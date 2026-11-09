@@ -128,12 +128,14 @@ a {
    ========================================= */
 
 .navbar-container {
+  color: #141414; /* Ajusta con tu token de color de texto principal */
   border-bottom: 1px solid #E5E5E5; /* Ajusta con tu token de color de borde */
   background-color: #FFFFFF;
   padding: 1rem 2rem;
 }
 
 .navbar {
+  
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -275,4 +277,323 @@ a {
   .navbar-right {
     gap: 1rem;
   }
+}
+/* =========================================
+   PÁGINA DE INICIO Y TARJETAS DE EVENTOS
+   ========================================= */
+
+.inicio-container {
+  width: 100%;
+}
+
+/* 1. Sección Hero (La parte negra de arriba) */
+.hero-section {
+  background-color: #171717; /* Negro casi puro */
+  color: #FFFFFF;
+  padding: 5rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.hero-badge {
+  background-color: #FFFFFF;
+  color: #000000;
+  padding: 0.4rem 1rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.hero-subtitle {
+  color: #A3A3A3;
+  max-width: 600px;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* 2. Sección Eventos Destacados */
+.eventos-section {
+  max-width: 1200px; /* Ancho máximo para que no se estire infinito */
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+}
+
+.section-header h2 {
+  font-size: 1.8rem;
+  margin: 0;
+  font-weight: 700;
+}
+
+.ver-todos {
+  color: #000000;
+  text-decoration: none;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.section-subtitle {
+  color: #666666;
+  margin-top: 0.5rem;
+  margin-bottom: 2.5rem;
+}
+
+/* 3. Cuadrícula de Tarjetas (4 columnas) */
+.eventos-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+/* 4. Tarjeta Individual */
+.evento-card {
+  border: 1px solid #E5E5E5;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background-color: #FFFFFF;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.evento-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+.evento-img {
+  height: 180px;
+  width: 100%;
+  /* El color de fondo se inyecta desde React con los datos de Postman */
+}
+
+.evento-info {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.categoria-badge {
+  font-size: 0.75rem;
+  background-color: #F5F5F5;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  display: inline-block;
+  align-self: flex-start;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  border: 1px solid #EAEAEA;
+}
+
+.evento-info h3 {
+  margin: 0 0 0.8rem 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.evento-meta {
+  margin: 0 0 0.4rem 0;
+  color: #666666;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.evento-footer {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid #F5F5F5;
+}
+
+.precio-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.precio-label {
+  font-size: 0.8rem;
+  color: #666666;
+}
+
+.precio-valor {
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+/* =========================================
+   RESPONSIVE (Para que se vea bien en celular)
+   ========================================= */
+@media (max-width: 1024px) {
+  .eventos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .eventos-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero-title {
+    font-size: 2.2rem;
+  }
+  .hero-section {
+    padding: 3rem 1.5rem;
+  }
+}
+/* =========================================
+   AVISO DE COOKIES
+   ========================================= */
+
+.cookie-banner-overlay {
+  position: fixed;
+  bottom: 2rem;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  z-index: 50;
+  padding: 0 1rem;
+}
+
+.cookie-banner {
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  max-width: 900px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.cookie-content h3 {
+  color: #141414;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.cookie-content p {
+  margin: 0;
+  color: #666666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.cookie-actions {
+  display: flex;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+@media (max-width: 768px) {
+  .cookie-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1.5rem;
+  }
+  .cookie-actions {
+    width: 100%;
+    justify-content: flex-end;
+    margin-top: 1rem;
+  }
+}/* =========================================
+   PANEL DE ACCESIBILIDAD Y ALTO CONTRASTE
+   ========================================= */
+
+.accessibility-panel {
+  position: absolute;
+  top: 130%;
+  right: 0;
+  background-color: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  border-radius: 12px;
+  padding: 1rem;
+  width: 220px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+}
+
+.accessibility-panel h4 {
+  margin: 0 0 1rem 0;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #E5E5E5;
+  padding-bottom: 0.5rem;
+}
+
+.acc-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.acc-buttons button {
+  background: none;
+  border: 1px solid #E5E5E5;
+  padding: 0.5rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  text-align: left;
+}
+
+.acc-buttons button:hover {
+  background-color: #F5F5F5;
+}
+
+.acc-buttons button.acc-reset {
+  margin-top: 0.5rem;
+  background-color: #171717;
+  color: white;
+  text-align: center;
+}
+
+/* Modo Alto Contraste */
+body.alto-contraste {
+  background-color: #000000 !important;
+  color: #FFFF00 !important;
+}
+
+body.alto-contraste .evento-card, 
+body.alto-contraste .navbar,
+body.alto-contraste .cookie-banner {
+  background-color: #000000 !important;
+  border: 2px solid #FFFF00 !important;
+}
+
+body.alto-contraste p,
+body.alto-contraste h1, 
+body.alto-contraste h2, 
+body.alto-contraste h3, 
+body.alto-contraste span {
+  color: #FFFF00 !important;
 }

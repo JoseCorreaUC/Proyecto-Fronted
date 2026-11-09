@@ -1,0 +1,23 @@
+{
+  "navbar": {
+    "home": "Inicio",
+    "explore": "Explorar",
+    "searchPlaceholder": "Busca eventos o artistas",
+    "accessibility": "Accesibilidad",
+    "login": "Ingresar",
+    "signup": "Crear cuenta"
+  },
+  "cookies": {
+    "titulo": "Usamos cookies",
+    "descripcion": "Usamos solo las cookies necesarias para mantener tu sesión y recordar tu idioma. Puedes aceptarlas o rechazarlas.",
+    "rechazar": "Rechazar",
+    "aceptar": "Aceptar"
+  },
+  "accesibilidad": {
+    "titulo": "Opciones de Accesibilidad",
+    "aumentar": "Aumentar texto (+)",
+    "disminuir": "Disminuir texto (-)",
+    "contraste": "Alto contraste",
+    "restablecer": "Restablecer diseño"
+  }
+}
