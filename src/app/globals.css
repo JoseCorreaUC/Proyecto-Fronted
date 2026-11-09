@@ -1,3 +1,79 @@
+/* Tokens de diseño de Taquilla, exportados del archivo de Figma. */
+/* Nombres iguales a las variables de Figma: "fondo/pagina" se usa como var(--fondo-pagina). */
+
+:root {
+  /* Color */
+  --fondo-pagina: #f7f7f7;
+  --fondo-superficie: #ffffff;
+  --fondo-sutil: #f0f0f0;
+  --fondo-inverso: #141414;
+  --fondo-inverso-2: #262626;
+  --marca-primario: #141414;
+  --marca-primario-hover: #2e2e2e;
+  --marca-primario-suave: #f0f0f0;
+  --marca-acento: #c9a24d;
+  --texto-principal: #141414;
+  --texto-secundario: #525252;
+  --texto-terciario: #6b6b6b;
+  --texto-inverso: #ffffff;
+  --texto-inverso-suave: #a8a8a8;
+  --texto-marca: #141414;
+  --borde-sutil: #e5e5e5;
+  --borde-fuerte: #8c8c8c;
+  --borde-inverso: #3a3a3a;
+  --estado-exito: #1a7f4b;
+  --estado-exito-suave: #e8f5ec;
+  --estado-alerta: #9a6700;
+  --estado-alerta-suave: #fff4d6;
+  --estado-error: #c5221f;
+  --estado-error-suave: #fce8e6;
+  --zona-vip: #6f66b0;
+  --zona-platea: #3f78b5;
+  --zona-general: #4c9a76;
+  --asiento-ocupado: #e0e0e0;
+  --asiento-reservado: #e6c36a;
+  --marca-primario-presionado: #000000;
+  --fondo-presionado: #e5e5e5;
+  --fondo-inverso-presionado: #3a3a3a;
+  /* Medidas */
+  --espacio-1: 4px;
+  --espacio-2: 8px;
+  --espacio-3: 12px;
+  --espacio-4: 16px;
+  --espacio-6: 24px;
+  --espacio-8: 32px;
+  --espacio-12: 48px;
+  --espacio-16: 64px;
+  --radio-sm: 6px;
+  --radio-md: 8px;
+  --radio-lg: 12px;
+  --radio-xl: 16px;
+  --radio-completo: 999px;
+  /* Familias tipográficas (Google Fonts) */
+  --fuente-instrument-sans: 'Instrument Sans', system-ui, sans-serif;
+  /* Sombras */
+  --sombra-tarjeta: 0px 1px 2px 0px #1414140d;
+  --sombra-flotante: 0px 8px 24px 0px #1414141a;
+}
+
+/* Estilos de texto de Figma como clases. */
+.titular-display { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 52px; line-height: 56px; letter-spacing: -0.025em; }
+.titular-h1 { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 34px; line-height: 40px; letter-spacing: -0.020em; }
+.titular-h2 { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 24px; line-height: 30px; letter-spacing: -0.015em; }
+.titular-h3 { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 20px; line-height: 26px; letter-spacing: -0.010em; }
+.titular-h4 { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 16px; line-height: 22px; letter-spacing: -0.005em; }
+.cuerpo-g { font-family: var(--fuente-instrument-sans); font-weight: 400; font-size: 18px; line-height: 28px; }
+.cuerpo-m { font-family: var(--fuente-instrument-sans); font-weight: 400; font-size: 16px; line-height: 24px; }
+.cuerpo-m-fuerte { font-family: var(--fuente-instrument-sans); font-weight: 500; font-size: 16px; line-height: 24px; }
+.cuerpo-p { font-family: var(--fuente-instrument-sans); font-weight: 400; font-size: 14px; line-height: 20px; }
+.cuerpo-p-fuerte { font-family: var(--fuente-instrument-sans); font-weight: 500; font-size: 14px; line-height: 20px; }
+.detalle-nota { font-family: var(--fuente-instrument-sans); font-weight: 400; font-size: 12px; line-height: 16px; }
+.detalle-nota-fuerte { font-family: var(--fuente-instrument-sans); font-weight: 500; font-size: 12px; line-height: 16px; }
+.detalle-etiqueta { font-family: var(--fuente-instrument-sans); font-weight: 500; font-size: 12px; line-height: 16px; }
+.dato-cifra { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 30px; line-height: 34px; letter-spacing: -0.020em; }
+.titular-gigante { font-family: var(--fuente-instrument-sans); font-weight: 600; font-size: 112px; line-height: 108px; letter-spacing: -0.030em; }
+
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
@@ -45,5 +121,158 @@ a {
 @media (prefers-color-scheme: dark) {
   html {
     color-scheme: dark;
+  }
+}
+/* =========================================
+   ESTILOS NAVBAR (WEB Y MÓVIL)
+   ========================================= */
+
+.navbar-container {
+  border-bottom: 1px solid #E5E5E5; /* Ajusta con tu token de color de borde */
+  background-color: #FFFFFF;
+  padding: 1rem 2rem;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.navbar-left, .navbar-right {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav-links {
+  display: flex;
+  list-style: none;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: #333333; /* Usa tu token de texto secundario */
+  font-weight: 500;
+}
+
+.nav-links a.active {
+  font-weight: 700;
+  color: #000000; /* Usa tu token de texto principal */
+}
+
+/* Buscador central */
+.search-input {
+  display: flex;
+  align-items: center;
+  background-color: #F5F5F5; /* Fondo gris claro */
+  border-radius: 50px;
+  padding: 0.5rem 1rem;
+  width: 300px;
+}
+
+.search-input input {
+  border: none;
+  background: transparent;
+  outline: none;
+  margin-left: 0.5rem;
+  width: 100%;
+}
+
+/* Acciones Globales */
+.global-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.lang-toggle {
+  display: flex;
+  background-color: #F5F5F5;
+  border-radius: 50px;
+  padding: 0.2rem;
+}
+
+.lang-btn {
+  border: none;
+  background: transparent;
+  padding: 0.3rem 0.8rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.lang-btn.active {
+  background-color: #000000;
+  color: #FFFFFF;
+}
+
+.icon-btn {
+  background: transparent;
+  border: 1px solid #E5E5E5;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Botones Principales */
+.btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1px solid #000000;
+  color: #000000;
+}
+
+.btn-primary {
+  background: #000000;
+  border: 1px solid #000000;
+  color: #FFFFFF;
+}
+
+.btn-text {
+  background: transparent;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =========================================
+   RESPONSIVE DESIGN (MÓVIL)
+   ========================================= */
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 1rem;
+  }
+  
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: flex;
+  }
+
+  .navbar-right {
+    gap: 1rem;
   }
 }
