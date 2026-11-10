@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { RUTAS } from "./src/lib/rutas";
 
 const nextConfig: NextConfig = {
   turbopack: {
@@ -15,7 +16,7 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       // La vista Explorar vive en /explorar (ruta del diseño). /eventos/:slug queda para el detalle.
-      { source: "/eventos", destination: "/explorar", permanent: true },
+      { source: RUTAS.eventosAntigua, destination: RUTAS.explorar, permanent: true },
     ];
   },
 };

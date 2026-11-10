@@ -1,0 +1,101 @@
+/* Panel de accesibilidad */
+.accesibilidad {
+  position: relative;
+}
+
+.panelAccesibilidad {
+  position: absolute;
+  top: calc(100% + var(--espacio-2));
+  left: 50%;
+  translate: -50% 0;
+  z-index: 40;
+  width: 300px;
+  padding: var(--espacio-4);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-lg);
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
+  color: var(--texto-principal);
+}
+
+.panelAccesibilidad:focus {
+  outline: none;
+}
+
+.panelAccesibilidadCabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--espacio-3);
+}
+
+.panelAccesibilidadSubtitulo {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  margin-bottom: var(--espacio-2);
+}
+
+.tamanoTexto {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--espacio-1);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md);
+  margin-bottom: var(--espacio-3);
+}
+
+.tamanoTextoMuestra {
+  font-weight: 600;
+}
+
+.panelAccesibilidadOpciones {
+  display: grid;
+  gap: var(--espacio-3);
+}
+
+.interruptorFila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.interruptorFilaNombre {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.interruptorFilaDescripcion {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--texto-secundario);
+}
+
+.panelAccesibilidadNota {
+  margin-top: var(--espacio-3);
+  font-size: 0.6875rem;
+  color: var(--texto-terciario);
+}
+
+.panelAccesibilidadPie {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--espacio-3);
+  padding-top: var(--espacio-3);
+  border-top: 1px solid var(--borde-sutil);
+}
+
+
+/* Dentro del menú móvil el panel se fija en la parte de abajo de la pantalla. */
+[data-menu-movil] .panelAccesibilidad {
+  position: fixed;
+  left: var(--espacio-4);
+  right: var(--espacio-4);
+  top: auto;
+  bottom: var(--espacio-4);
+  translate: none;
+  width: auto;
+}

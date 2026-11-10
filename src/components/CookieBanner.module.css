@@ -1,0 +1,51 @@
+/* ---------- Aviso de cookies ---------- */
+.avisoCookies {
+  /* A media altura de la pantalla, como en el diseño (sobre las categorías y los destacados). */;
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  translate: -50% -50%;
+  z-index: 45;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-6);
+  width: min(840px, calc(100% - 2 * var(--espacio-4)));
+  padding: var(--espacio-4) var(--espacio-4) var(--espacio-4) var(--espacio-6);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-lg);
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
+}
+
+.avisoCookies h2 {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.avisoCookies p {
+  font-size: 0.75rem;
+  color: var(--texto-secundario);
+}
+
+.avisoCookiesBotones {
+  display: flex;
+  gap: var(--espacio-2);
+  flex-shrink: 0;
+}
+
+@media (max-width: 767px) {
+  /* Aviso de cookies como tarjeta inferior */
+  .avisoCookies {
+    flex-direction: column;
+    align-items: stretch;
+    gap: var(--espacio-3);
+    padding: var(--espacio-4);
+  }
+}
+
+/* En el móvil los dos botones ocupan el mismo ancho. */
+@media (max-width: 767px) {
+  .avisoCookiesBotones > button {
+    flex: 1;
+  }
+}

@@ -1,0 +1,170 @@
+/* ---------- Navbar ---------- */
+.navbar {
+  position: sticky;
+  top: 0;
+  z-index: 30;
+  background: var(--fondo-superficie);
+  border-bottom: 1px solid var(--borde-sutil);
+}
+
+.navbarContenido {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--espacio-6);
+  height: var(--alto-navbar);
+}
+
+.navbarIzquierda,
+.navbarDerecha,
+.navbarAcciones {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+}
+
+.navbarIzquierda {
+  gap: var(--espacio-8);
+}
+
+.navbarEnlaces {
+  display: flex;
+  gap: var(--espacio-6);
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.navbarEnlaces a {
+  color: var(--texto-secundario);
+  padding-block: var(--espacio-1);
+}
+
+.navbarEnlaces a:hover,
+.navbarEnlaces a[aria-current="page"] {
+  color: var(--texto-principal);
+}
+
+.navbarEnlaces a[aria-current="page"] {
+  font-weight: 600;
+}
+
+/* Menú de la cuenta (con sesión) */
+.menuUsuario {
+  position: relative;
+}
+
+.menuUsuario summary {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  height: 36px;
+  padding-inline: var(--espacio-1) var(--espacio-3);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-completo);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  list-style: none;
+}
+
+.menuUsuario summary::-webkit-details-marker {
+  display: none;
+}
+
+.menuUsuarioAvatar {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+  font-size: 0.75rem;
+}
+
+.menuUsuarioLista {
+  position: absolute;
+  right: 0;
+  top: calc(100% + var(--espacio-2));
+  min-width: 200px;
+  padding: var(--espacio-2);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-lg);
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
+}
+
+.menuUsuarioOpcion {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  width: 100%;
+  padding: var(--espacio-2) var(--espacio-3);
+  border-radius: var(--radio-md);
+  font-size: 0.8125rem;
+  text-align: left;
+}
+
+.menuUsuarioOpcion:hover {
+  background: var(--fondo-sutil);
+}
+
+.menuMovilEnlaces {
+  display: grid;
+  gap: var(--espacio-1);
+  padding-block: var(--espacio-4);
+}
+
+.menuMovilEnlaces a {
+  display: block;
+  padding-block: var(--espacio-3);
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.menuMovilEnlaces a[aria-current="page"] {
+  font-weight: 600;
+}
+
+.menuMovilPie {
+  margin-top: auto;
+  display: grid;
+  gap: var(--espacio-3);
+}
+
+.menuMovilFila {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: var(--espacio-2);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+@media (max-width: 767px) {
+  /* Navbar móvil: oscura sobre el hero en el inicio, como en el diseño */
+  .navbarContenido {
+    gap: var(--espacio-2);
+  }
+  .navbarDerecha {
+    gap: var(--espacio-1);
+  }
+  .navbarIngresar {
+    border-color: transparent;
+    padding-inline: var(--espacio-2);
+  }
+}
+
+/* En el inicio la barra móvil es oscura y se funde con el hero, como en el diseño.
+   El hero se marca con el atributo data-hero (app/page.tsx y app/loading.tsx). */
+@media (max-width: 767px) {
+  body:has([data-hero]) .navbar {
+    background: var(--fondo-inverso);
+    border-bottom-color: var(--fondo-inverso);
+    color: var(--texto-inverso);
+  }
+  body:has([data-hero]) .navbar .navbarIngresar {
+    background: transparent;
+    color: var(--texto-inverso);
+  }
+}

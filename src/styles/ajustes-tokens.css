@@ -1,0 +1,57 @@
+/* =====================================================================
+   Ajustes sobre los tokens de la profesora (styles/tokens.css)
+   tokens.css se deja tal cual se entregó. Aquí van solo los cambios y las
+   variables propias del sitio, para que se vea qué es del diseño y qué no.
+   Este archivo se importa después de tokens.css, así que lo de aquí gana.
+   ===================================================================== */
+
+:root {
+  /* Instrument Sans se carga con next/font, que la expone en la variable --fuente-cargada
+     (ver app/layout.tsx). Si no carga, se usa el mismo respaldo de tokens.css. */
+  --fuente-instrument-sans: var(--fuente-cargada, "Instrument Sans"), system-ui, sans-serif;
+
+  /* Propias del sitio (no están en Figma) */
+  --ancho-contenido: 1240px;
+  --alto-navbar: 64px;
+  --foco: 0 0 0 2px var(--fondo-superficie), 0 0 0 4px var(--marca-primario);
+  --transicion: 150ms ease;
+}
+
+/* Móvil (diseño de 390 px): la barra de navegación es más baja. */
+@media (max-width: 767px) {
+  :root {
+    --alto-navbar: 56px;
+  }
+}
+
+/* Alto contraste del panel de accesibilidad: refuerza los colores del diseño. */
+:root[data-alto-contraste] {
+  --fondo-pagina: #ffffff;
+  --fondo-sutil: #ebebeb;
+  --texto-secundario: #141414;
+  --texto-terciario: #262626;
+  --texto-inverso-suave: #ffffff;
+  --borde-sutil: #141414;
+  --borde-fuerte: #000000;
+  --borde-inverso: #ffffff;
+}
+
+/* ---------- Estilos de texto de Figma en rem ----------
+   tokens.css los define en px. El panel de accesibilidad agranda el texto cambiando el
+   tamaño de letra de <html>, y eso solo funciona con rem. Los valores son los mismos de
+   Figma divididos entre 16 (px → rem) y el interlineado como proporción. */
+.titular-gigante { font-size: 7rem; line-height: 0.964; letter-spacing: -0.03em; }
+.titular-display { font-size: 3.25rem; line-height: 1.08; letter-spacing: -0.025em; }
+.titular-h1 { font-size: 2.125rem; line-height: 1.18; letter-spacing: -0.02em; }
+.titular-h2 { font-size: 1.5rem; line-height: 1.25; letter-spacing: -0.015em; }
+.titular-h3 { font-size: 1.25rem; line-height: 1.3; letter-spacing: -0.01em; }
+.titular-h4 { font-size: 1rem; line-height: 1.375; letter-spacing: -0.005em; }
+.dato-cifra { font-size: 1.875rem; line-height: 1.133; letter-spacing: -0.02em; }
+.cuerpo-g { font-size: 1.125rem; line-height: 1.55; }
+.cuerpo-m,
+.cuerpo-m-fuerte { font-size: 1rem; line-height: 1.5; }
+.cuerpo-p,
+.cuerpo-p-fuerte { font-size: 0.875rem; line-height: 1.43; }
+.detalle-nota,
+.detalle-nota-fuerte,
+.detalle-etiqueta { font-size: 0.75rem; line-height: 1.33; }

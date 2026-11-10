@@ -1,0 +1,42 @@
+/* ---------- Logo ---------- */
+.logo {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  font-weight: 600;
+  font-size: 1.125rem;
+  letter-spacing: -0.02em;
+}
+
+.logoMarca {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radio-md);
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+}
+
+.logoInverso .logoMarca {
+  background: var(--fondo-superficie);
+  color: var(--marca-primario);
+}
+
+.logoInverso {
+  color: var(--texto-inverso);
+}
+
+
+/* En el inicio la barra móvil es oscura (ver Navbar.module.css): la marca se invierte,
+   pero dentro del menú móvil vuelve a la normal. */
+@media (max-width: 767px) {
+  body:has([data-hero]) [data-navbar] .logoMarca {
+    background: var(--fondo-superficie);
+    color: var(--marca-primario);
+  }
+  body:has([data-hero]) [data-navbar] [data-menu-movil] .logoMarca {
+    background: var(--marca-primario);
+    color: var(--texto-inverso);
+  }
+}

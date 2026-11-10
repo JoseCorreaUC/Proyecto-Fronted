@@ -1,7 +1,11 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
 import Script from "next/script";
-import "./globals.css";
+// Estilos globales: tokens de la profesora (sin cambios), mis ajustes y la base.
+// Los de cada componente están en su propio archivo .module.css.
+import "@/styles/tokens.css";
+import "@/styles/ajustes-tokens.css";
+import "@/styles/base.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import CookieBanner from "@/components/CookieBanner";

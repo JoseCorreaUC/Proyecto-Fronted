@@ -1,0 +1,156 @@
+/* ---------- Botones ---------- */
+.boton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--espacio-2);
+  height: 44px;
+  padding-inline: var(--espacio-6);
+  border-radius: var(--radio-md);
+  border: 1px solid transparent;
+  font-weight: 500;
+  font-size: 0.875rem;
+  white-space: nowrap;
+  transition: background var(--transicion), border-color var(--transicion);
+}
+
+.botonPequeno {
+  height: 36px;
+  padding-inline: var(--espacio-4);
+  font-size: 0.8125rem;
+}
+
+.botonBloque {
+  width: 100%;
+}
+
+.botonPrimario {
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+}
+
+.botonPrimario:hover {
+  background: var(--marca-primario-hover);
+}
+
+.botonPrimario:active {
+  background: var(--marca-primario-presionado);
+}
+
+.botonSecundario {
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+  border-color: var(--borde-fuerte);
+}
+
+.botonSecundario:hover {
+  background: var(--fondo-sutil);
+}
+
+.botonSecundario:active {
+  background: var(--fondo-presionado);
+}
+
+.boton:disabled {
+  opacity: 0.6;
+}
+
+.botonIcono {
+  display: inline-grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radio-completo);
+  border: 1px solid var(--borde-sutil);
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+  transition: background var(--transicion);
+}
+
+.botonIcono:hover {
+  background: var(--fondo-sutil);
+}
+
+.botonIcono[aria-expanded="true"] {
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+  border-color: var(--marca-primario);
+}
+
+.botonIconoPlano {
+  border-color: transparent;
+  background: transparent;
+}
+
+.botonIconoCuadrado {
+  border-radius: var(--radio-md);
+  width: 32px;
+  height: 32px;
+}
+
+.botonIconoOscuro {
+  border-radius: var(--radio-md);
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+  border-color: var(--marca-primario);
+  width: 44px;
+  height: 44px;
+}
+
+.botonIconoOscuro:hover {
+  background: var(--marca-primario-hover);
+}
+
+.botonIcono:disabled {
+  opacity: 0.4;
+}
+
+.enlaceBoton {
+  font-size: 0.8125rem;
+  color: var(--texto-secundario);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.enlaceBoton:hover {
+  color: var(--texto-principal);
+}
+
+.enlaceSubrayado {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.enlaceFlecha {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.enlaceFlecha:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 767px) {
+  .botonIcono:global(.solo-movil) {
+    display: inline-grid !important;
+  }
+}
+
+/* En el inicio la barra móvil es oscura (ver Navbar.module.css): los botones planos de la
+   barra se ven claros, pero dentro del menú móvil vuelven al color normal. */
+@media (max-width: 767px) {
+  body:has([data-hero]) [data-navbar] .botonIconoPlano {
+    background: transparent;
+    color: var(--texto-inverso);
+  }
+  body:has([data-hero]) [data-navbar] [data-menu-movil] .botonIconoPlano {
+    color: var(--texto-principal);
+  }
+}

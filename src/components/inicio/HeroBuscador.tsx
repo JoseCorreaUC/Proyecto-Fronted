@@ -2,6 +2,9 @@
 
 import { useRouter } from "next/navigation";
 import Icono from "../Icono";
+import { RUTAS } from "@/lib/rutas";
+import botones from "@/components/ui/Boton.module.css";
+import estilos from "./HeroBuscador.module.css";
 
 interface Props {
   ciudades: string[];
@@ -21,22 +24,22 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
   const router = useRouter();
 
   return (
-    <form action="/explorar" role="search" className="hero-buscador">
-      <label className="hero-buscador__campo">
+    <form action={RUTAS.explorar} role="search" className={estilos.heroBuscador}>
+      <label className={estilos.heroBuscadorCampo}>
         <Icono nombre="search" tamano={16} />
         <span>
-          <span className="hero-buscador__etiqueta">{textos.etiquetas.que}</span>
+          <span className={estilos.heroBuscadorEtiqueta}>{textos.etiquetas.que}</span>
           <input type="search" name="q" placeholder={textos.placeholders.que} maxLength={80} />
         </span>
       </label>
-      <label className="hero-buscador__campo">
+      <label className={estilos.heroBuscadorCampo}>
         <Icono nombre="pin" tamano={16} />
         <span>
-          <span className="hero-buscador__etiqueta">{textos.etiquetas.donde}</span>
+          <span className={estilos.heroBuscadorEtiqueta}>{textos.etiquetas.donde}</span>
           <select
             name="ciudad"
             defaultValue={ciudad}
-            onChange={(e) => router.replace(`/?ciudad=${encodeURIComponent(e.target.value)}`, { scroll: false })}
+            onChange={(e) => router.replace(`${RUTAS.inicio}?ciudad=${encodeURIComponent(e.target.value)}`, { scroll: false })}
           >
             {ciudades.map((c) => (
               <option key={c} value={c}>
@@ -46,10 +49,10 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
           </select>
         </span>
       </label>
-      <label className="hero-buscador__campo">
+      <label className={estilos.heroBuscadorCampo}>
         <Icono nombre="calendar" tamano={16} />
         <span>
-          <span className="hero-buscador__etiqueta">{textos.etiquetas.cuando}</span>
+          <span className={estilos.heroBuscadorEtiqueta}>{textos.etiquetas.cuando}</span>
           <select name="fecha" defaultValue="">
             <option value="">{textos.placeholders.cuando}</option>
             {opcionesFecha.map((o) => (
@@ -60,7 +63,7 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
           </select>
         </span>
       </label>
-      <button type="submit" className="boton boton--primario">
+      <button type="submit" className={`${botones.boton} ${botones.botonPrimario} ${estilos.heroBuscadorBoton}`}>
         {textos.botones.buscar}
       </button>
     </form>

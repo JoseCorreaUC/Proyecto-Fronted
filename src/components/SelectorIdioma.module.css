@@ -1,0 +1,26 @@
+.selectorIdioma {
+  display: inline-flex;
+  padding: 3px;
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-completo);
+  background: var(--fondo-superficie);
+}
+
+.selectorIdiomaOpcion {
+  min-width: 34px;
+  height: 28px;
+  padding-inline: var(--espacio-2);
+  border-radius: var(--radio-completo);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.selectorIdiomaOpcion[aria-pressed="true"] {
+  background: var(--marca-primario);
+  color: var(--texto-inverso);
+}
+
+.selectorIdioma[aria-busy="true"] {
+  opacity: 0.6;
+}
+

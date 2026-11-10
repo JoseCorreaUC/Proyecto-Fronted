@@ -1,0 +1,116 @@
+/* ---------- Etiquetas, chips y pastillas ---------- */
+.etiqueta {
+  display: inline-flex;
+  align-items: center;
+  align-self: flex-start;
+  height: 20px;
+  padding-inline: var(--espacio-2);
+  border-radius: var(--radio-sm);
+  background: var(--fondo-sutil);
+  color: var(--texto-principal);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.etiquetaClara {
+  background: var(--fondo-superficie);
+}
+
+.etiquetaSobre {
+  position: absolute;
+  top: var(--espacio-3);
+  left: var(--espacio-3);
+}
+
+.etiquetaError {
+  background: var(--estado-error-suave);
+  color: var(--estado-error);
+}
+
+.etiquetaAlerta {
+  background: var(--estado-alerta-suave);
+  color: var(--estado-alerta);
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--espacio-2);
+  height: 32px;
+  padding-inline: var(--espacio-3);
+  border-radius: var(--radio-completo);
+  border: 1px solid var(--borde-sutil);
+  background: var(--fondo-superficie);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  border-color: var(--borde-fuerte);
+}
+
+.chipActivo,
+.chip[aria-current="page"] {
+  background: var(--marca-primario);
+  border-color: var(--marca-primario);
+  color: var(--texto-inverso);
+}
+
+.chipQuitar {
+  height: 28px;
+  font-size: 0.75rem;
+}
+
+.pastillas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--espacio-2);
+}
+
+.pastilla {
+  height: 32px;
+  padding-inline: var(--espacio-3);
+  border-radius: var(--radio-completo);
+  border: 1px solid var(--borde-sutil);
+  background: var(--fondo-superficie);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+.pastilla:hover {
+  border-color: var(--borde-fuerte);
+}
+
+.pastilla[aria-pressed="true"] {
+  background: var(--marca-primario);
+  border-color: var(--marca-primario);
+  color: var(--texto-inverso);
+}
+
+@media (max-width: 767px) {
+  /* Chips de categorías con desplazamiento horizontal */
+  .chips:global(.solo-movil) {
+    display: flex !important;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+    margin-inline: calc(-1 * var(--espacio-4));
+    padding-inline: var(--espacio-4);
+  }
+  .chips:global(.solo-movil)::-webkit-scrollbar {
+    display: none;
+  }
+  .chipsActivos {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+}

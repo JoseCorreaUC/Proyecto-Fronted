@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Icono from "./Icono";
+import estados from "./Estados.module.css";
+import botones from "./ui/Boton.module.css";
 
 interface Props {
   error: Error & { digest?: string };
@@ -42,15 +44,15 @@ export default function ErrorPagina({ error, reset }: Props) {
 
   return (
     <div className="contenedor seccion">
-      <div className="estado estado--error" role="alert">
-        <span className="estado__icono">
+      <div className={`${estados.estado} ${estados.estadoError}`} role="alert">
+        <span className={estados.estadoIcono}>
           <Icono nombre="alert" tamano={20} />
         </span>
         <h1 className="titular-h4">{textos.titulo}</h1>
         <p>{textos.texto}</p>
         <button
           type="button"
-          className="boton boton--primario boton--pequeno"
+          className={`${botones.boton} ${botones.botonPrimario} ${botones.botonPequeno}`}
           disabled={pendiente}
           onClick={() =>
             iniciar(() => {

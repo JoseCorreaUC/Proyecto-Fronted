@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { api, ApiError, type Usuario } from "./api";
+import { api, ApiError, ENDPOINTS, type Usuario } from "./api";
 
 // El token de la API vive en una cookie httpOnly de este frontend (nunca en localStorage).
 export const COOKIE_TOKEN = "token";
@@ -13,7 +13,7 @@ export const getUsuario = cache(async (): Promise<Usuario | null> => {
   const token = await getToken();
   if (!token) return null;
   try {
-    const respuesta = await api<{ usuario: Usuario } | Usuario>("/sesion", { token });
+    const respuesta = await api<{ usuario: Usuario } | Usuario>(ENDPOINTS.sesion, { token });
     return "usuario" in respuesta ? respuesta.usuario : respuesta;
   } catch (error) {
     if (error instanceof ApiError && error.estado === 401) return null;

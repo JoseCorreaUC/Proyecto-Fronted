@@ -1,0 +1,73 @@
+/* ---------- Afiche (degradado + formas, sin fotos) ---------- */
+.afiche {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(135deg, var(--afiche-1), var(--afiche-2));
+  isolation: isolate;
+  /* Los colores de la API son vivos; el diseño los muestra apagados. */;
+  filter: saturate(0.6) brightness(0.92);
+}
+
+/* Capa que suaviza los colores de la API para acercarlos a los tonos del diseño. */
+.afiche::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(160deg, #ffffff33 0%, #14141440 100%);
+  z-index: -1;
+}
+
+.aficheCirculo {
+  position: absolute;
+  border-radius: 50%;
+  background: #ffffff1f;
+}
+
+.aficheCirculoGrande {
+  width: 70%;
+  aspect-ratio: 1;
+  right: -14%;
+  top: -34%;
+}
+
+.aficheCirculoPequeno {
+  width: 32%;
+  aspect-ratio: 1;
+  left: -8%;
+  bottom: -18%;
+  background: #1414141f;
+}
+
+.aficheLineas::after,
+.afichePuntos::after,
+.aficheRombos::after,
+.aficheOndas::after,
+.aficheCirculos::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+}
+
+.aficheLineas::after {
+  background: repeating-linear-gradient(135deg, #fff 0 1px, transparent 1px 14px);
+}
+
+.afichePuntos::after {
+  background: radial-gradient(#fff 1.2px, transparent 1.6px) 0 0 / 14px 14px;
+}
+
+.aficheRombos::after {
+  background:
+    linear-gradient(45deg, #fff 1px, transparent 1px) 0 0 / 18px 18px,
+    linear-gradient(-45deg, #fff 1px, transparent 1px) 0 0 / 18px 18px;
+}
+
+.aficheOndas::after {
+  background: radial-gradient(circle at 50% 120%, transparent 40%, #fff 40.5%, transparent 41.5%) 0 0 / 40px 20px;
+}
+
+.aficheCirculos::after {
+  background: radial-gradient(circle, transparent 6px, #fff 6.5px, transparent 7.5px) 0 0 / 24px 24px;
+}
+

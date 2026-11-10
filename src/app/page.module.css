@@ -1,0 +1,228 @@
+/* ---------- Inicio: hero ----------
+   El hero lleva el atributo data-hero: con él la barra de navegación móvil se vuelve oscura
+   (ver Navbar.module.css). */
+.hero {
+  background: var(--fondo-inverso);
+  color: var(--texto-inverso);
+}
+
+.heroCargando {
+  height: 420px;
+}
+
+.heroContenido {
+  display: grid;
+  grid-template-columns: minmax(0, 1.75fr) minmax(0, 1fr);
+  align-items: center;
+  gap: var(--espacio-12);
+  padding-block: var(--espacio-12);
+  min-height: 420px;
+}
+
+.heroTexto {
+  display: flex;
+  flex-direction: column;
+  gap: var(--espacio-4);
+}
+
+/* Etiqueta "Temporada" clara sobre el fondo oscuro del hero. */
+.heroTexto .heroEtiqueta {
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+}
+
+.heroTitulo {
+  font-size: clamp(2rem, 3.4vw, 3.25rem);
+  font-weight: 600;
+  line-height: 1.08;
+  letter-spacing: -0.025em;
+}
+
+.heroSubtitulo {
+  max-width: 560px;
+  color: var(--texto-inverso-suave);
+  font-size: 0.9375rem;
+}
+
+.heroPopulares {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--espacio-2) var(--espacio-4);
+  margin-top: var(--espacio-4);
+  font-size: 0.75rem;
+  color: var(--texto-inverso-suave);
+}
+
+.heroPopulares a {
+  color: var(--texto-inverso);
+  font-weight: 500;
+}
+
+.heroPopulares a:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.heroDestacado {
+  position: relative;
+}
+
+.heroTarjeta {
+  position: relative;
+  border-radius: var(--radio-xl);
+  overflow: hidden;
+}
+
+.heroAfiche {
+  aspect-ratio: 1 / 0.92;
+  border-radius: var(--radio-xl);
+}
+
+.heroFicha {
+  position: absolute;
+  left: var(--espacio-3);
+  right: var(--espacio-3);
+  bottom: var(--espacio-6);
+  display: grid;
+  gap: var(--espacio-2);
+  padding: var(--espacio-4);
+  border-radius: var(--radio-lg);
+  background: var(--fondo-superficie);
+  color: var(--texto-principal);
+  box-shadow: var(--sombra-flotante);
+}
+
+.heroFichaPie {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espacio-3);
+}
+
+.heroFichaMeta {
+  font-size: 0.75rem;
+  color: var(--texto-secundario);
+}
+
+.heroFichaPrecio {
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+/* ---------- Inicio: categorías y secciones ---------- */
+.seccionCategorias {
+  padding-bottom: 0;
+}
+
+.categorias {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--espacio-3);
+}
+
+.categoria {
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-3);
+  padding: var(--espacio-3);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-lg);
+  background: var(--fondo-superficie);
+  transition: border-color var(--transicion);
+}
+
+.categoria:hover {
+  border-color: var(--borde-fuerte);
+}
+
+.categoriaIcono {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radio-md);
+  background: var(--fondo-sutil);
+}
+
+.categoriaNombre {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.categoriaCantidad {
+  display: block;
+  font-size: 0.6875rem;
+  color: var(--texto-terciario);
+}
+
+.encabezadoSeccion {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--espacio-4);
+  margin-bottom: var(--espacio-4);
+}
+
+.encabezadoSeccionSubtitulo {
+  font-size: 0.8125rem;
+  color: var(--texto-secundario);
+}
+
+@media (max-width: 1100px) {
+  .categorias {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 767px) {
+  /* Hero */
+  .heroContenido {
+    display: block;
+    min-height: 0;
+    padding-block: var(--espacio-4) var(--espacio-6);
+  }
+  .heroTitulo {
+    font-size: 1.75rem;
+    line-height: 1.12;
+  }
+  .buscadorMovil {
+    display: flex !important;
+    align-items: center;
+    gap: var(--espacio-2);
+    margin-top: var(--espacio-4);
+    padding: var(--espacio-1) var(--espacio-1) var(--espacio-1) var(--espacio-3);
+    border-radius: var(--radio-lg);
+    background: var(--fondo-superficie);
+    color: var(--texto-principal);
+  }
+  .buscadorMovilCampo {
+    flex: 1;
+    display: grid;
+    min-width: 0;
+  }
+  .buscadorMovil input {
+    border: 0;
+    outline: none;
+    background: transparent;
+    font-size: 0.8125rem;
+    min-width: 0;
+  }
+  .buscadorMovilResumen {
+    font-size: 0.6875rem;
+    color: var(--texto-terciario);
+  }
+  .buscadorMovil:focus-within {
+    box-shadow: var(--foco);
+  }
+  .encabezadoSeccion {
+    margin-bottom: var(--espacio-3);
+  }
+  .encabezadoSeccion :global(.titular-h3) {
+    font-size: 1rem;
+  }
+  .encabezadoSeccion :global(.solo-movil) {
+    display: inline !important;
+  }
+}

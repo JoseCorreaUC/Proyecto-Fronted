@@ -4,7 +4,12 @@ import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { urlExplorar, type Fecha, type Filtros } from "@/lib/filtros";
 import { fmt, formatoPrecio } from "@/lib/formato";
+import { RUTAS } from "@/lib/rutas";
 import Icono from "../Icono";
+import botones from "@/components/ui/Boton.module.css";
+import campos from "@/components/ui/Campo.module.css";
+import etiquetas from "@/components/ui/Etiqueta.module.css";
+import estilos from "./PanelFiltros.module.css";
 
 export interface TextosFiltros {
   titulo: string;
@@ -94,7 +99,7 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
       <button
         ref={boton}
         type="button"
-        className="boton-icono boton-icono--oscuro solo-movil filtros-abrir"
+        className={`${botones.botonIcono} ${botones.botonIconoOscuro} solo-movil ${estilos.filtrosAbrir}`}
         aria-label={textos.titulo}
         aria-expanded={abierto}
         aria-controls={id}
@@ -106,42 +111,42 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
       <aside
         ref={panel}
         id={id}
-        className={`filtros${abierto ? " filtros--abierto" : ""}`}
+        className={abierto ? `${estilos.filtros} ${estilos.filtrosAbierto}` : estilos.filtros}
         aria-labelledby={`${id}-titulo`}
         aria-busy={pendiente}
         tabIndex={-1}
         {...(abierto ? { role: "dialog", "aria-modal": true } : {})}
       >
-        <div className="filtros__cabecera">
+        <div className={estilos.filtrosCabecera}>
           <h2 id={`${id}-titulo`} className="titular-h4">
             {textos.titulo}
           </h2>
-          <button type="button" className="enlace-boton" onClick={() => iniciar(() => router.push("/explorar", { scroll: false }))}>
+          <button type="button" className={botones.enlaceBoton} onClick={() => iniciar(() => router.push(RUTAS.explorar, { scroll: false }))}>
             {textos.botones.limpiar}
           </button>
-          <button type="button" className="boton-icono boton-icono--plano solo-movil" aria-label={textos.cerrar} onClick={cerrar}>
+          <button type="button" className={`${botones.botonIcono} ${botones.botonIconoPlano} solo-movil`} aria-label={textos.cerrar} onClick={cerrar}>
             <Icono nombre="x" tamano={18} />
           </button>
         </div>
 
-        <fieldset className="filtros__grupo">
+        <fieldset className={estilos.filtrosGrupo}>
           <legend>{textos.categoria}</legend>
-          <ul className="filtros__categorias">
+          <ul className={estilos.filtrosCategorias}>
             {categorias.map((c) => {
               const activa = filtros.categoria === c.id;
               return (
                 <li key={c.id}>
-                  <label className="casilla">
+                  <label className={`${campos.casilla} ${estilos.filtrosCasilla}`}>
                     <input
                       type="checkbox"
                       checked={activa}
                       onChange={() => aplicar({ categoria: activa ? undefined : c.id })}
                     />
-                    <span className="casilla__caja" aria-hidden="true">
+                    <span className={`${campos.casillaCaja} ${estilos.filtrosCasillaCaja}`} aria-hidden="true">
                       <Icono nombre="check" tamano={12} />
                     </span>
-                    <span className="casilla__texto">{c.nombre}</span>
-                    <span className="casilla__cantidad">{c.eventos}</span>
+                    <span className={campos.casillaTexto}>{c.nombre}</span>
+                    <span className={`${campos.casillaCantidad} ${estilos.filtrosCasillaCantidad}`}>{c.eventos}</span>
                   </label>
                 </li>
               );
@@ -149,16 +154,16 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
           </ul>
         </fieldset>
 
-        <fieldset className="filtros__grupo">
+        <fieldset className={estilos.filtrosGrupo}>
           <legend>{textos.fecha.titulo}</legend>
-          <div className="pastillas">
+          <div className={etiquetas.pastillas}>
             {opcionesFecha.map((o) => {
               const activa = filtros.fecha === o.valor;
               return (
                 <button
                   key={o.valor}
                   type="button"
-                  className="pastilla"
+                  className={etiquetas.pastilla}
                   aria-pressed={activa}
                   onClick={() => aplicar({ fecha: activa ? undefined : o.valor })}
                 >
@@ -168,16 +173,16 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
             })}
           </div>
           {filtros.fecha === "rango" && (
-            <div className="filtros__rango">
+            <div className={estilos.filtrosRango}>
               <label>
                 <span>{textos.desde}</span>
-                <input type="date" className="campo" defaultValue={filtros.desde} onChange={(e) => aplicar({ desde: e.target.value || undefined })} />
+                <input type="date" className={`${campos.campo} ${estilos.filtrosRangoCampo}`} defaultValue={filtros.desde} onChange={(e) => aplicar({ desde: e.target.value || undefined })} />
               </label>
               <label>
                 <span>{textos.hasta}</span>
                 <input
                   type="date"
-                  className="campo"
+                  className={`${campos.campo} ${estilos.filtrosRangoCampo}`}
                   defaultValue={filtros.hasta}
                   min={filtros.desde}
                   onChange={(e) => aplicar({ hasta: e.target.value || undefined })}
@@ -187,12 +192,12 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
           )}
         </fieldset>
 
-        <div className="filtros__grupo">
-          <label htmlFor={`${id}-ciudad`} className="filtros__leyenda">
+        <div className={estilos.filtrosGrupo}>
+          <label htmlFor={`${id}-ciudad`} className={estilos.filtrosLeyenda}>
             {textos.ciudad}
           </label>
-          <div className="selector">
-            <select id={`${id}-ciudad`} className="campo" value={filtros.ciudad ?? ""} onChange={(e) => aplicar({ ciudad: e.target.value || undefined })}>
+          <div className={campos.selector}>
+            <select id={`${id}-ciudad`} className={campos.campo} value={filtros.ciudad ?? ""} onChange={(e) => aplicar({ ciudad: e.target.value || undefined })}>
               <option value="">{textos.todasLasCiudades}</option>
               {ciudades.map((c) => (
                 <option key={c.nombre} value={c.nombre}>
@@ -204,14 +209,14 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
           </div>
         </div>
 
-        <div className="filtros__grupo">
-          <label htmlFor={`${id}-precio`} className="filtros__leyenda">
+        <div className={estilos.filtrosGrupo}>
+          <label htmlFor={`${id}-precio`} className={estilos.filtrosLeyenda}>
             {textos.precio}
           </label>
           <input
             id={`${id}-precio`}
             type="range"
-            className="deslizador"
+            className={campos.deslizador}
             min={precio.minimo}
             max={precio.maximo}
             step={5000}
@@ -219,14 +224,14 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
             aria-valuetext={formatoPrecio(precioMax)}
             onChange={(e) => setPrecioMax(Number(e.target.value))}
           />
-          <div className="filtros__precios">
+          <div className={estilos.filtrosPrecios}>
             <span>{formatoPrecio(precio.minimo)}</span>
             <span>{formatoPrecio(precioMax)}</span>
           </div>
         </div>
 
-        <div className="filtros__pie solo-movil">
-          <button type="button" className="boton boton--primario boton--bloque" onClick={cerrar} disabled={pendiente}>
+        <div className={`${estilos.filtrosPie} solo-movil`}>
+          <button type="button" className={`${botones.boton} ${botones.botonPrimario} ${botones.botonBloque}`} onClick={cerrar} disabled={pendiente}>
             {fmt(textos.botones.verResultados, { cantidad: total })}
           </button>
         </div>

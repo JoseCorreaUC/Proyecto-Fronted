@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Icono from "./Icono";
+import botones from "./ui/Boton.module.css";
+import estilos from "./MenuMovil.module.css";
 
 interface Props {
   abrir: string;
@@ -39,7 +41,7 @@ export default function MenuMovil({ abrir, cerrar, children, cabecera }: Props) 
       <button
         ref={boton}
         type="button"
-        className="boton-icono boton-icono--plano solo-movil"
+        className={`${botones.botonIcono} ${botones.botonIconoPlano} solo-movil`}
         aria-label={abrir}
         aria-expanded={abierto}
         onClick={() => setAbierto(true)}
@@ -49,7 +51,7 @@ export default function MenuMovil({ abrir, cerrar, children, cabecera }: Props) 
 
       {abierto && (
         <div
-          className="menu-movil-fondo"
+          className={estilos.menuMovilFondo}
           aria-hidden="true"
           onClick={() => {
             setAbierto(false);
@@ -60,7 +62,9 @@ export default function MenuMovil({ abrir, cerrar, children, cabecera }: Props) 
       {abierto && (
         <div
           ref={hoja}
-          className="menu-movil"
+          className={estilos.menuMovil}
+          // Marca para los estilos que cambian dentro del menú (Accesibilidad, Logo, Boton).
+          data-menu-movil
           role="dialog"
           aria-modal="true"
           aria-label={abrir}
@@ -69,11 +73,11 @@ export default function MenuMovil({ abrir, cerrar, children, cabecera }: Props) 
             if ((e.target as HTMLElement).closest("a")) setAbierto(false);
           }}
         >
-          <div className="menu-movil__cabecera">
+          <div className={estilos.menuMovilCabecera}>
             {cabecera}
             <button
               type="button"
-              className="boton-icono boton-icono--plano"
+              className={`${botones.botonIcono} ${botones.botonIconoPlano}`}
               aria-label={cerrar}
               onClick={() => {
                 setAbierto(false);

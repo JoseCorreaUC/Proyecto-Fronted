@@ -1,0 +1,51 @@
+.orden {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: var(--espacio-1);
+  height: 36px;
+  padding-inline: var(--espacio-3) var(--espacio-2);
+  border: 1px solid var(--borde-sutil);
+  border-radius: var(--radio-md);
+  background: var(--fondo-superficie);
+  font-size: 0.75rem;
+}
+
+.orden:focus-within {
+  box-shadow: var(--foco);
+}
+
+.ordenEtiqueta {
+  color: var(--texto-secundario);
+}
+
+.orden select {
+  appearance: none;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-weight: 500;
+  padding-right: var(--espacio-4);
+  cursor: pointer;
+}
+
+.orden :global(.icono) {
+  position: absolute;
+  right: var(--espacio-2);
+  pointer-events: none;
+}
+
+@media (max-width: 767px) {
+  .orden {
+    border: 0;
+    padding-inline: 0 var(--espacio-2);
+    background: transparent;
+  }
+  .ordenEtiqueta {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+  }
+}

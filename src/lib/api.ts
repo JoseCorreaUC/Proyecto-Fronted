@@ -1,9 +1,18 @@
 import "server-only";
+import { getApiUrl, getSimulacion } from "./config";
 
 // Cliente de la API de Taquilla. Solo se usa en el servidor (Server Components y Server Actions).
+// La dirección base sale de la variable de entorno API_URL (ver src/lib/config.ts).
 
-export const API_URL =
-  process.env.API_URL ?? process.env.NEXT_PUBLIC_API_URL ?? "https://yanethm-taquilla-api.fly.dev/api/v1";
+/** Rutas de la API según el contrato. Se suman a la dirección base. */
+export const ENDPOINTS = {
+  categorias: "/categorias",
+  ciudades: "/ciudades",
+  eventos: "/eventos",
+  eventosDestacados: "/eventos/destacados",
+  sesion: "/sesion",
+  textos: "/textos",
+} as const;
 
 /** Error con la forma del contrato: `{ error: { codigo, mensaje, campos } }`. */
 export class ApiError extends Error {
@@ -38,7 +47,7 @@ interface Opciones {
 export async function api<T>(ruta: string, opciones: Opciones = {}): Promise<T> {
   const { metodo = "GET", parametros, cuerpo, token, revalidar = false } = opciones;
 
-  const url = new URL(API_URL + ruta);
+  const url = new URL(getApiUrl() + ruta);
   for (const [clave, valor] of Object.entries(parametros ?? {})) {
     if (valor !== undefined && valor !== null && valor !== "") url.searchParams.set(clave, String(valor));
   }
@@ -47,8 +56,9 @@ export async function api<T>(ruta: string, opciones: Opciones = {}): Promise<T> 
   if (cuerpo !== undefined) cabeceras["Content-Type"] = "application/json";
   if (token) cabeceras.Authorization = `Bearer ${token}`;
   // Para ver los estados de carga y error en desarrollo (ver CONTRATO.md, sección 1).
-  if (process.env.API_SIMULAR_LATENCIA) cabeceras["X-Simular-Latencia"] = process.env.API_SIMULAR_LATENCIA;
-  if (process.env.API_SIMULAR_ERROR) cabeceras["X-Simular-Error"] = process.env.API_SIMULAR_ERROR;
+  const simulacion = getSimulacion();
+  if (simulacion.latencia) cabeceras["X-Simular-Latencia"] = simulacion.latencia;
+  if (simulacion.error) cabeceras["X-Simular-Error"] = simulacion.error;
 
   const pedir = () =>
     fetch(url, {
@@ -146,9 +156,9 @@ export interface Usuario {
 // ---------- Endpoints del Sprint 1 ----------
 
 // Categorías y ciudades cambian poco: se guardan 5 minutos en caché.
-export const getCategorias = () => api<Lista<Categoria>>("/categorias", { revalidar: 300 });
-export const getCiudades = () => api<Lista<Ciudad>>("/ciudades", { revalidar: 300 });
-export const getDestacados = () => api<Lista<EventoResumen>>("/eventos/destacados", { revalidar: 60 });
+export const getCategorias = () => api<Lista<Categoria>>(ENDPOINTS.categorias, { revalidar: 300 });
+export const getCiudades = () => api<Lista<Ciudad>>(ENDPOINTS.ciudades, { revalidar: 300 });
+export const getDestacados = () => api<Lista<EventoResumen>>(ENDPOINTS.eventosDestacados, { revalidar: 60 });
 
 export interface FiltrosEventos {
   q?: string;
@@ -162,5 +172,6 @@ export interface FiltrosEventos {
   porPagina?: number;
 }
 
-export const getEventos = (filtros: FiltrosEventos) =>
-  api<ListaPaginada<EventoResumen>>("/eventos", { parametros: { ...filtros }, revalidar: 30 });
+/** `revalidar`: segundos de caché (30 por defecto; el rango de precios usa más). */
+export const getEventos = (filtros: FiltrosEventos, revalidar = 30) =>
+  api<ListaPaginada<EventoResumen>>(ENDPOINTS.eventos, { parametros: { ...filtros }, revalidar });

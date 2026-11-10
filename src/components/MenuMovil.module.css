@@ -1,0 +1,52 @@
+/* Fondo oscuro detrás del menú: deja ver la página y al tocarlo se cierra el menú. */
+.menuMovilFondo {
+  position: fixed;
+  inset: 0;
+  z-index: 49;
+  background: #14141473;
+  animation: aparecer 200ms ease;
+}
+
+/* Panel que sale desde la derecha por encima de la página. */
+.menuMovil {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  width: min(85vw, 340px);
+  padding: 0 var(--espacio-4) var(--espacio-6);
+  background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
+  overflow-y: auto;
+  animation: entrar-derecha 250ms ease;
+}
+
+.menuMovilCabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 56px;
+}
+
+@keyframes entrar-derecha {
+  from {
+    translate: 100% 0;
+  }
+}
+
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
+}
+
+
+/* La barra del inicio es oscura en el móvil, pero el menú conserva el texto oscuro. */
+@media (max-width: 767px) {
+  body:has([data-hero]) [data-navbar] .menuMovil {
+    color: var(--texto-principal);
+  }
+}

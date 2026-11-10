@@ -2,6 +2,8 @@ import Link from "next/link";
 import type { Textos } from "@/lib/textos";
 import { fmt } from "@/lib/formato";
 import Logo from "./Logo";
+import { RUTAS } from "@/lib/rutas";
+import estilos from "./Footer.module.css";
 
 export default function Footer({ textos }: { textos: Textos }) {
   const f = textos.footer;
@@ -9,38 +11,38 @@ export default function Footer({ textos }: { textos: Textos }) {
     {
       titulo: f.columnas.explora.titulo,
       enlaces: [
-        { href: "/", texto: f.columnas.explora.enlaces.inicio },
-        { href: "/explorar", texto: f.columnas.explora.enlaces.explorar },
+        { href: RUTAS.inicio, texto: f.columnas.explora.enlaces.inicio },
+        { href: RUTAS.explorar, texto: f.columnas.explora.enlaces.explorar },
       ],
     },
     {
       titulo: f.columnas.cuenta.titulo,
       enlaces: [
-        { href: "/ingresar", texto: f.columnas.cuenta.enlaces.ingresar },
-        { href: "/registro", texto: f.columnas.cuenta.enlaces.crearCuenta },
+        { href: RUTAS.ingresar, texto: f.columnas.cuenta.enlaces.ingresar },
+        { href: RUTAS.registro, texto: f.columnas.cuenta.enlaces.crearCuenta },
       ],
     },
     {
       titulo: f.columnas.legal.titulo,
       enlaces: [
-        { href: "/terminos", texto: f.columnas.legal.enlaces.terminos },
-        { href: "/accesibilidad", texto: f.columnas.legal.enlaces.accesibilidad },
+        { href: RUTAS.terminos, texto: f.columnas.legal.enlaces.terminos },
+        { href: RUTAS.accesibilidad, texto: f.columnas.legal.enlaces.accesibilidad },
       ],
     },
   ];
 
   return (
-    <footer className="footer">
+    <footer className={estilos.footer}>
       <div className="contenedor">
-        <div className="footer__superior">
-          <div className="footer__marca">
+        <div className={estilos.footerSuperior}>
+          <div className={estilos.footerMarca}>
             <Logo texto={textos.navbar.logo.texto} aria={textos.navbar.logo.aria} variante="inverso" />
             <p>{f.lema}</p>
           </div>
-          <div className="footer__columnas">
+          <div className={estilos.footerColumnas}>
             {columnas.map((columna) => (
               <nav key={columna.titulo} aria-label={columna.titulo}>
-                <h2 className="footer__titulo">{columna.titulo}</h2>
+                <h2 className={estilos.footerTitulo}>{columna.titulo}</h2>
                 <ul>
                   {columna.enlaces.map((enlace) => (
                     <li key={enlace.href}>
@@ -52,7 +54,7 @@ export default function Footer({ textos }: { textos: Textos }) {
             ))}
           </div>
         </div>
-        <div className="footer__inferior">
+        <div className={estilos.footerInferior}>
           <p>{fmt(f.legal.derechos, { anio: new Date().getFullYear() })}</p>
           <p>{f.legal.nota}</p>
         </div>

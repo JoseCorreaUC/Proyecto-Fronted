@@ -1,15 +1,20 @@
 import Link from "next/link";
 import type { Metadata } from "next";
-import { api, getCategorias, getCiudades, getEventos, type EventoResumen, type ListaPaginada } from "@/lib/api";
+import { getCategorias, getCiudades, getEventos } from "@/lib/api";
 import { getIdioma, getTextos, type Textos } from "@/lib/textos";
 import { hayFiltros, leerFiltros, parametrosApi, urlExplorar, type Filtros } from "@/lib/filtros";
 import { fmt, formatoPrecio, plural } from "@/lib/formato";
+import { RUTAS } from "@/lib/rutas";
 import Icono from "@/components/Icono";
 import TarjetaEvento, { nombreCategoria } from "@/components/TarjetaEvento";
 import ErrorSeccion from "@/components/ErrorSeccion";
 import { Estado, EnlaceBoton } from "@/components/Estados";
 import PanelFiltros from "@/components/explorar/PanelFiltros";
 import SelectorOrden from "@/components/explorar/SelectorOrden";
+import buscadores from "@/components/ui/Buscador.module.css";
+import tarjetas from "@/components/TarjetaEvento.module.css";
+import etiquetas from "@/components/ui/Etiqueta.module.css";
+import estilos from "./page.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.explorar;
@@ -19,7 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /** Precio más bajo y más alto del catálogo, para los extremos del control de precio. */
 async function getRangoPrecios() {
   try {
-    const todos = await api<ListaPaginada<EventoResumen>>("/eventos", { parametros: { porPagina: 100 }, revalidar: 300 });
+    const todos = await getEventos({ porPagina: 100 }, 300);
     const precios = todos.datos.map((e) => e.precioDesde);
     return {
       minimo: Math.floor(Math.min(...precios) / 10000) * 10000,
@@ -52,27 +57,27 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
   const entre = resto.split("{fin}")[0];
 
   return (
-    <div className="contenedor explorar">
-      <nav aria-label={textos.componentes.migas.explorar} className="migas solo-escritorio">
+    <div className={`contenedor ${estilos.explorar}`}>
+      <nav aria-label={textos.componentes.migas.explorar} className={`${estilos.migas} solo-escritorio`}>
         <ol>
           <li>
-            <Link href="/">{textos.componentes.migas.inicio}</Link>
+            <Link href={RUTAS.inicio}>{textos.componentes.migas.inicio}</Link>
           </li>
           <li aria-current="page">{textos.componentes.migas.explorar}</li>
         </ol>
       </nav>
 
-      <header className="explorar__cabecera">
+      <header className={estilos.explorarCabecera}>
         <h1 className="titular-h1">{textos.footer.columnas.explora.enlaces.explorar}</h1>
         {resultado.ok && (
-          <p className="explorar__total solo-escritorio" aria-live="polite">
+          <p className={`${estilos.explorarTotal} solo-escritorio`} aria-live="polite">
             {plural(t.resultados, total)}
           </p>
         )}
       </header>
 
-      <div className="explorar__buscador solo-movil">
-        <form action="/explorar" role="search" className="buscador-nav buscador-nav--movil">
+      <div className={`${estilos.explorarBuscador} solo-movil`}>
+        <form action={RUTAS.explorar} role="search" className={`${buscadores.buscadorNav} ${buscadores.buscadorNavMovil}`}>
           <Icono nombre="search" tamano={14} />
           <input type="search" name="q" defaultValue={filtros.q} placeholder={textos.paginas.inicio.hero.buscador.placeholders.movil} aria-label={textos.navbar.buscador.aria} maxLength={80} />
           {filtros.categoria && <input type="hidden" name="categoria" value={filtros.categoria} />}
@@ -80,7 +85,7 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
         </form>
       </div>
 
-      <div className="explorar__cuerpo">
+      <div className={estilos.explorarCuerpo}>
         <PanelFiltros
           filtros={filtros}
           total={total}
@@ -97,11 +102,11 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
           }}
         />
 
-        <section className="explorar__resultados" aria-label={textos.footer.columnas.explora.enlaces.explorar}>
-          <div className="explorar__barra">
+        <section aria-label={textos.footer.columnas.explora.enlaces.explorar}>
+          <div className={estilos.explorarBarra}>
             <FiltrosActivos filtros={filtros} textos={textos} />
-            <div className="explorar__barra-derecha">
-              {resultado.ok && <span className="explorar__total-corto solo-movil">{plural(t.resultadosCorto, total)}</span>}
+            <div className={estilos.explorarBarraDerecha}>
+              {resultado.ok && <span className={`${estilos.explorarTotalCorto} solo-movil`}>{plural(t.resultadosCorto, total)}</span>}
               <SelectorOrden filtros={filtros} etiqueta={t.orden.etiqueta} opciones={t.orden.opciones} />
             </div>
           </div>
@@ -113,11 +118,11 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
               icono="search"
               titulo={t.vacio.titulo}
               texto={t.vacio.texto}
-              accion={hayFiltros(filtros) ? <EnlaceBoton href="/explorar">{t.vacio.botones.limpiar}</EnlaceBoton> : undefined}
+              accion={hayFiltros(filtros) ? <EnlaceBoton href={RUTAS.explorar}>{t.vacio.botones.limpiar}</EnlaceBoton> : undefined}
             />
           ) : (
             <>
-              <ul className="rejilla-eventos rejilla-eventos--tres">
+              <ul className={`${tarjetas.rejillaEventos} ${tarjetas.rejillaEventosTres}`}>
                 {resultado.datos.map((evento) => (
                   <li key={evento.id}>
                     <TarjetaEvento evento={evento} textos={textos} idioma={idioma} nivelTitulo="h2" />
@@ -145,12 +150,12 @@ function FiltrosActivos({ filtros, textos }: { filtros: Filtros; textos: Textos 
   if (chips.length === 0) return <div />;
 
   return (
-    <ul className="chips chips--activos">
+    <ul className={`${etiquetas.chips} ${etiquetas.chipsActivos}`}>
       {chips.map((chip) => (
         <li key={chip.clave}>
           <Link
             href={urlExplorar({ ...filtros, ...chip.quitar, pagina: undefined })}
-            className="chip chip--quitar"
+            className={`${etiquetas.chip} ${etiquetas.chipQuitar}`}
             scroll={false}
             aria-label={`${textos.general.acciones.eliminar}: ${chip.texto}`}
           >
@@ -177,27 +182,27 @@ function Paginacion({ filtros, paginas, textos }: { filtros: Filtros; paginas: n
   const url = (pagina: number) => urlExplorar({ ...filtros, pagina });
 
   return (
-    <nav className="paginacion" aria-label={aria.etiqueta}>
+    <nav className={estilos.paginacion} aria-label={aria.etiqueta}>
       {actual > 1 ? (
-        <Link href={url(actual - 1)} className="paginacion__boton" aria-label={aria.anterior}>
+        <Link href={url(actual - 1)} className={estilos.paginacionBoton} aria-label={aria.anterior}>
           <Icono nombre="chevl" tamano={14} />
         </Link>
       ) : (
-        <span className="paginacion__boton" aria-disabled="true">
+        <span className={estilos.paginacionBoton} aria-disabled="true">
           <Icono nombre="chevl" tamano={14} />
         </span>
       )}
       <ol>
         {numeros.map((n, i) =>
           n === "…" ? (
-            <li key={`p${i}`} aria-hidden="true" className="paginacion__puntos">
+            <li key={`p${i}`} aria-hidden="true" className={estilos.paginacionPuntos}>
               …
             </li>
           ) : (
             <li key={n}>
               <Link
                 href={url(n)}
-                className="paginacion__boton"
+                className={estilos.paginacionBoton}
                 aria-current={n === actual ? "page" : undefined}
                 aria-label={fmt(n === actual ? aria.paginaActual : aria.irAPagina, { numero: n })}
               >
@@ -208,11 +213,11 @@ function Paginacion({ filtros, paginas, textos }: { filtros: Filtros; paginas: n
         )}
       </ol>
       {actual < paginas ? (
-        <Link href={url(actual + 1)} className="paginacion__boton" aria-label={aria.siguiente}>
+        <Link href={url(actual + 1)} className={estilos.paginacionBoton} aria-label={aria.siguiente}>
           <Icono nombre="chevr" tamano={14} />
         </Link>
       ) : (
-        <span className="paginacion__boton" aria-disabled="true">
+        <span className={estilos.paginacionBoton} aria-disabled="true">
           <Icono nombre="chevr" tamano={14} />
         </span>
       )}

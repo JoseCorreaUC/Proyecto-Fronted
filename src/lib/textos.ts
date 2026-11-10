@@ -1,7 +1,7 @@
 import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
-import { api } from "./api";
+import { api, ENDPOINTS } from "./api";
 import type textosReferencia from "./textos-referencia.json";
 
 // Todos los textos de la interfaz salen de GET /textos (ver CONTRATO.md, sección 2).
@@ -20,7 +20,7 @@ export const getIdioma = cache(async (): Promise<Idioma> => {
 
 export const getTextos = cache(async (): Promise<Textos> => {
   const idioma = await getIdioma();
-  const respuesta = await api<{ idioma: Idioma; textos: Textos }>("/textos", {
+  const respuesta = await api<{ idioma: Idioma; textos: Textos }>(ENDPOINTS.textos, {
     parametros: { idioma },
     revalidar: 3600,
   });

@@ -1,6 +1,7 @@
 // Filtros de la vista Explorar. Viven en la URL para no perderse al recargar o compartir el enlace.
 // Este archivo se usa en el servidor (para pedir los eventos) y en el cliente (para cambiar la URL).
 import { rangoDeFecha, type RangoFecha } from "./formato";
+import { RUTAS } from "./rutas";
 
 export type Orden = "fecha" | "precio" | "popularidad";
 export type Fecha = RangoFecha | "rango";
@@ -60,7 +61,7 @@ export function urlExplorar(filtros: Filtros) {
     p.set(clave, String(valor));
   }
   const texto = p.toString();
-  return texto ? `/explorar?${texto}` : "/explorar";
+  return texto ? `${RUTAS.explorar}?${texto}` : RUTAS.explorar;
 }
 
 /** Convierte los filtros de la URL en los parámetros de GET /eventos. */

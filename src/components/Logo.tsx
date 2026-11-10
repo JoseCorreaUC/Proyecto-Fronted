@@ -1,5 +1,7 @@
 import Link from "next/link";
 import Icono from "./Icono";
+import { RUTAS } from "@/lib/rutas";
+import estilos from "./Logo.module.css";
 
 interface Props {
   texto: string;
@@ -10,11 +12,11 @@ interface Props {
 
 export default function Logo({ texto, aria, variante = "normal" }: Props) {
   return (
-    <Link href="/" className={`logo logo--${variante}`} aria-label={aria}>
-      <span className="logo__marca" aria-hidden="true">
+    <Link href={RUTAS.inicio} className={variante === "inverso" ? `${estilos.logo} ${estilos.logoInverso}` : estilos.logo} aria-label={aria}>
+      <span className={estilos.logoMarca} aria-hidden="true">
         <Icono nombre="ticket" tamano={18} />
       </span>
-      <span className="logo__texto" aria-hidden="true">
+      <span aria-hidden="true">
         {texto}
       </span>
     </Link>

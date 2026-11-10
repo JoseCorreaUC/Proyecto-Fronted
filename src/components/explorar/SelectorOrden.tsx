@@ -4,6 +4,7 @@ import { useId, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { urlExplorar, type Filtros, type Orden } from "@/lib/filtros";
 import Icono from "../Icono";
+import estilos from "./SelectorOrden.module.css";
 
 interface Props {
   filtros: Filtros;
@@ -16,8 +17,8 @@ export default function SelectorOrden({ filtros, etiqueta, opciones }: Props) {
   const [, iniciar] = useTransition();
   const id = useId();
   return (
-    <div className="orden">
-      <label htmlFor={id} className="orden__etiqueta">
+    <div className={estilos.orden}>
+      <label htmlFor={id} className={estilos.ordenEtiqueta}>
         {etiqueta}
       </label>
       <select

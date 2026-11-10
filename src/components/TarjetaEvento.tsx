@@ -4,6 +4,10 @@ import type { Textos } from "@/lib/textos";
 import { fmt, formatoDia, formatoHora, formatoPrecio, type Idioma } from "@/lib/formato";
 import Afiche from "./Afiche";
 import Icono from "./Icono";
+import { RUTAS } from "@/lib/rutas";
+import etiquetas from "./ui/Etiqueta.module.css";
+import botones from "./ui/Boton.module.css";
+import estilos from "./TarjetaEvento.module.css";
 
 interface Props {
   evento: EventoResumen;
@@ -22,7 +26,7 @@ export function nombreCategoria(textos: Textos, id: string, singular = false) {
 
 export default function TarjetaEvento({ evento, textos, idioma, variante = "normal", nivelTitulo = "h3" }: Props) {
   const Titulo = nivelTitulo;
-  const href = `/eventos/${evento.slug}`;
+  const href = RUTAS.evento(evento.slug);
   const fechaHora = fmt(textos.general.formatos.fechaYHora, {
     fecha: formatoDia(evento.fecha, idioma),
     hora: formatoHora(evento.fecha, idioma),
@@ -33,23 +37,23 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
   });
   const disp = textos.componentes.etiquetas.disponibilidad;
   const estado = evento.disponibilidad.agotado
-    ? { texto: disp.agotada, clase: "etiqueta--error" }
+    ? { texto: disp.agotada, clase: etiquetas.etiquetaError }
     : evento.disponibilidad.ultimasEntradas
-      ? { texto: disp.ultimasEntradas, clase: "etiqueta--alerta" }
+      ? { texto: disp.ultimasEntradas, clase: etiquetas.etiquetaAlerta }
       : null;
 
   if (variante === "compacta") {
     return (
-      <article className="tarjeta-compacta">
-        <Afiche afiche={evento.afiche} className="tarjeta-compacta__afiche" />
-        <div className="tarjeta-compacta__cuerpo">
-          <Titulo className="tarjeta-compacta__titulo">
+      <article className={estilos.tarjetaCompacta}>
+        <Afiche afiche={evento.afiche} className={estilos.tarjetaCompactaAfiche} />
+        <div>
+          <Titulo className={estilos.tarjetaCompactaTitulo}>
             <Link href={href} className="enlace-estirado">
               {evento.titulo}
             </Link>
           </Titulo>
-          <p className="tarjeta-compacta__meta">{fechaHora}</p>
-          <p className="tarjeta-compacta__precio">
+          <p className={estilos.tarjetaCompactaMeta}>{fechaHora}</p>
+          <p className={estilos.tarjetaCompactaPrecio}>
             {fmt(textos.componentes.precio.desdePrecio, { precio: formatoPrecio(evento.precioDesde) })}
           </p>
         </div>
@@ -58,15 +62,15 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
   }
 
   return (
-    <article className="tarjeta-evento">
-      <div className="tarjeta-evento__media">
-        <Afiche afiche={evento.afiche} className="tarjeta-evento__afiche" />
-        {estado && <span className={`etiqueta etiqueta--sobre ${estado.clase}`}>{estado.texto}</span>}
+    <article className={estilos.tarjetaEvento}>
+      <div className={estilos.tarjetaEventoMedia}>
+        <Afiche afiche={evento.afiche} className={estilos.tarjetaEventoAfiche} />
+        {estado && <span className={`${etiquetas.etiqueta} ${etiquetas.etiquetaSobre} ${estado.clase}`}>{estado.texto}</span>}
       </div>
-      <div className="tarjeta-evento__cuerpo">
-        <span className="etiqueta">{nombreCategoria(textos, evento.categoria, true)}</span>
-        <Titulo className="tarjeta-evento__titulo">{evento.titulo}</Titulo>
-        <ul className="tarjeta-evento__meta">
+      <div className={estilos.tarjetaEventoCuerpo}>
+        <span className={etiquetas.etiqueta}>{nombreCategoria(textos, evento.categoria, true)}</span>
+        <Titulo className={estilos.tarjetaEventoTitulo}>{evento.titulo}</Titulo>
+        <ul className={estilos.tarjetaEventoMeta}>
           <li>
             <Icono nombre="calendar" tamano={14} />
             <time dateTime={evento.fecha}>{fechaHora}</time>
@@ -76,12 +80,12 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
             <span>{lugar}</span>
           </li>
         </ul>
-        <div className="tarjeta-evento__pie">
-          <p className="precio">
-            <span className="precio__etiqueta">{textos.componentes.precio.desde}</span>
-            <span className="precio__valor">{formatoPrecio(evento.precioDesde)}</span>
+        <div className={estilos.tarjetaEventoPie}>
+          <p className={estilos.precio}>
+            <span className={estilos.precioEtiqueta}>{textos.componentes.precio.desde}</span>
+            <span className={estilos.precioValor}>{formatoPrecio(evento.precioDesde)}</span>
           </p>
-          <Link href={href} className="boton boton--secundario boton--pequeno enlace-estirado" aria-label={`${textos.paginas.inicio.tarjeta.botones.verEvento}: ${evento.titulo}`}>
+          <Link href={href} className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno} enlace-estirado`} aria-label={`${textos.paginas.inicio.tarjeta.botones.verEvento}: ${evento.titulo}`}>
             {textos.paginas.inicio.tarjeta.botones.verEvento}
           </Link>
         </div>

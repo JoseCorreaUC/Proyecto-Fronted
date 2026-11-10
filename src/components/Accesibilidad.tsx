@@ -2,6 +2,10 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import Icono from "./Icono";
+import { RUTAS } from "@/lib/rutas";
+import botones from "./ui/Boton.module.css";
+import campos from "./ui/Campo.module.css";
+import estilos from "./Accesibilidad.module.css";
 
 // Preferencias del panel de accesibilidad. Se guardan en este dispositivo (localStorage)
 // y se aplican como atributos en <html>; ver el script inicial en layout.tsx.
@@ -62,11 +66,9 @@ interface Props {
   textos: TextosAccesibilidad;
   etiquetaBoton: string;
   cerrar: string;
-  /** Clase extra para el botón (en el menú móvil se ve distinto). */
-  claseBoton?: string;
 }
 
-export default function Accesibilidad({ textos, etiquetaBoton, cerrar, claseBoton }: Props) {
+export default function Accesibilidad({ textos, etiquetaBoton, cerrar }: Props) {
   const [abierto, setAbierto] = useState(false);
   const [pref, setPref] = useState<Preferencias | null>(null);
   const boton = useRef<HTMLButtonElement>(null);
@@ -121,11 +123,11 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar, claseBoto
   ];
 
   return (
-    <div className="accesibilidad">
+    <div className={estilos.accesibilidad}>
       <button
         ref={boton}
         type="button"
-        className={claseBoton ?? "boton-icono"}
+        className={botones.botonIcono}
         aria-label={etiquetaBoton}
         aria-expanded={abierto}
         aria-controls={abierto ? id : undefined}
@@ -138,14 +140,14 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar, claseBoto
       </button>
 
       {abierto && (
-        <div ref={panel} id={id} className="panel-accesibilidad" role="dialog" aria-labelledby={`${id}-titulo`} tabIndex={-1}>
-          <div className="panel-accesibilidad__cabecera">
+        <div ref={panel} id={id} className={estilos.panelAccesibilidad} role="dialog" aria-labelledby={`${id}-titulo`} tabIndex={-1}>
+          <div className={estilos.panelAccesibilidadCabecera}>
             <h2 id={`${id}-titulo`} className="titular-h4">
               {textos.titulo}
             </h2>
             <button
               type="button"
-              className="boton-icono boton-icono--plano"
+              className={`${botones.botonIcono} ${botones.botonIconoPlano}`}
               aria-label={cerrar}
               onClick={() => {
                 setAbierto(false);
@@ -156,24 +158,24 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar, claseBoto
             </button>
           </div>
 
-          <p className="panel-accesibilidad__subtitulo">{textos.tamanoTexto}</p>
-          <div className="tamano-texto">
+          <p className={estilos.panelAccesibilidadSubtitulo}>{textos.tamanoTexto}</p>
+          <div className={estilos.tamanoTexto}>
             <button
               type="button"
-              className="boton-icono boton-icono--cuadrado"
+              className={`${botones.botonIcono} ${botones.botonIconoCuadrado}`}
               aria-label={textos.aria.disminuirTexto}
               disabled={p.tamano <= 0}
               onClick={() => cambiar({ tamano: p.tamano - 1 })}
             >
               <Icono nombre="minus" tamano={14} />
             </button>
-            <span className="tamano-texto__muestra" aria-live="polite">
+            <span className={estilos.tamanoTextoMuestra} aria-live="polite">
               <span style={{ fontSize: `${(TAMANOS[p.tamano] / 100) * 16}px` }}>{textos.muestraTamano}</span>
               <span className="solo-lectores">{TAMANOS[p.tamano]} %</span>
             </span>
             <button
               type="button"
-              className="boton-icono boton-icono--cuadrado"
+              className={`${botones.botonIcono} ${botones.botonIconoCuadrado}`}
               aria-label={textos.aria.aumentarTexto}
               disabled={p.tamano >= TAMANOS.length - 1}
               onClick={() => cambiar({ tamano: p.tamano + 1 })}
@@ -182,21 +184,21 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar, claseBoto
             </button>
           </div>
 
-          <ul className="panel-accesibilidad__opciones">
+          <ul className={estilos.panelAccesibilidadOpciones}>
             {interruptores.map(({ clave, texto }) => (
-              <li key={clave} className="interruptor-fila">
+              <li key={clave} className={estilos.interruptorFila}>
                 <span>
-                  <span className="interruptor-fila__nombre" id={`${id}-${clave}`}>
+                  <span className={estilos.interruptorFilaNombre} id={`${id}-${clave}`}>
                     {texto.nombre}
                   </span>
-                  <span className="interruptor-fila__descripcion" id={`${id}-${clave}-d`}>
+                  <span className={estilos.interruptorFilaDescripcion} id={`${id}-${clave}-d`}>
                     {texto.descripcion}
                   </span>
                 </span>
                 <button
                   type="button"
                   role="switch"
-                  className="interruptor"
+                  className={campos.interruptor}
                   aria-checked={p[clave]}
                   aria-labelledby={`${id}-${clave}`}
                   aria-describedby={`${id}-${clave}-d`}
@@ -206,12 +208,12 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar, claseBoto
             ))}
           </ul>
 
-          <p className="panel-accesibilidad__nota">{textos.nota}</p>
-          <div className="panel-accesibilidad__pie">
-            <a href="/accesibilidad" className="enlace-subrayado">
+          <p className={estilos.panelAccesibilidadNota}>{textos.nota}</p>
+          <div className={estilos.panelAccesibilidadPie}>
+            <a href={RUTAS.accesibilidad} className={botones.enlaceSubrayado}>
               {textos.enlaces.declaracion}
             </a>
-            <button type="button" className="boton boton--secundario boton--pequeno" onClick={restablecer}>
+            <button type="button" className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno}`} onClick={restablecer}>
               {textos.botones.restablecer}
             </button>
           </div>

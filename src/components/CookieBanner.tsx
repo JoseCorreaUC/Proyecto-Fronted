@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { guardarConsentimiento } from "@/app/acciones";
+import botones from "./ui/Boton.module.css";
+import estilos from "./CookieBanner.module.css";
 
 interface Props {
   textos: { titulo: string; texto: string; botones: { rechazar: string; aceptar: string } };
@@ -20,16 +22,16 @@ export default function CookieBanner({ textos }: Props) {
     });
 
   return (
-    <section className="aviso-cookies" aria-labelledby="aviso-cookies-titulo" role="region">
-      <div className="aviso-cookies__texto">
+    <section className={estilos.avisoCookies} aria-labelledby="aviso-cookies-titulo" role="region">
+      <div>
         <h2 id="aviso-cookies-titulo">{textos.titulo}</h2>
         <p>{textos.texto}</p>
       </div>
-      <div className="aviso-cookies__botones">
-        <button type="button" className="boton boton--secundario boton--pequeno" disabled={pendiente} onClick={() => responder("rechazado")}>
+      <div className={estilos.avisoCookiesBotones}>
+        <button type="button" className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno}`} disabled={pendiente} onClick={() => responder("rechazado")}>
           {textos.botones.rechazar}
         </button>
-        <button type="button" className="boton boton--primario boton--pequeno" disabled={pendiente} onClick={() => responder("aceptado")}>
+        <button type="button" className={`${botones.boton} ${botones.botonPrimario} ${botones.botonPequeno}`} disabled={pendiente} onClick={() => responder("aceptado")}>
           {textos.botones.aceptar}
         </button>
       </div>
