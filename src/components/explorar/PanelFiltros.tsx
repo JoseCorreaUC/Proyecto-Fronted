@@ -116,7 +116,7 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
           <h2 id={`${id}-titulo`} className="titular-h4">
             {textos.titulo}
           </h2>
-          <button type="button" className="enlace-boton" onClick={() => iniciar(() => router.push("/eventos", { scroll: false }))}>
+          <button type="button" className="enlace-boton" onClick={() => iniciar(() => router.push("/explorar", { scroll: false }))}>
             {textos.botones.limpiar}
           </button>
           <button type="button" className="boton-icono boton-icono--plano solo-movil" aria-label={textos.cerrar} onClick={cerrar}>

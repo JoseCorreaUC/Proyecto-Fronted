@@ -42,14 +42,14 @@ export default function Navbar({ textos, idioma, usuario }: Props) {
                 <EnlaceNav href="/">{nav.enlaces.inicio}</EnlaceNav>
               </li>
               <li>
-                <EnlaceNav href="/eventos">{nav.enlaces.explorar}</EnlaceNav>
+                <EnlaceNav href="/explorar">{nav.enlaces.explorar}</EnlaceNav>
               </li>
             </ul>
           </nav>
         </div>
 
         <div className="navbar__derecha">
-          <form action="/eventos" role="search" className="buscador-nav solo-escritorio">
+          <form action="/explorar" role="search" className="buscador-nav solo-escritorio">
             <Icono nombre="search" tamano={14} />
             <input type="search" name="q" placeholder={nav.buscador.placeholder} aria-label={nav.buscador.aria} maxLength={80} />
           </form>
@@ -79,7 +79,7 @@ export default function Navbar({ textos, idioma, usuario }: Props) {
             </details>
           ) : (
             <>
-              <Link href="/eventos" className="boton-icono boton-icono--plano solo-movil" aria-label={nav.buscador.aria}>
+              <Link href="/explorar" className="boton-icono boton-icono--plano solo-movil" aria-label={nav.buscador.aria}>
                 <Icono nombre="search" tamano={18} />
               </Link>
               <Link href="/ingresar" className="boton boton--secundario boton--pequeno navbar__ingresar">
@@ -98,7 +98,7 @@ export default function Navbar({ textos, idioma, usuario }: Props) {
                   <EnlaceNav href="/">{movil.enlaces.inicio}</EnlaceNav>
                 </li>
                 <li>
-                  <EnlaceNav href="/eventos">{movil.enlaces.explorar}</EnlaceNav>
+                  <EnlaceNav href="/explorar">{movil.enlaces.explorar}</EnlaceNav>
                 </li>
               </ul>
             </nav>

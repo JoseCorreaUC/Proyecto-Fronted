@@ -15,13 +15,13 @@ interface Props {
   opcionesFecha: { valor: string; texto: string }[];
 }
 
-// Buscador del inicio. Es un formulario GET a /eventos, así que funciona aunque JavaScript no cargue.
+// Buscador del inicio. Es un formulario GET a /explorar, así que funciona aunque JavaScript no cargue.
 // Al cambiar "Dónde" también se actualiza la sección "Próximamente en {ciudad}" del inicio.
 export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }: Props) {
   const router = useRouter();
 
   return (
-    <form action="/eventos" role="search" className="hero-buscador">
+    <form action="/explorar" role="search" className="hero-buscador">
       <label className="hero-buscador__campo">
         <Icono nombre="search" tamano={16} />
         <span>

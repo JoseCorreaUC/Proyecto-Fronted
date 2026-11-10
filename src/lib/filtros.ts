@@ -60,7 +60,7 @@ export function urlExplorar(filtros: Filtros) {
     p.set(clave, String(valor));
   }
   const texto = p.toString();
-  return texto ? `/eventos?${texto}` : "/eventos";
+  return texto ? `/explorar?${texto}` : "/explorar";
 }
 
 /** Convierte los filtros de la URL en los parámetros de GET /eventos. */

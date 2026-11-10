@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 /** Precio más bajo y más alto del catálogo, para los extremos del control de precio. */
 async function getRangoPrecios() {
   try {
-    const todos = await api<ListaPaginada<EventoResumen>>("/eventos", { parametros: { porPagina: 100 }, revalidar: 300 });
+    const todos = await api<ListaPaginada<EventoResumen>>("/explorar", { parametros: { porPagina: 100 }, revalidar: 300 });
     const precios = todos.datos.map((e) => e.precioDesde);
     return {
       minimo: Math.floor(Math.min(...precios) / 10000) * 10000,
@@ -30,7 +30,7 @@ async function getRangoPrecios() {
   }
 }
 
-export default async function Explorar({ searchParams }: PageProps<"/eventos">) {
+export default async function Explorar({ searchParams }: PageProps<"/explorar">) {
   const filtros = leerFiltros(await searchParams);
   const [textos, idioma, categorias, ciudades, precio] = await Promise.all([
     getTextos(),
@@ -71,7 +71,7 @@ export default async function Explorar({ searchParams }: PageProps<"/eventos">) 
       </header>
 
       <div className="explorar__buscador solo-movil">
-        <form action="/eventos" role="search" className="buscador-nav buscador-nav--movil">
+        <form action="/explorar" role="search" className="buscador-nav buscador-nav--movil">
           <Icono nombre="search" tamano={14} />
           <input type="search" name="q" defaultValue={filtros.q} placeholder={textos.paginas.inicio.hero.buscador.placeholders.movil} aria-label={textos.navbar.buscador.aria} maxLength={80} />
           {filtros.categoria && <input type="hidden" name="categoria" value={filtros.categoria} />}
@@ -112,7 +112,7 @@ export default async function Explorar({ searchParams }: PageProps<"/eventos">) 
               icono="search"
               titulo={t.vacio.titulo}
               texto={t.vacio.texto}
-              accion={hayFiltros(filtros) ? <EnlaceBoton href="/eventos">{t.vacio.botones.limpiar}</EnlaceBoton> : undefined}
+              accion={hayFiltros(filtros) ? <EnlaceBoton href="/explorar">{t.vacio.botones.limpiar}</EnlaceBoton> : undefined}
             />
           ) : (
             <>

@@ -23,7 +23,7 @@ Abre http://localhost:3000. Sin configurar nada usa la API del curso. Para cambi
 | Vista | Ruta | Qué hace |
 | --- | --- | --- |
 | Inicio público | `/` | Hero con buscador y evento principal, categorías, destacados, próximos por ciudad. En móvil: chips, carrusel y "Este fin de semana" |
-| Explorar eventos | `/eventos` | Filtros por categoría, fecha, ciudad y precio guardados en la URL; orden; paginación; estado vacío |
+| Explorar eventos | `/explorar` | Filtros por categoría, fecha, ciudad y precio guardados en la URL; orden; paginación; estado vacío |
 
 En todas las vistas: textos en español e inglés desde `GET /textos`, aviso de cookies, panel de accesibilidad, menú móvil y estados de carga, vacío y error.
 

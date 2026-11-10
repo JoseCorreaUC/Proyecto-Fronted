@@ -10,7 +10,7 @@ export default function Footer({ textos }: { textos: Textos }) {
       titulo: f.columnas.explora.titulo,
       enlaces: [
         { href: "/", texto: f.columnas.explora.enlaces.inicio },
-        { href: "/eventos", texto: f.columnas.explora.enlaces.explorar },
+        { href: "/explorar", texto: f.columnas.explora.enlaces.explorar },
       ],
     },
     {

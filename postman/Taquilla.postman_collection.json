@@ -349,7 +349,7 @@
     },
     {
       "name": "3. Vista 2 · Explorar eventos",
-      "description": "Catálogo con filtros, orden y paginación. En el frontend los filtros viven en la URL de /eventos (CONTRATO.md, sección 4).",
+      "description": "Catálogo con filtros, orden y paginación. En el frontend los filtros viven en la URL de /explorar (CONTRATO.md, sección 4).",
       "item": [
         {
           "name": "Ciudades para el filtro",
@@ -449,7 +449,7 @@
                 }
               ]
             },
-            "description": "Lo que pide /eventos?categoria=conciertos&orden=precio en el frontend. 9 eventos por página (cuadrícula de 3 × 3 del diseño).",
+            "description": "Lo que pide /explorar?categoria=conciertos&orden=precio en el frontend. 9 eventos por página (cuadrícula de 3 × 3 del diseño).",
             "auth": {
               "type": "noauth"
             }

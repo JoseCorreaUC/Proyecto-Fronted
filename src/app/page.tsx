@@ -75,7 +75,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
                 <p className="hero__populares">
                   <span>{t.hero.buscador.populares}</span>
                   {populares.map((c) => (
-                    <Link key={c.id} href={`/eventos?categoria=${c.id}`}>
+                    <Link key={c.id} href={`/explorar?categoria=${c.id}`}>
                       {nombreCategoria(textos, c.id)}
                     </Link>
                   ))}
@@ -84,7 +84,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
             </div>
 
             {/* Buscador compacto del móvil */}
-            <form action="/eventos" role="search" className="buscador-movil solo-movil">
+            <form action="/explorar" role="search" className="buscador-movil solo-movil">
               <Icono nombre="search" tamano={16} />
               <label className="buscador-movil__campo">
                 <span className="solo-lectores">{t.hero.buscador.etiquetas.que}</span>
@@ -115,7 +115,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
             <ul className="categorias solo-escritorio">
               {categorias.datos.datos.map((c) => (
                 <li key={c.id}>
-                  <Link href={`/eventos?categoria=${c.id}`} className="categoria">
+                  <Link href={`/explorar?categoria=${c.id}`} className="categoria">
                     <span className="categoria__icono">
                       <Icono nombre={ICONO_CATEGORIA[c.id] ?? "ticket"} tamano={16} />
                     </span>
@@ -129,13 +129,13 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
             </ul>
             <ul className="chips solo-movil">
               <li>
-                <Link href="/eventos" className="chip chip--activo">
+                <Link href="/explorar" className="chip chip--activo">
                   {t.filtrosMovil.todos}
                 </Link>
               </li>
               {categorias.datos.datos.map((c) => (
                 <li key={c.id}>
-                  <Link href={`/eventos?categoria=${c.id}`} className="chip">
+                  <Link href={`/explorar?categoria=${c.id}`} className="chip">
                     {nombreCategoria(textos, c.id)}
                   </Link>
                 </li>
@@ -153,7 +153,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
           id="destacados-titulo"
           titulo={<><span className="solo-escritorio">{t.destacados.titulo}</span><span className="solo-movil">{t.filtrosMovil.destacados}</span></>}
           subtitulo={t.destacados.subtitulo}
-          enlace={{ href: "/eventos?orden=popularidad", texto: t.destacados.enlaces.verTodos }}
+          enlace={{ href: "/explorar?orden=popularidad", texto: t.destacados.enlaces.verTodos }}
         />
         <Suspense fallback={<TarjetasCargando etiqueta={textos.estados.cargando.titulo} />}>
           <Destacados textos={textos} idioma={idioma} />
@@ -166,7 +166,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
           id="proximos-titulo"
           titulo={fmt(t.proximos.titulo, { ciudad })}
           subtitulo={t.proximos.subtitulo}
-          enlace={{ href: `/eventos?ciudad=${encodeURIComponent(ciudad)}`, texto: t.destacados.enlaces.verTodos }}
+          enlace={{ href: `/explorar?ciudad=${encodeURIComponent(ciudad)}`, texto: t.destacados.enlaces.verTodos }}
         />
         <Suspense key={ciudad} fallback={<TarjetasCargando etiqueta={textos.estados.cargando.titulo} />}>
           <Proximos textos={textos} idioma={idioma} ciudad={ciudad} />
@@ -178,7 +178,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
         <EncabezadoSeccion
           id="finde-titulo"
           titulo={t.filtrosMovil.finDeSemana}
-          enlace={{ href: "/eventos?fecha=finde", texto: t.destacados.enlaces.verTodos }}
+          enlace={{ href: "/explorar?fecha=finde", texto: t.destacados.enlaces.verTodos }}
         />
         <Suspense fallback={<TarjetasCargando cantidad={3} etiqueta={textos.estados.cargando.titulo} />}>
           <FinDeSemana textos={textos} idioma={idioma} />
