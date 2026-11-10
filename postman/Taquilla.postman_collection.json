@@ -1,0 +1,1346 @@
+{
+  "info": {
+    "name": "Taquilla API · Proyecto final Frontend",
+    "description": "Endpoints que usa el frontend de Taquilla (Next.js), agrupados por vista. Cada petición tiene pruebas que comprueban lo que la interfaz necesita.\n\n1. Importa esta colección y el entorno `Taquilla.postman_environment.json`.\n2. Elige el entorno \"Taquilla · API de prueba\".\n3. Ejecuta la colección completa con el Runner, en orden: algunas peticiones guardan variables para las siguientes.\n\nLa API se apaga cuando no se usa: la primera petición puede tardar unos segundos.\n\nDocumentación: https://yanethm-taquilla-api.fly.dev/docs · Contrato: https://yanethm-taquilla-api.fly.dev/docs/contrato",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. Idioma y textos (todas las vistas)",
+      "description": "Ningún texto de la interfaz está escrito en los componentes: el frontend los pide aquí en español o inglés (CONTRATO.md, sección 2).",
+      "item": [
+        {
+          "name": "Idiomas disponibles",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Incluye español e inglés\", () => {",
+                  "    const codigos = pm.response.json().datos.map(i => i.codigo);",
+                  "    pm.expect(codigos).to.include.members([\"es\", \"en\"]);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/idiomas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "idiomas"
+              ]
+            },
+            "description": "Alimenta el selector ES | EN de la barra de navegación.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Textos de la interfaz (secciones del layout)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Trae los textos de la barra, el pie y el aviso de cookies\", () => {",
+                  "    const t = pm.response.json().textos;",
+                  "    pm.expect(t).to.include.keys(\"navbar\", \"footer\", \"cookies\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/textos?idioma={{idioma}}&seccion=navbar,footer,cookies",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "textos"
+              ],
+              "query": [
+                {
+                  "key": "idioma",
+                  "value": "{{idioma}}"
+                },
+                {
+                  "key": "seccion",
+                  "value": "navbar,footer,cookies"
+                }
+              ]
+            },
+            "description": "El layout pide los textos del idioma elegido. `seccion` trae solo una parte; el frontend pide el objeto completo y lo guarda en caché 1 hora.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Textos en inglés (página de inicio)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"El título del hero está en inglés\", () => {",
+                  "    pm.expect(pm.response.json().textos.paginas.inicio.hero.titulo).to.eql(\"Your next night out starts here\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/textos?idioma=en&seccion=paginas.inicio",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "textos"
+              ],
+              "query": [
+                {
+                  "key": "idioma",
+                  "value": "en"
+                },
+                {
+                  "key": "seccion",
+                  "value": "paginas.inicio"
+                }
+              ]
+            },
+            "description": "La misma interfaz en inglés: es lo que se ve al pulsar EN.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Error: idioma no soportado (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es idioma_no_soportado\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"idioma_no_soportado\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/textos?idioma=fr",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "textos"
+              ],
+              "query": [
+                {
+                  "key": "idioma",
+                  "value": "fr"
+                }
+              ]
+            },
+            "description": "Un idioma que no existe responde 400 `idioma_no_soportado`. El frontend nunca lo pide: lee la cookie `idioma` y usa `es` si no es válida.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Vista 1 · Inicio público",
+      "description": "Datos de la portada: evento principal del hero, destacados, categorías y próximos por ciudad (CONTRATO.md, sección 3).",
+      "item": [
+        {
+          "name": "Eventos destacados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "const datos = pm.response.json().datos;",
+                  "pm.test(\"Devuelve una lista de eventos\", () => pm.expect(datos).to.be.an(\"array\").that.is.not.empty);",
+                  "pm.test(\"Cada evento trae lo que pinta la tarjeta\", () => {",
+                  "    datos.forEach(e => {",
+                  "        pm.expect(e).to.include.keys(\"slug\", \"titulo\", \"categoria\", \"fecha\", \"recinto\", \"precioDesde\", \"afiche\", \"disponibilidad\");",
+                  "        pm.expect(e.precioDesde).to.be.a(\"number\");",
+                  "    });",
+                  "});",
+                  "pm.test(\"El afiche no es una foto: son dos colores y un patrón\", () => {",
+                  "    pm.expect(datos[0].afiche).to.include.keys(\"color1\", \"color2\", \"patron\");",
+                  "});",
+                  "pm.collectionVariables.set(\"slug\", datos[0].slug);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/destacados",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "destacados"
+              ]
+            },
+            "description": "El primero alimenta la tarjeta grande del hero; los 4 primeros, \"Destacados de la semana\". Guarda el `slug` del primero para la vista de detalle.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Categorías con su número de eventos",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Cada categoría tiene id, nombre y cantidad de eventos\", () => {",
+                  "    pm.response.json().datos.forEach(c => pm.expect(c).to.include.keys(\"id\", \"nombre\", \"eventos\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "Las seis tarjetas de categorías del inicio y las casillas del filtro de Explorar.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Próximamente en una ciudad",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Todos los eventos son de la ciudad pedida\", () => {",
+                  "    const ciudad = pm.variables.get(\"ciudad\");",
+                  "    pm.response.json().datos.forEach(e => pm.expect(e.recinto.ciudad).to.eql(ciudad));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos?ciudad={{ciudad}}&orden=fecha&porPagina=4",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "ciudad",
+                  "value": "{{ciudad}}"
+                },
+                {
+                  "key": "orden",
+                  "value": "fecha"
+                },
+                {
+                  "key": "porPagina",
+                  "value": "4"
+                }
+              ]
+            },
+            "description": "Sección \"Próximamente en {ciudad}\": 4 eventos de la ciudad elegida en el buscador, ordenados por fecha.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Vista 2 · Explorar eventos",
+      "description": "Catálogo con filtros, orden y paginación. En el frontend los filtros viven en la URL de /eventos (CONTRATO.md, sección 4).",
+      "item": [
+        {
+          "name": "Ciudades para el filtro",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Cada ciudad tiene nombre y cantidad de eventos\", () => {",
+                  "    pm.response.json().datos.forEach(c => pm.expect(c).to.include.keys(\"nombre\", \"eventos\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/ciudades",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "ciudades"
+              ]
+            },
+            "description": "Opciones del selector \"Ciudad\" y del campo \"Dónde\" del hero.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Catálogo con filtros, orden y paginación",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test(\"Trae datos y paginación\", () => {",
+                  "    pm.expect(r.datos).to.be.an(\"array\");",
+                  "    pm.expect(r.paginacion).to.include.keys(\"pagina\", \"porPagina\", \"total\", \"paginas\");",
+                  "});",
+                  "pm.test(\"Respeta porPagina\", () => pm.expect(r.datos.length).to.be.at.most(9));",
+                  "pm.test(\"Solo trae la categoría pedida\", () => r.datos.forEach(e => pm.expect(e.categoria).to.eql(\"conciertos\")));",
+                  "pm.test(\"Viene ordenado por precio, del más barato al más caro\", () => {",
+                  "    const precios = r.datos.map(e => e.precioDesde);",
+                  "    pm.expect(precios).to.eql([...precios].sort((a, b) => a - b));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos?categoria=conciertos&orden=precio&pagina=1&porPagina=9",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "categoria",
+                  "value": "conciertos"
+                },
+                {
+                  "key": "orden",
+                  "value": "precio"
+                },
+                {
+                  "key": "pagina",
+                  "value": "1"
+                },
+                {
+                  "key": "porPagina",
+                  "value": "9"
+                }
+              ]
+            },
+            "description": "Lo que pide /eventos?categoria=conciertos&orden=precio en el frontend. 9 eventos por página (cuadrícula de 3 × 3 del diseño).",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Catálogo por rango de fechas y precio máximo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Ningún evento supera el precio máximo\", () => {",
+                  "    pm.response.json().datos.forEach(e => pm.expect(e.precioDesde).to.be.at.most(80000));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos?desde=2026-11-01&hasta=2026-12-31&precioMax=80000",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "desde",
+                  "value": "2026-11-01"
+                },
+                {
+                  "key": "hasta",
+                  "value": "2026-12-31"
+                },
+                {
+                  "key": "precioMax",
+                  "value": "80000"
+                }
+              ]
+            },
+            "description": "Los atajos de fecha (Hoy, Este fin de semana, Este mes) se convierten en `desde` y `hasta` en hora de Colombia. El control de precio envía `precioMax`.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Estado vacío: búsqueda sin resultados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"La lista viene vacía (no es un error)\", () => {",
+                  "    pm.expect(pm.response.json().datos).to.be.an(\"array\").that.is.empty;",
+                  "    pm.expect(pm.response.json().paginacion.total).to.eql(0);",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos?q=zzzz",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos"
+              ],
+              "query": [
+                {
+                  "key": "q",
+                  "value": "zzzz"
+                }
+              ]
+            },
+            "description": "Sin resultados la API responde 200 con `datos: []`, no un error. El frontend muestra el estado vacío con el botón \"Limpiar filtros\".",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Vista 3 · Detalle de un evento",
+      "description": "Usa el `slug` que guardó \"Eventos destacados\" (CONTRATO.md, sección 5). Vista del Sprint 2.",
+      "item": [
+        {
+          "name": "Detalle de un evento",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "const e = pm.response.json();",
+                  "pm.test(\"Trae el detalle completo\", () => pm.expect(e).to.include.keys(\"descripcion\", \"funciones\", \"localidades\", \"artistas\"));",
+                  "pm.test(\"Es el evento pedido\", () => pm.expect(e.slug).to.eql(pm.variables.get(\"slug\")));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/{{slug}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "{{slug}}"
+              ]
+            },
+            "description": "Evento completo con funciones y localidades. `titulo` y `descripcion` sirven para los metadatos de la página.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Eventos relacionados",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Trae como máximo 4 eventos\", () => pm.expect(pm.response.json().datos.length).to.be.at.most(4));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/{{slug}}/relacionados",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "{{slug}}",
+                "relacionados"
+              ]
+            },
+            "description": "Hasta 4 eventos parecidos para el final de la página de detalle.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Error: evento que no existe (404)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 404\", () => pm.response.to.have.status(404));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es no_encontrado\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"no_encontrado\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/evento-que-no-existe",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "evento-que-no-existe"
+              ]
+            },
+            "description": "Responde 404 `no_encontrado`. En Next.js se llama a `notFound()` y se muestra la página de no encontrado.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Sesión (Vistas 4 y 5)",
+      "description": "Ingreso, usuario de la sesión y salida. El frontend hace el ingreso en una Server Action y guarda el token en una cookie httpOnly propia, nunca en localStorage (CONTRATO.md, sección 1).",
+      "item": [
+        {
+          "name": "Ingresar con una cuenta de prueba",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "const r = pm.response.json();",
+                  "pm.test(\"Devuelve el usuario y un token\", () => {",
+                  "    pm.expect(r.usuario).to.include.keys(\"id\", \"nombre\", \"correo\", \"rol\");",
+                  "    pm.expect(r.token).to.be.a(\"string\").and.not.empty;",
+                  "});",
+                  "pm.collectionVariables.set(\"token\", r.token);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sesion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sesion"
+              ]
+            },
+            "description": "Cuenta de prueba publicada en el contrato. Guarda el `token` en una variable para las peticiones que piden sesión.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{correoPrueba}}\",\n  \"clave\": \"{{clavePrueba}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Usuario de la sesión (con token)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Es la persona que ingresó\", () => {",
+                  "    const r = pm.response.json();",
+                  "    const usuario = r.usuario ?? r;",
+                  "    pm.expect(usuario.correo).to.eql(pm.variables.get(\"correoPrueba\"));",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sesion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sesion"
+              ]
+            },
+            "description": "La barra de navegación lo usa para mostrar el nombre y el menú de la cuenta. Envía `Authorization: Bearer {{token}}`.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Error: credenciales inválidas (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es credenciales_invalidas\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"credenciales_invalidas\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sesion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sesion"
+              ]
+            },
+            "description": "Un solo mensaje para correo o contraseña incorrectos: no se dice cuál de los dos falló.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{correoPrueba}}\",\n  \"clave\": \"clave-equivocada\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Cerrar sesión",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 204\", () => pm.response.to.have.status(204));",
+                  "pm.collectionVariables.set(\"token\", \"\");"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sesion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sesion"
+              ]
+            },
+            "description": "Responde 204 sin cuerpo. El frontend además borra su cookie `token`.",
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Error: sin sesión (401)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 401\", () => pm.response.to.have.status(401));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es no_autenticado\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"no_autenticado\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/sesion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "sesion"
+              ]
+            },
+            "description": "Sin token responde 401 `no_autenticado`: la navegación se muestra como invitado.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Registro y verificación del correo (Vista 5)",
+      "description": "Crea una cuenta con un correo inventado distinto cada vez. La API no envía correos: el código llega en `codigoDePrueba` (CONTRATO.md, sección 7).",
+      "item": [
+        {
+          "name": "Crear cuenta",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Un correo distinto en cada ejecución para no chocar con correo_en_uso.",
+                  "pm.collectionVariables.set(\"correoNuevo\", `sustentacion-${Date.now()}@taquilla.test`);"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 201\", () => pm.response.to.have.status(201));",
+                  "const r = pm.response.json();",
+                  "pm.test(\"La cuenta queda sin verificar y trae el código de prueba\", () => {",
+                  "    pm.expect(r.usuario.correoVerificado).to.eql(false);",
+                  "    pm.expect(r.verificacion.codigoDePrueba).to.match(/^\\d{6}$/);",
+                  "});",
+                  "pm.collectionVariables.set(\"codigoVerificacion\", r.verificacion.codigoDePrueba);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "Responde 201, deja la sesión abierta y trae el código para verificar el correo. La confirmación de contraseña y los términos se validan en el frontend.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Persona de Prueba\",\n  \"correo\": \"{{correoNuevo}}\",\n  \"clave\": \"una-clave-larga\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Error: correo en uso (409)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 409\", () => pm.response.to.have.status(409));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es correo_en_uso\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"correo_en_uso\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "El mismo correo otra vez: 409 `correo_en_uso`. El frontend muestra el mensaje junto al campo y un enlace a ingresar.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Persona de Prueba\",\n  \"correo\": \"{{correoNuevo}}\",\n  \"clave\": \"una-clave-larga\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Error: datos inválidos (422)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 422\", () => pm.response.to.have.status(422));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es validacion\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"validacion\"));",
+                  "pm.test(\"Marca los tres campos con error\", () => {",
+                  "    pm.expect(pm.response.json().error.campos).to.include.keys(\"nombre\", \"correo\", \"clave\");",
+                  "});"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/usuarios",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "usuarios"
+              ]
+            },
+            "description": "Cada campo que no cumple su regla llega en `error.campos` y el frontend muestra el mensaje junto a ese campo. Reglas: nombre de 2 a 80 caracteres, correo válido y clave de 8 a 72.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"A\",\n  \"correo\": \"no-es-un-correo\",\n  \"clave\": \"123\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Error: código incorrecto (400)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 400\", () => pm.response.to.have.status(400));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es codigo_incorrecto\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"codigo_incorrecto\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/verificacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "verificacion"
+              ]
+            },
+            "description": "El código no coincide: mensaje junto al campo del código.",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{correoNuevo}}\",\n  \"codigo\": \"000000\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Verificar el correo",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"El correo queda verificado\", () => pm.expect(pm.response.json().correoVerificado).to.eql(true));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/verificacion",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "verificacion"
+              ]
+            },
+            "description": "Usa el código que devolvió \"Crear cuenta\".",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"correo\": \"{{correoNuevo}}\",\n  \"codigo\": \"{{codigoVerificacion}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Estados de carga y error (cabeceras de simulación)",
+      "description": "La API permite forzar latencia y errores para comprobar que la interfaz muestra sus estados (CONTRATO.md, sección 1). En el frontend se activan con API_SIMULAR_LATENCIA y API_SIMULAR_ERROR en .env.local.",
+      "item": [
+        {
+          "name": "Latencia simulada (estado de carga)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 200\", () => pm.response.to.have.status(200));",
+                  "pm.test(\"Tardó al menos 2 segundos\", () => pm.expect(pm.response.responseTime).to.be.at.least(2000));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Simular-Latencia",
+                "value": "2000"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/categorias",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "categorias"
+              ]
+            },
+            "description": "La respuesta tarda 2 segundos: así se ven los esqueletos de carga de la interfaz.",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Error simulado 503 (estado de error)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Responde 503\", () => pm.response.to.have.status(503));",
+                  "pm.test(\"El error tiene la forma del contrato { error: { codigo, mensaje } }\", () => {",
+                  "    const e = pm.response.json().error;",
+                  "    pm.expect(e).to.be.an(\"object\");",
+                  "    pm.expect(e.codigo).to.be.a(\"string\");",
+                  "    pm.expect(e.mensaje).to.be.a(\"string\");",
+                  "});",
+                  "pm.test(\"El código es falla_simulada\", () => pm.expect(pm.response.json().error.codigo).to.eql(\"falla_simulada\"));"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "X-Simular-Error",
+                "value": "503"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/eventos/destacados",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "eventos",
+                "destacados"
+              ]
+            },
+            "description": "La API responde 503 `falla_simulada`. El frontend muestra el estado de error con el botón \"Reintentar\".",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "slug",
+      "value": "noche-de-salsa-brava"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "correoNuevo",
+      "value": ""
+    },
+    {
+      "key": "codigoVerificacion",
+      "value": ""
+    }
+  ]
+}

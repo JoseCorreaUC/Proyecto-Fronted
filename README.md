@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Taquilla · Proyecto final Frontend
 
-## Getting Started
+Sitio de eventos y boletería hecho con **Next.js 16 (App Router)**, **React 19** y **TypeScript**. Consume la API de prueba del curso y sigue el diseño de Figma (escritorio de 1440 px y móvil de 390 px).
 
-First, run the development server:
+- Diseño: https://www.figma.com/design/RrMxUHfYCBQKcH3OwG4mdb
+- API: https://yanethm-taquilla-api.fly.dev/api/v1
+- Documentación de la API: https://yanethm-taquilla-api.fly.dev/docs · [Contrato](https://yanethm-taquilla-api.fly.dev/docs/contrato)
+
+## Cómo ejecutarlo
+
+```bash
+npm install
+```
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre http://localhost:3000. Sin configurar nada usa la API del curso. Para cambiarla o simular estados de carga y error, copia `.env.example` como `.env.local`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Sprint 1 (terminado)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Vista | Ruta | Qué hace |
+| --- | --- | --- |
+| Inicio público | `/` | Hero con buscador y evento principal, categorías, destacados, próximos por ciudad. En móvil: chips, carrusel y "Este fin de semana" |
+| Explorar eventos | `/eventos` | Filtros por categoría, fecha, ciudad y precio guardados en la URL; orden; paginación; estado vacío |
 
-## Learn More
+En todas las vistas: textos en español e inglés desde `GET /textos`, aviso de cookies, panel de accesibilidad, menú móvil y estados de carga, vacío y error.
 
-To learn more about Next.js, take a look at the following resources:
+## Estructura
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+src/
+├── app/                 Rutas (App Router), layout, estados de carga y error, Server Actions
+├── components/          Componentes de la interfaz (navbar, tarjetas, filtros, accesibilidad…)
+└── lib/
+    ├── api.ts           Cliente de la API: errores del contrato, tipos y caché por endpoint
+    ├── textos.ts        Idioma y textos de la interfaz (cookie `idioma`)
+    ├── filtros.ts       Filtros de Explorar ⇄ URL ⇄ parámetros de la API
+    ├── formato.ts       Precios, fechas en hora de Colombia, plurales
+    └── sesion.ts        Usuario de la sesión (token en cookie httpOnly)
+postman/                 Colección y entorno de Postman de la API
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Postman
 
-## Deploy on Vercel
+En [`postman/`](postman) está la colección con los endpoints que usa el frontend, agrupados por vista, y un entorno con la dirección de la API y la cuenta de prueba del contrato.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. En Postman: **Import** → arrastra `Taquilla.postman_collection.json` y `Taquilla.postman_environment.json`.
+2. Arriba a la derecha elige el entorno **Taquilla · API de prueba**.
+3. Ejecuta la colección completa con **Run collection**. Hay que ejecutarla en orden: algunas peticiones guardan variables para las siguientes (`slug`, `token`, `codigoVerificacion`).
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Carpeta | Endpoints |
+| --- | --- |
+| 1. Idioma y textos | `GET /idiomas`, `GET /textos` (es, en, error 400) |
+| 2. Inicio | `GET /eventos/destacados`, `GET /categorias`, `GET /eventos?ciudad=` |
+| 3. Explorar | `GET /ciudades`, `GET /eventos` con filtros, orden, paginación y estado vacío |
+| 4. Detalle | `GET /eventos/:slug`, `GET /eventos/:slug/relacionados`, error 404 |
+| 5. Sesión | `POST /sesion`, `GET /sesion` con token, `DELETE /sesion`, errores 401 |
+| 6. Registro | `POST /usuarios`, `POST /verificacion`, errores 409, 422 y 400 |
+| 7. Estados | Cabeceras `X-Simular-Latencia` y `X-Simular-Error` |
+
+Cada petición tiene pruebas que comprueban lo que la interfaz necesita: códigos de estado, forma de los errores `{ error: { codigo, mensaje, campos } }`, filtros y orden. También se puede ejecutar desde la terminal:
+
+```bash
+npx newman run postman/Taquilla.postman_collection.json -e postman/Taquilla.postman_environment.json
+```
+
+La API se apaga cuando nadie la usa: la primera petición puede tardar unos segundos.
