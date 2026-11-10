@@ -19,13 +19,14 @@ export async function generateMetadata(): Promise<Metadata> {
 /** Precio más bajo y más alto del catálogo, para los extremos del control de precio. */
 async function getRangoPrecios() {
   try {
-    const todos = await api<ListaPaginada<EventoResumen>>("/explorar", { parametros: { porPagina: 100 }, revalidar: 300 });
+    const todos = await api<ListaPaginada<EventoResumen>>("/eventos", { parametros: { porPagina: 100 }, revalidar: 300 });
     const precios = todos.datos.map((e) => e.precioDesde);
     return {
       minimo: Math.floor(Math.min(...precios) / 10000) * 10000,
       maximo: Math.ceil(Math.max(...precios) / 10000) * 10000,
     };
-  } catch {
+  } catch (error) {
+    console.error("[explorar] No se pudo calcular el rango de precios:", error);
     return { minimo: 0, maximo: 200000 };
   }
 }
