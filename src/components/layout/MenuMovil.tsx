@@ -1,9 +1,9 @@
 "use client";
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
-import Icono from "./Icono";
-import botones from "@/styles/modulos/ui/Boton.module.css";
-import estilos from "@/styles/modulos/componentes/MenuMovil.module.css";
+import Icono from "@/components/compartidos/Icono";
+import botones from "@/components/ui/Boton.module.css";
+import estilos from "./MenuMovil.module.css";
 
 interface Props {
   abrir: string;

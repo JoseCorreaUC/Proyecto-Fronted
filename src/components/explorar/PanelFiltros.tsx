@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { urlExplorar, type Fecha, type Filtros } from "@/lib/filtros";
 import { fmt, formatoPrecio } from "@/lib/formato";
 import { RUTAS } from "@/lib/rutas";
-import Icono from "../Icono";
-import botones from "@/styles/modulos/ui/Boton.module.css";
-import campos from "@/styles/modulos/ui/Campo.module.css";
-import etiquetas from "@/styles/modulos/ui/Etiqueta.module.css";
-import estilos from "@/styles/modulos/componentes/PanelFiltros.module.css";
+import Icono from "@/components/compartidos/Icono";
+import botones from "@/components/ui/Boton.module.css";
+import campos from "@/components/ui/Campo.module.css";
+import etiquetas from "@/components/ui/Etiqueta.module.css";
+import estilos from "./PanelFiltros.module.css";
 
 export interface TextosFiltros {
   titulo: string;

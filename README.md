@@ -39,16 +39,20 @@ En todas las vistas: textos en español e inglés desde `GET /textos`, aviso de 
 
 ```
 src/
-├── app/                 Rutas (App Router), layout, estados de carga y error, Server Actions
-├── components/          Componentes de la interfaz (navbar, tarjetas, filtros, accesibilidad…)
+├── app/                 Rutas (App Router): cada page.tsx con su page.module.css,
+│                        layout, estados de carga y error, Server Actions
+├── components/          Cada componente (.tsx) con su .module.css al lado
+│   ├── layout/          En todas las páginas: Navbar, MenuMovil, Accesibilidad,
+│   │                    SelectorIdioma, Logo, Footer, CookieBanner
+│   ├── inicio/          Solo del inicio: HeroBuscador
+│   ├── explorar/        Solo de Explorar: PanelFiltros, SelectorOrden
+│   ├── compartidos/     Usados en varias páginas: TarjetaEvento, Afiche, Estados,
+│   │                    errores, Icono
+│   └── ui/              Estilos base compartidos: botones, etiquetas y chips, campos, buscador
 ├── styles/
 │   ├── tokens.css       Tokens de diseño entregados por la profesora (sin modificar)
 │   ├── ajustes-tokens.css  Cambios sobre los tokens y variables propias del sitio
-│   ├── base.css         Estilos globales: reinicio, elementos, utilidades, accesibilidad
-│   └── modulos/         CSS Modules (estilos con alcance local)
-│       ├── paginas/     Inicio y Explorar
-│       ├── componentes/ Uno por componente (Navbar, TarjetaEvento, PanelFiltros…)
-│       └── ui/          Compartidos: botones, etiquetas y chips, campos, buscador
+│   └── base.css         Estilos globales: reinicio, elementos, utilidades, accesibilidad
 └── lib/
     ├── config.ts        Variables de entorno (único archivo que lee process.env)
     ├── rutas.ts         Rutas internas del sitio

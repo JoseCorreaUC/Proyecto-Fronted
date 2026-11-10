@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { getTextos } from "@/lib/textos";
-import { Estado, EnlaceBoton } from "@/components/Estados";
+import { Estado, EnlaceBoton } from "@/components/compartidos/Estados";
 
 export async function generateMetadata(): Promise<Metadata> {
   const textos = await getTextos();

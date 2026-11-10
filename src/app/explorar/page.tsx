@@ -5,16 +5,16 @@ import { getIdioma, getTextos, type Textos } from "@/lib/textos";
 import { hayFiltros, leerFiltros, parametrosApi, urlExplorar, type Filtros } from "@/lib/filtros";
 import { fmt, formatoPrecio, plural } from "@/lib/formato";
 import { RUTAS } from "@/lib/rutas";
-import Icono from "@/components/Icono";
-import TarjetaEvento, { nombreCategoria } from "@/components/TarjetaEvento";
-import ErrorSeccion from "@/components/ErrorSeccion";
-import { Estado, EnlaceBoton } from "@/components/Estados";
+import Icono from "@/components/compartidos/Icono";
+import TarjetaEvento, { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
+import ErrorSeccion from "@/components/compartidos/ErrorSeccion";
+import { Estado, EnlaceBoton } from "@/components/compartidos/Estados";
 import PanelFiltros from "@/components/explorar/PanelFiltros";
 import SelectorOrden from "@/components/explorar/SelectorOrden";
-import buscadores from "@/styles/modulos/ui/Buscador.module.css";
-import tarjetas from "@/styles/modulos/componentes/TarjetaEvento.module.css";
-import etiquetas from "@/styles/modulos/ui/Etiqueta.module.css";
-import estilos from "@/styles/modulos/paginas/Explorar.module.css";
+import buscadores from "@/components/ui/Buscador.module.css";
+import tarjetas from "@/components/compartidos/TarjetaEvento.module.css";
+import etiquetas from "@/components/ui/Etiqueta.module.css";
+import estilos from "./page.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.explorar;

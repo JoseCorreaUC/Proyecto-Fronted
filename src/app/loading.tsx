@@ -1,6 +1,6 @@
 import { getTextos } from "@/lib/textos";
-import { TarjetasCargando } from "@/components/Estados";
-import estilos from "@/styles/modulos/paginas/Inicio.module.css";
+import { TarjetasCargando } from "@/components/compartidos/Estados";
+import estilos from "./page.module.css";
 
 export default async function Cargando() {
   const textos = await getTextos();

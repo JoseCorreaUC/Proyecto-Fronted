@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import Icono from "./Icono";
 import type { NombreIcono } from "./iconos";
-import botones from "@/styles/modulos/ui/Boton.module.css";
-import tarjetas from "@/styles/modulos/componentes/TarjetaEvento.module.css";
-import estilos from "@/styles/modulos/componentes/Estados.module.css";
+import botones from "@/components/ui/Boton.module.css";
+import tarjetas from "./TarjetaEvento.module.css";
+import estilos from "./Estados.module.css";
 
 interface Props {
   titulo: string;

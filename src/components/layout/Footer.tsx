@@ -3,7 +3,7 @@ import type { Textos } from "@/lib/textos";
 import { fmt } from "@/lib/formato";
 import Logo from "./Logo";
 import { RUTAS } from "@/lib/rutas";
-import estilos from "@/styles/modulos/componentes/Footer.module.css";
+import estilos from "./Footer.module.css";
 
 export default function Footer({ textos }: { textos: Textos }) {
   const f = textos.footer;

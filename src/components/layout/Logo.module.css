@@ -28,7 +28,7 @@
 }
 
 
-/* En el inicio la barra móvil es oscura (ver Navbar.module.css): la marca se invierte,
+/* En el inicio la barra móvil es oscura (ver components/layout/Navbar.module.css): la marca se invierte,
    pero dentro del menú móvil vuelve a la normal. */
 @media (max-width: 767px) {
   body:has([data-hero]) [data-navbar] .logoMarca {

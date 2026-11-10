@@ -3,8 +3,8 @@
 import { useId, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { urlExplorar, type Filtros, type Orden } from "@/lib/filtros";
-import Icono from "../Icono";
-import estilos from "@/styles/modulos/componentes/SelectorOrden.module.css";
+import Icono from "@/components/compartidos/Icono";
+import estilos from "./SelectorOrden.module.css";
 
 interface Props {
   filtros: Filtros;

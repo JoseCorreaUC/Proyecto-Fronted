@@ -7,18 +7,18 @@ import { fmt, formatoDia, formatoPrecio, plural, rangoDeFecha, type Idioma } fro
 import { urlExplorar } from "@/lib/filtros";
 import { RUTAS } from "@/lib/rutas";
 import { getCiudadPredeterminada } from "@/lib/config";
-import Afiche from "@/components/Afiche";
-import Icono from "@/components/Icono";
-import type { NombreIcono } from "@/components/iconos";
-import TarjetaEvento, { nombreCategoria } from "@/components/TarjetaEvento";
-import ErrorSeccion from "@/components/ErrorSeccion";
-import { Estado, TarjetasCargando } from "@/components/Estados";
+import Afiche from "@/components/compartidos/Afiche";
+import Icono from "@/components/compartidos/Icono";
+import type { NombreIcono } from "@/components/compartidos/iconos";
+import TarjetaEvento, { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
+import ErrorSeccion from "@/components/compartidos/ErrorSeccion";
+import { Estado, TarjetasCargando } from "@/components/compartidos/Estados";
 import HeroBuscador from "@/components/inicio/HeroBuscador";
-import etiquetas from "@/styles/modulos/ui/Etiqueta.module.css";
-import botones from "@/styles/modulos/ui/Boton.module.css";
-import estados from "@/styles/modulos/componentes/Estados.module.css";
-import tarjetas from "@/styles/modulos/componentes/TarjetaEvento.module.css";
-import estilos from "@/styles/modulos/paginas/Inicio.module.css";
+import etiquetas from "@/components/ui/Etiqueta.module.css";
+import botones from "@/components/ui/Boton.module.css";
+import estados from "@/components/compartidos/Estados.module.css";
+import tarjetas from "@/components/compartidos/TarjetaEvento.module.css";
+import estilos from "./page.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.inicio;

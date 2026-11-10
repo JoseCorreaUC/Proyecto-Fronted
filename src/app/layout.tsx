@@ -2,13 +2,13 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
 import Script from "next/script";
 // Estilos globales: tokens de la profesora (sin cambios), mis ajustes y la base.
-// Los de cada página y componente están en src/styles/modulos/.
+// Cada página y cada componente tiene su .module.css al lado de su .tsx.
 import "@/styles/tokens.css";
 import "@/styles/ajustes-tokens.css";
 import "@/styles/base.css";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import CookieBanner from "@/components/CookieBanner";
+import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
+import CookieBanner from "@/components/layout/CookieBanner";
 import { getConsentimiento, getIdioma, getTextos } from "@/lib/textos";
 import { getUsuario } from "@/lib/sesion";
 

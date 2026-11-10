@@ -5,14 +5,14 @@ import { fmt, type Idioma } from "@/lib/formato";
 import { cerrarSesion } from "@/app/acciones";
 import Accesibilidad from "./Accesibilidad";
 import EnlaceNav from "./EnlaceNav";
-import Icono from "./Icono";
+import Icono from "@/components/compartidos/Icono";
 import Logo from "./Logo";
 import MenuMovil from "./MenuMovil";
 import SelectorIdioma from "./SelectorIdioma";
 import { RUTAS } from "@/lib/rutas";
-import buscadores from "@/styles/modulos/ui/Buscador.module.css";
-import botones from "@/styles/modulos/ui/Boton.module.css";
-import estilos from "@/styles/modulos/componentes/Navbar.module.css";
+import buscadores from "@/components/ui/Buscador.module.css";
+import botones from "@/components/ui/Boton.module.css";
+import estilos from "./Navbar.module.css";
 
 interface Props {
   textos: Textos;

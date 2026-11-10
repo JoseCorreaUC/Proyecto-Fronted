@@ -1,6 +1,6 @@
 /* ---------- Inicio: hero ----------
    El hero lleva el atributo data-hero: con él la barra de navegación móvil se vuelve oscura
-   (ver Navbar.module.css). */
+   (ver components/layout/Navbar.module.css). */
 .hero {
   background: var(--fondo-inverso);
   color: var(--texto-inverso);

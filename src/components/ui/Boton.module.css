@@ -143,7 +143,7 @@
   }
 }
 
-/* En el inicio la barra móvil es oscura (ver Navbar.module.css): los botones planos de la
+/* En el inicio la barra móvil es oscura (ver components/layout/Navbar.module.css): los botones planos de la
    barra se ven claros, pero dentro del menú móvil vuelven al color normal. */
 @media (max-width: 767px) {
   body:has([data-hero]) [data-navbar] .botonIconoPlano {

@@ -5,9 +5,9 @@ import { fmt, formatoDia, formatoHora, formatoPrecio, type Idioma } from "@/lib/
 import Afiche from "./Afiche";
 import Icono from "./Icono";
 import { RUTAS } from "@/lib/rutas";
-import etiquetas from "@/styles/modulos/ui/Etiqueta.module.css";
-import botones from "@/styles/modulos/ui/Boton.module.css";
-import estilos from "@/styles/modulos/componentes/TarjetaEvento.module.css";
+import etiquetas from "@/components/ui/Etiqueta.module.css";
+import botones from "@/components/ui/Boton.module.css";
+import estilos from "./TarjetaEvento.module.css";
 
 interface Props {
   evento: EventoResumen;
