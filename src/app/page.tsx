@@ -1,115 +1,288 @@
-import Link from 'next/link';
+import { Suspense } from "react";
+import Link from "next/link";
+import type { Metadata } from "next";
+import { getCategorias, getCiudades, getDestacados, getEventos, type EventoResumen } from "@/lib/api";
+import { getIdioma, getTextos, type Textos } from "@/lib/textos";
+import { fmt, formatoDia, formatoPrecio, plural, rangoDeFecha, type Idioma } from "@/lib/formato";
+import Afiche from "@/components/Afiche";
+import Icono from "@/components/Icono";
+import type { NombreIcono } from "@/components/iconos";
+import TarjetaEvento, { nombreCategoria } from "@/components/TarjetaEvento";
+import ErrorSeccion from "@/components/ErrorSeccion";
+import { Estado, TarjetasCargando } from "@/components/Estados";
+import HeroBuscador from "@/components/inicio/HeroBuscador";
 
-// 1. EL MOLDE EXACTO: Usamos la estructura que descubriste en Postman
-interface Evento {
-  id: string;
-  titulo: string;
-  categoria: string;
-  fecha: string; // Viene en formato ISO "2026-11-11T00:45:00.000Z"
-  precioDesde: number;
-  recinto: {
-    nombre: string;
-    ciudad: string;
-  };
-  afiche: {
-    color1: string;
-    color2: string;
-  };
+export async function generateMetadata(): Promise<Metadata> {
+  const { seo } = (await getTextos()).paginas.inicio;
+  return { title: seo.titulo, description: seo.descripcion };
 }
 
-// 2. CONEXIÓN A LA API
-async function getEventos(): Promise<Evento[]> {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://yanethm-taquilla-api.fly.dev/api/v1';
-  
+const ICONO_CATEGORIA: Record<string, NombreIcono> = {
+  conciertos: "music",
+  teatro: "star",
+  deportes: "trophy",
+  festivales: "flag",
+  comedia: "smile",
+  familiares: "users",
+};
+
+/** Lo que se guarda en una sección: el resultado o el error, para mostrar su propio estado. */
+async function intentar<T>(promesa: Promise<T>): Promise<{ ok: true; datos: T } | { ok: false; error: unknown }> {
   try {
-    const res = await fetch(`${apiUrl}/eventos`, { cache: 'no-store' });
-    if (!res.ok) throw new Error('Error al conectar con la API');
-    
-    const data = await res.json();
-    // Validamos por si la API devuelve directamente el array o lo envuelve en un objeto
-    return Array.isArray(data) ? data : (data.data || data.eventos || []);
+    return { ok: true, datos: await promesa };
   } catch (error) {
-    console.error(error);
-    return [];
+    return { ok: false, error };
   }
 }
 
-// 3. LA VISTA PRINCIPAL
-export const dynamic = 'force-dynamic';
+export default async function Inicio({ searchParams }: PageProps<"/">) {
+  const parametros = await searchParams;
+  const [textos, idioma, categorias, ciudades] = await Promise.all([
+    getTextos(),
+    getIdioma(),
+    intentar(getCategorias()),
+    intentar(getCiudades()),
+  ]);
 
-export default async function Home() {
-  const eventos = await getEventos();
-
-  // Función para volver la fecha a texto legible (Ej. "Mié, 11 nov. 7:45 p.m.")
-  const formatearFecha = (fechaIso: string) => {
-    const fecha = new Date(fechaIso);
-    return fecha.toLocaleDateString('es-CO', { 
-      weekday: 'short', month: 'short', day: 'numeric', 
-      hour: 'numeric', minute: '2-digit' 
-    });
-  };
-
-  // Función para poner los puntos de miles al precio
-  const formatearPrecio = (precio: number) => {
-    return new Intl.NumberFormat('es-CO').format(precio);
-  };
+  const t = textos.paginas.inicio;
+  const listaCiudades = ciudades.ok ? ciudades.datos.datos.map((c) => c.nombre) : [];
+  const pedida = typeof parametros.ciudad === "string" ? parametros.ciudad : "";
+  const ciudad = listaCiudades.find((c) => c.toLowerCase() === pedida.toLowerCase()) ?? listaCiudades[0] ?? "Manizales";
+  const fechas = textos.paginas.explorar.filtros.fecha;
+  const opcionesFecha = [
+    { valor: "hoy", texto: fechas.hoy },
+    { valor: "finde", texto: fechas.finDeSemana },
+    { valor: "mes", texto: fechas.mes },
+  ];
+  // "Populares" usa las categorías con más eventos (los textos fijos no se escriben en el código).
+  const populares = categorias.ok ? [...categorias.datos.datos].sort((a, b) => b.eventos - a.eventos).slice(0, 4) : [];
 
   return (
-    <section className="inicio-container">
-      {/* Sección Hero */}
-      <div className="hero-section">
-        <span className="hero-badge">Temporada nov - dic 2026</span>
-        <h1 className="hero-title">Tu próxima noche empieza aquí</h1>
-        <p className="hero-subtitle">
-          Conciertos, teatro, deportes y festivales. Busca por categoría, fecha o ciudad y consulta todos los detalles de cada evento.
-        </p>
-      </div>
+    <>
+      {/* ---------- Hero ---------- */}
+      <section className="hero" aria-labelledby="hero-titulo">
+        <div className="contenedor hero__contenido">
+          <div className="hero__texto">
+            <span className="etiqueta etiqueta--clara solo-escritorio">{t.hero.etiquetas.temporada}</span>
+            <h1 id="hero-titulo" className="hero__titulo">
+              {t.hero.titulo}
+            </h1>
+            <p className="hero__subtitulo solo-escritorio">{t.hero.subtitulo}</p>
 
-      {/* Sección de eventos destacados */}
-      <div className="eventos-section">
-        <div className="section-header">
-          <h2>Destacados de la semana</h2>
-          <Link href="/eventos" className="ver-todos">Ver todos ➔</Link>
-        </div>
-        <p className="section-subtitle">Los eventos con más entradas vendidas en los últimos 7 días</p>
+            <div className="solo-escritorio">
+              <HeroBuscador ciudades={listaCiudades.length ? listaCiudades : [ciudad]} ciudad={ciudad} textos={t.hero.buscador} opcionesFecha={opcionesFecha} />
+              {populares.length > 0 && (
+                <p className="hero__populares">
+                  <span>{t.hero.buscador.populares}</span>
+                  {populares.map((c) => (
+                    <Link key={c.id} href={`/eventos?categoria=${c.id}`}>
+                      {nombreCategoria(textos, c.id)}
+                    </Link>
+                  ))}
+                </p>
+              )}
+            </div>
 
-        {/* Cuadrícula de Tarjetas */}
-        <div className="eventos-grid">
-          {eventos.length === 0 ? (
-            <p>Cargando eventos o no hay eventos disponibles...</p>
-          ) : (
-            eventos.slice(0, 4).map((evento) => ( // Cortamos para mostrar solo 4 en el inicio
-              <div key={evento.id} className="evento-card">
-                
-                {/* Degradado generado usando los colores exactos de la API (afiche) */}
-                <div 
-                  className="evento-img" 
-                  style={{ 
-                    background: `linear-gradient(135deg, ${evento.afiche.color1}, ${evento.afiche.color2})` 
-                  }}
-                ></div>
-                
-                <div className="evento-info">
-                  <span className="categoria-badge" style={{ textTransform: 'capitalize' }}>
-                    {evento.categoria}
-                  </span>
-                  <h3>{evento.titulo}</h3>
-                  <p className="evento-meta">🗓️ {formatearFecha(evento.fecha)}</p>
-                  <p className="evento-meta">📍 {evento.recinto.nombre}, {evento.recinto.ciudad}</p>
-                  
-                  <div className="evento-footer">
-                    <div className="precio-container">
-                      <span className="precio-label">Desde</span>
-                      <span className="precio-valor">${formatearPrecio(evento.precioDesde)}</span>
-                    </div>
-                    <button className="btn btn-outline">Ver evento</button>
-                  </div>
-                </div>
-              </div>
-            ))
-          )}
+            {/* Buscador compacto del móvil */}
+            <form action="/eventos" role="search" className="buscador-movil solo-movil">
+              <Icono nombre="search" tamano={16} />
+              <label className="buscador-movil__campo">
+                <span className="solo-lectores">{t.hero.buscador.etiquetas.que}</span>
+                <input type="search" name="q" placeholder={t.hero.buscador.placeholders.movil} maxLength={80} />
+                <span className="buscador-movil__resumen" aria-hidden="true">
+                  {fmt(t.hero.buscador.resumenMovil, { ciudad, fecha: t.hero.buscador.placeholders.cuando })}
+                </span>
+              </label>
+              <input type="hidden" name="ciudad" value={ciudad} />
+              <button type="submit" className="boton-icono boton-icono--plano" aria-label={t.hero.buscador.botones.buscar}>
+                <Icono nombre="sliders" tamano={16} />
+              </button>
+            </form>
+          </div>
+
+          <div className="hero__destacado solo-escritorio">
+            <Suspense fallback={<div className="esqueleto hero__afiche" />}>
+              <EventoPrincipal textos={textos} idioma={idioma} />
+            </Suspense>
+          </div>
+        </div>
+      </section>
+
+      {/* ---------- Categorías ---------- */}
+      <section className="contenedor seccion seccion--categorias" aria-label={textos.paginas.explorar.filtros.categoria}>
+        {categorias.ok ? (
+          <>
+            <ul className="categorias solo-escritorio">
+              {categorias.datos.datos.map((c) => (
+                <li key={c.id}>
+                  <Link href={`/eventos?categoria=${c.id}`} className="categoria">
+                    <span className="categoria__icono">
+                      <Icono nombre={ICONO_CATEGORIA[c.id] ?? "ticket"} tamano={16} />
+                    </span>
+                    <span>
+                      <span className="categoria__nombre">{nombreCategoria(textos, c.id)}</span>
+                      <span className="categoria__cantidad">{plural(t.categorias.eventos, c.eventos)}</span>
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <ul className="chips solo-movil">
+              <li>
+                <Link href="/eventos" className="chip chip--activo">
+                  {t.filtrosMovil.todos}
+                </Link>
+              </li>
+              {categorias.datos.datos.map((c) => (
+                <li key={c.id}>
+                  <Link href={`/eventos?categoria=${c.id}`} className="chip">
+                    {nombreCategoria(textos, c.id)}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </>
+        ) : (
+          <ErrorSeccion textos={textos} error={categorias.error} />
+        )}
+      </section>
+
+      {/* ---------- Destacados ---------- */}
+      <section className="contenedor seccion" aria-labelledby="destacados-titulo">
+        <EncabezadoSeccion
+          id="destacados-titulo"
+          titulo={<><span className="solo-escritorio">{t.destacados.titulo}</span><span className="solo-movil">{t.filtrosMovil.destacados}</span></>}
+          subtitulo={t.destacados.subtitulo}
+          enlace={{ href: "/eventos?orden=popularidad", texto: t.destacados.enlaces.verTodos }}
+        />
+        <Suspense fallback={<TarjetasCargando etiqueta={textos.estados.cargando.titulo} />}>
+          <Destacados textos={textos} idioma={idioma} />
+        </Suspense>
+      </section>
+
+      {/* ---------- Próximamente en {ciudad} (escritorio) ---------- */}
+      <section className="contenedor seccion solo-escritorio" aria-labelledby="proximos-titulo">
+        <EncabezadoSeccion
+          id="proximos-titulo"
+          titulo={fmt(t.proximos.titulo, { ciudad })}
+          subtitulo={t.proximos.subtitulo}
+          enlace={{ href: `/eventos?ciudad=${encodeURIComponent(ciudad)}`, texto: t.destacados.enlaces.verTodos }}
+        />
+        <Suspense key={ciudad} fallback={<TarjetasCargando etiqueta={textos.estados.cargando.titulo} />}>
+          <Proximos textos={textos} idioma={idioma} ciudad={ciudad} />
+        </Suspense>
+      </section>
+
+      {/* ---------- Este fin de semana (móvil) ---------- */}
+      <section className="contenedor seccion solo-movil" aria-labelledby="finde-titulo">
+        <EncabezadoSeccion
+          id="finde-titulo"
+          titulo={t.filtrosMovil.finDeSemana}
+          enlace={{ href: "/eventos?fecha=finde", texto: t.destacados.enlaces.verTodos }}
+        />
+        <Suspense fallback={<TarjetasCargando cantidad={3} etiqueta={textos.estados.cargando.titulo} />}>
+          <FinDeSemana textos={textos} idioma={idioma} />
+        </Suspense>
+      </section>
+    </>
+  );
+}
+
+function EncabezadoSeccion({
+  id,
+  titulo,
+  subtitulo,
+  enlace,
+}: {
+  id: string;
+  titulo: React.ReactNode;
+  subtitulo?: string;
+  enlace: { href: string; texto: string };
+}) {
+  return (
+    <div className="encabezado-seccion">
+      <div>
+        <h2 id={id} className="titular-h3">
+          {titulo}
+        </h2>
+        {subtitulo && <p className="encabezado-seccion__subtitulo solo-escritorio">{subtitulo}</p>}
+      </div>
+      <Link href={enlace.href} className="enlace-flecha">
+        {enlace.texto}
+        <Icono nombre="arrowr" tamano={14} />
+      </Link>
+    </div>
+  );
+}
+
+interface PropsSeccion {
+  textos: Textos;
+  idioma: Idioma;
+}
+
+function Rejilla({ eventos, textos, idioma, carrusel }: PropsSeccion & { eventos: EventoResumen[]; carrusel?: boolean }) {
+  if (eventos.length === 0) {
+    return <Estado titulo={textos.estados.vacio.titulo} texto={textos.estados.vacio.texto} />;
+  }
+  return (
+    <ul className={`rejilla-eventos${carrusel ? " rejilla-eventos--carrusel" : ""}`}>
+      {eventos.map((evento) => (
+        <li key={evento.id}>
+          <TarjetaEvento evento={evento} textos={textos} idioma={idioma} />
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+async function EventoPrincipal({ textos, idioma }: PropsSeccion) {
+  const r = await intentar(getDestacados());
+  const evento = r.ok ? r.datos.datos[0] : undefined;
+  if (!evento) return null;
+  const d = textos.paginas.inicio.hero.destacado;
+  return (
+    <article className="hero__tarjeta">
+      <Afiche afiche={evento.afiche} className="hero__afiche" />
+      <div className="hero__ficha">
+        <span className="etiqueta">{d.etiqueta}</span>
+        <h2 className="titular-h3">{evento.titulo}</h2>
+        <div className="hero__ficha-pie">
+          <div>
+            <p className="hero__ficha-meta">{fmt(textos.general.formatos.fechaYLugar, { fecha: formatoDia(evento.fecha, idioma), lugar: evento.recinto.nombre })}</p>
+            <p className="hero__ficha-precio">{fmt(d.desde, { precio: formatoPrecio(evento.precioDesde) })}</p>
+          </div>
+          <Link href={`/eventos/${evento.slug}`} className="boton boton--primario boton--pequeno enlace-estirado" aria-label={`${d.botones.verEvento}: ${evento.titulo}`}>
+            {d.botones.verEvento}
+          </Link>
         </div>
       </div>
-    </section>
+    </article>
+  );
+}
+
+async function Destacados({ textos, idioma }: PropsSeccion) {
+  const r = await intentar(getDestacados());
+  if (!r.ok) return <ErrorSeccion textos={textos} error={r.error} />;
+  return <Rejilla eventos={r.datos.datos.slice(0, 4)} textos={textos} idioma={idioma} carrusel />;
+}
+
+async function Proximos({ textos, idioma, ciudad }: PropsSeccion & { ciudad: string }) {
+  const r = await intentar(getEventos({ ciudad, orden: "fecha", porPagina: 4 }));
+  if (!r.ok) return <ErrorSeccion textos={textos} error={r.error} />;
+  return <Rejilla eventos={r.datos.datos} textos={textos} idioma={idioma} />;
+}
+
+async function FinDeSemana({ textos, idioma }: PropsSeccion) {
+  const r = await intentar(getEventos({ ...rangoDeFecha("finde"), orden: "fecha", porPagina: 3 }));
+  if (!r.ok) return <ErrorSeccion textos={textos} error={r.error} />;
+  if (r.datos.datos.length === 0) return <Estado titulo={textos.estados.vacio.titulo} texto={textos.estados.vacio.texto} />;
+  return (
+    <ul className="lista-compacta">
+      {r.datos.datos.map((evento) => (
+        <li key={evento.id}>
+          <TarjetaEvento evento={evento} textos={textos} idioma={idioma} variante="compacta" />
+        </li>
+      ))}
+    </ul>
   );
 }
