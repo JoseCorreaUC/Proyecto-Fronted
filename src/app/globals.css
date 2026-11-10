@@ -792,15 +792,39 @@ button:disabled {
 }
 
 /* Menú móvil */
-.menu-movil {
+/* Fondo oscuro detrás del menú: deja ver la página y al tocarlo se cierra el menú. */
+.menu-movil-fondo {
   position: fixed;
   inset: 0;
+  z-index: 49;
+  background: #14141473;
+  animation: aparecer 200ms ease;
+}
+/* Panel que sale desde la derecha por encima de la página. */
+.menu-movil {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
   z-index: 50;
   display: flex;
   flex-direction: column;
+  width: min(85vw, 340px);
   padding: 0 var(--espacio-4) var(--espacio-6);
   background: var(--fondo-superficie);
+  box-shadow: var(--sombra-flotante);
   overflow-y: auto;
+  animation: entrar-derecha 250ms ease;
+}
+@keyframes entrar-derecha {
+  from {
+    translate: 100% 0;
+  }
+}
+@keyframes aparecer {
+  from {
+    opacity: 0;
+  }
 }
 .menu-movil__cabecera {
   display: flex;
@@ -1481,10 +1505,11 @@ a.paginacion__boton:hover {
 
 /* ---------- Aviso de cookies ---------- */
 .aviso-cookies {
+  /* A media altura de la pantalla, como en el diseño (sobre las categorías y los destacados). */
   position: fixed;
   left: 50%;
-  bottom: var(--espacio-6);
-  translate: -50% 0;
+  top: 50%;
+  translate: -50% -50%;
   z-index: 45;
   display: flex;
   align-items: center;
@@ -1865,7 +1890,6 @@ a.paginacion__boton:hover {
     flex-direction: column;
     align-items: stretch;
     gap: var(--espacio-3);
-    bottom: var(--espacio-4);
     padding: var(--espacio-4);
   }
   .aviso-cookies__botones .boton {

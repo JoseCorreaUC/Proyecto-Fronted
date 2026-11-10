@@ -49,6 +49,16 @@ export default function MenuMovil({ abrir, cerrar, children, cabecera }: Props) 
 
       {abierto && (
         <div
+          className="menu-movil-fondo"
+          aria-hidden="true"
+          onClick={() => {
+            setAbierto(false);
+            boton.current?.focus();
+          }}
+        />
+      )}
+      {abierto && (
+        <div
           ref={hoja}
           className="menu-movil"
           role="dialog"
