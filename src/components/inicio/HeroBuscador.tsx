@@ -3,8 +3,8 @@
 import { useRouter } from "next/navigation";
 import Icono from "../Icono";
 import { RUTAS } from "@/lib/rutas";
-import botones from "@/components/ui/Boton.module.css";
-import estilos from "./HeroBuscador.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
+import estilos from "@/styles/modulos/componentes/HeroBuscador.module.css";
 
 interface Props {
   ciudades: string[];

@@ -2,8 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { guardarConsentimiento } from "@/app/acciones";
-import botones from "./ui/Boton.module.css";
-import estilos from "./CookieBanner.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
+import estilos from "@/styles/modulos/componentes/CookieBanner.module.css";
 
 interface Props {
   textos: { titulo: string; texto: string; botones: { rechazar: string; aceptar: string } };

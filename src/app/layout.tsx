@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
 import Script from "next/script";
 // Estilos globales: tokens de la profesora (sin cambios), mis ajustes y la base.
-// Los de cada componente están en su propio archivo .module.css.
+// Los de cada página y componente están en src/styles/modulos/.
 import "@/styles/tokens.css";
 import "@/styles/ajustes-tokens.css";
 import "@/styles/base.css";

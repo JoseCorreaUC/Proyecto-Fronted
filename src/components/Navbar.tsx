@@ -10,9 +10,9 @@ import Logo from "./Logo";
 import MenuMovil from "./MenuMovil";
 import SelectorIdioma from "./SelectorIdioma";
 import { RUTAS } from "@/lib/rutas";
-import buscadores from "./ui/Buscador.module.css";
-import botones from "./ui/Boton.module.css";
-import estilos from "./Navbar.module.css";
+import buscadores from "@/styles/modulos/ui/Buscador.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
+import estilos from "@/styles/modulos/componentes/Navbar.module.css";
 
 interface Props {
   textos: Textos;

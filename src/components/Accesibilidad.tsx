@@ -3,9 +3,9 @@
 import { useEffect, useId, useRef, useState } from "react";
 import Icono from "./Icono";
 import { RUTAS } from "@/lib/rutas";
-import botones from "./ui/Boton.module.css";
-import campos from "./ui/Campo.module.css";
-import estilos from "./Accesibilidad.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
+import campos from "@/styles/modulos/ui/Campo.module.css";
+import estilos from "@/styles/modulos/componentes/Accesibilidad.module.css";
 
 // Preferencias del panel de accesibilidad. Se guardan en este dispositivo (localStorage)
 // y se aplican como atributos en <html>; ver el script inicial en layout.tsx.

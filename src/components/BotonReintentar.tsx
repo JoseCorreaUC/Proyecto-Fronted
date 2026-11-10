@@ -2,7 +2,7 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import botones from "./ui/Boton.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
 
 /** Vuelve a pedir los datos de la página al servidor. */
 export default function BotonReintentar({ texto, cargando }: { texto: string; cargando: string }) {

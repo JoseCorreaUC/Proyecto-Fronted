@@ -4,7 +4,7 @@ import { useId, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { urlExplorar, type Filtros, type Orden } from "@/lib/filtros";
 import Icono from "../Icono";
-import estilos from "./SelectorOrden.module.css";
+import estilos from "@/styles/modulos/componentes/SelectorOrden.module.css";
 
 interface Props {
   filtros: Filtros;

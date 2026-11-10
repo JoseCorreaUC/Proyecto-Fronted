@@ -40,12 +40,15 @@ En todas las vistas: textos en español e inglés desde `GET /textos`, aviso de 
 ```
 src/
 ├── app/                 Rutas (App Router), layout, estados de carga y error, Server Actions
-├── components/          Componentes de la interfaz, cada uno con su archivo .module.css
-│   └── ui/              Estilos compartidos: botones, etiquetas y chips, campos, buscador
+├── components/          Componentes de la interfaz (navbar, tarjetas, filtros, accesibilidad…)
 ├── styles/
 │   ├── tokens.css       Tokens de diseño entregados por la profesora (sin modificar)
 │   ├── ajustes-tokens.css  Cambios sobre los tokens y variables propias del sitio
-│   └── base.css         Estilos globales: reinicio, elementos, utilidades, accesibilidad
+│   ├── base.css         Estilos globales: reinicio, elementos, utilidades, accesibilidad
+│   └── modulos/         CSS Modules (estilos con alcance local)
+│       ├── paginas/     Inicio y Explorar
+│       ├── componentes/ Uno por componente (Navbar, TarjetaEvento, PanelFiltros…)
+│       └── ui/          Compartidos: botones, etiquetas y chips, campos, buscador
 └── lib/
     ├── config.ts        Variables de entorno (único archivo que lee process.env)
     ├── rutas.ts         Rutas internas del sitio

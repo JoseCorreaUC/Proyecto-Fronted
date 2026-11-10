@@ -3,7 +3,7 @@
 import { useTransition } from "react";
 import { cambiarIdioma } from "@/app/acciones";
 import type { Idioma } from "@/lib/formato";
-import estilos from "./SelectorIdioma.module.css";
+import estilos from "@/styles/modulos/componentes/SelectorIdioma.module.css";
 
 interface Props {
   idioma: Idioma;

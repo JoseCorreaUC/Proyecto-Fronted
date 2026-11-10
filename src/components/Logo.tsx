@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Icono from "./Icono";
 import { RUTAS } from "@/lib/rutas";
-import estilos from "./Logo.module.css";
+import estilos from "@/styles/modulos/componentes/Logo.module.css";
 
 interface Props {
   texto: string;

@@ -3,8 +3,8 @@
 import { useEffect, useMemo, useSyncExternalStore, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import Icono from "./Icono";
-import estados from "./Estados.module.css";
-import botones from "./ui/Boton.module.css";
+import estados from "@/styles/modulos/componentes/Estados.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
 
 interface Props {
   error: Error & { digest?: string };

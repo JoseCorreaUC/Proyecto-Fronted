@@ -1,8 +1,8 @@
 import { getTextos } from "@/lib/textos";
 import { TarjetasCargando } from "@/components/Estados";
-import estados from "@/components/Estados.module.css";
-import panelFiltros from "@/components/explorar/PanelFiltros.module.css";
-import estilos from "./page.module.css";
+import estados from "@/styles/modulos/componentes/Estados.module.css";
+import panelFiltros from "@/styles/modulos/componentes/PanelFiltros.module.css";
+import estilos from "@/styles/modulos/paginas/Explorar.module.css";
 
 export default async function Cargando() {
   const textos = await getTextos();

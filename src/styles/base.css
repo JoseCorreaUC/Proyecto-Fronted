@@ -2,7 +2,7 @@
    Taquilla · estilos base (globales)
    Solo lo que aplica a toda la página: reinicio, elementos HTML, foco,
    utilidades de maquetación y preferencias de accesibilidad.
-   Los estilos de cada componente están en su propio archivo .module.css.
+   Los estilos de cada página y componente están en styles/modulos/.
    Punto de quiebre: móvil < 768 px (diseño de 390 px), escritorio desde 768 px (diseño de 1440 px).
    ===================================================================== */
 

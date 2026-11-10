@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 import type { Afiche as TipoAfiche } from "@/lib/api";
-import estilos from "./Afiche.module.css";
+import estilos from "@/styles/modulos/componentes/Afiche.module.css";
 
 // Clase de cada patrón que envía la API ("liso" no lleva textura).
 const PATRONES: Record<string, string | undefined> = {

@@ -14,11 +14,11 @@ import TarjetaEvento, { nombreCategoria } from "@/components/TarjetaEvento";
 import ErrorSeccion from "@/components/ErrorSeccion";
 import { Estado, TarjetasCargando } from "@/components/Estados";
 import HeroBuscador from "@/components/inicio/HeroBuscador";
-import etiquetas from "@/components/ui/Etiqueta.module.css";
-import botones from "@/components/ui/Boton.module.css";
-import estados from "@/components/Estados.module.css";
-import tarjetas from "@/components/TarjetaEvento.module.css";
-import estilos from "./page.module.css";
+import etiquetas from "@/styles/modulos/ui/Etiqueta.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
+import estados from "@/styles/modulos/componentes/Estados.module.css";
+import tarjetas from "@/styles/modulos/componentes/TarjetaEvento.module.css";
+import estilos from "@/styles/modulos/paginas/Inicio.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.inicio;

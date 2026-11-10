@@ -2,8 +2,8 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import Icono from "./Icono";
-import botones from "./ui/Boton.module.css";
-import estilos from "./MenuMovil.module.css";
+import botones from "@/styles/modulos/ui/Boton.module.css";
+import estilos from "@/styles/modulos/componentes/MenuMovil.module.css";
 
 interface Props {
   abrir: string;

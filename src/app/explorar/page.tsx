@@ -11,10 +11,10 @@ import ErrorSeccion from "@/components/ErrorSeccion";
 import { Estado, EnlaceBoton } from "@/components/Estados";
 import PanelFiltros from "@/components/explorar/PanelFiltros";
 import SelectorOrden from "@/components/explorar/SelectorOrden";
-import buscadores from "@/components/ui/Buscador.module.css";
-import tarjetas from "@/components/TarjetaEvento.module.css";
-import etiquetas from "@/components/ui/Etiqueta.module.css";
-import estilos from "./page.module.css";
+import buscadores from "@/styles/modulos/ui/Buscador.module.css";
+import tarjetas from "@/styles/modulos/componentes/TarjetaEvento.module.css";
+import etiquetas from "@/styles/modulos/ui/Etiqueta.module.css";
+import estilos from "@/styles/modulos/paginas/Explorar.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.explorar;
