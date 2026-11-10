@@ -39,31 +39,4 @@ src/
     ├── filtros.ts       Filtros de Explorar ⇄ URL ⇄ parámetros de la API
     ├── formato.ts       Precios, fechas en hora de Colombia, plurales
     └── sesion.ts        Usuario de la sesión (token en cookie httpOnly)
-postman/                 Colección y entorno de Postman de la API
 ```
-
-## Postman
-
-En [`postman/`](postman) está la colección con los endpoints que usa el frontend, agrupados por vista, y un entorno con la dirección de la API y la cuenta de prueba del contrato.
-
-1. En Postman: **Import** → arrastra `Taquilla.postman_collection.json` y `Taquilla.postman_environment.json`.
-2. Arriba a la derecha elige el entorno **Taquilla · API de prueba**.
-3. Ejecuta la colección completa con **Run collection**. Hay que ejecutarla en orden: algunas peticiones guardan variables para las siguientes (`slug`, `token`, `codigoVerificacion`).
-
-| Carpeta | Endpoints |
-| --- | --- |
-| 1. Idioma y textos | `GET /idiomas`, `GET /textos` (es, en, error 400) |
-| 2. Inicio | `GET /eventos/destacados`, `GET /categorias`, `GET /eventos?ciudad=` |
-| 3. Explorar | `GET /ciudades`, `GET /eventos` con filtros, orden, paginación y estado vacío |
-| 4. Detalle | `GET /eventos/:slug`, `GET /eventos/:slug/relacionados`, error 404 |
-| 5. Sesión | `POST /sesion`, `GET /sesion` con token, `DELETE /sesion`, errores 401 |
-| 6. Registro | `POST /usuarios`, `POST /verificacion`, errores 409, 422 y 400 |
-| 7. Estados | Cabeceras `X-Simular-Latencia` y `X-Simular-Error` |
-
-Cada petición tiene pruebas que comprueban lo que la interfaz necesita: códigos de estado, forma de los errores `{ error: { codigo, mensaje, campos } }`, filtros y orden. También se puede ejecutar desde la terminal:
-
-```bash
-npx newman run postman/Taquilla.postman_collection.json -e postman/Taquilla.postman_environment.json
-```
-
-La API se apaga cuando nadie la usa: la primera petición puede tardar unos segundos.

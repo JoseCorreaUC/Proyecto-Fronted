@@ -41,11 +41,6 @@ yarn-error.log*
 pnpm-debug.log*
 *.log
 
-# --- Postman: copias locales de entornos con datos personales ---
-# La colección y el entorno compartido de /postman sí se suben.
-postman/*.local.json
-postman/**/*.local.json
-
 # --- Editores (configuración personal de cada persona) ---
 .vscode/*
 !.vscode/extensions.json
