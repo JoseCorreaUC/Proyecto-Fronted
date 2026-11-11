@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
-import { api } from "@/lib/api";
+import { api, ENDPOINTS } from "@/lib/api";
 import { COOKIE_CONSENTIMIENTO, COOKIE_IDIOMA, type Idioma } from "@/lib/textos";
 import { COOKIE_TOKEN } from "@/lib/sesion";
 
@@ -36,7 +36,7 @@ export async function cerrarSesion() {
   const almacen = await cookies();
   const token = almacen.get(COOKIE_TOKEN)?.value;
   if (token) {
-    await api("/sesion", { metodo: "DELETE", token }).catch(() => undefined);
+    await api(ENDPOINTS.sesion, { metodo: "DELETE", token }).catch(() => undefined);
   }
   almacen.delete(COOKIE_TOKEN);
   revalidatePath("/", "layout");

@@ -1,0 +1,35 @@
+/* Pantalla de error global. Usa los tokens de diseño como el resto del sitio. */
+
+.cuerpo {
+  font-family: var(--fuente-instrument-sans);
+  display: grid;
+  place-items: center;
+  min-height: 100vh;
+  margin: 0;
+  background: var(--fondo-pagina);
+  color: var(--texto-principal);
+}
+
+.caja {
+  text-align: center;
+  padding: var(--espacio-6);
+  max-width: 420px;
+}
+
+.titulo {
+  font-size: 1.25rem;
+}
+
+.descripcion {
+  color: var(--texto-secundario);
+}
+
+.boton {
+  margin-top: var(--espacio-4);
+  padding: 10px 18px;
+  border-radius: var(--radio-md);
+  border: 0;
+  background: var(--fondo-inverso);
+  color: var(--texto-inverso);
+  cursor: pointer;
+}

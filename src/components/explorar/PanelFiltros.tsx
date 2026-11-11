@@ -3,7 +3,7 @@
 import { useEffect, useId, useRef, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { urlExplorar, type Fecha, type Filtros } from "@/lib/filtros";
-import { fmt, formatoPrecio } from "@/lib/formato";
+import { fmt, formatoPrecio, type Idioma } from "@/lib/formato";
 import { RUTAS } from "@/lib/rutas";
 import Icono from "@/components/compartidos/Icono";
 import botones from "@/components/ui/Boton.module.css";
@@ -32,11 +32,12 @@ interface Props {
   ciudades: { nombre: string; eventos: number }[];
   precio: { minimo: number; maximo: number };
   textos: TextosFiltros;
+  idioma: Idioma;
 }
 
 // Panel de filtros. En escritorio es la columna izquierda; en el móvil se abre a pantalla completa.
 // Cada cambio actualiza la URL al instante y el servidor vuelve a pedir los eventos.
-export default function PanelFiltros({ filtros, total, categorias, ciudades, precio, textos }: Props) {
+export default function PanelFiltros({ filtros, total, categorias, ciudades, precio, textos, idioma }: Props) {
   const router = useRouter();
   const [pendiente, iniciar] = useTransition();
   const [abierto, setAbierto] = useState(false);
@@ -221,12 +222,12 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
             max={precio.maximo}
             step={5000}
             value={precioMax}
-            aria-valuetext={formatoPrecio(precioMax)}
+            aria-valuetext={formatoPrecio(precioMax, idioma)}
             onChange={(e) => setPrecioMax(Number(e.target.value))}
           />
           <div className={estilos.filtrosPrecios}>
-            <span>{formatoPrecio(precio.minimo)}</span>
-            <span>{formatoPrecio(precioMax)}</span>
+            <span>{formatoPrecio(precio.minimo, idioma)}</span>
+            <span>{formatoPrecio(precioMax, idioma)}</span>
           </div>
         </div>
 

@@ -260,7 +260,7 @@ async function EventoPrincipal({ textos, idioma }: PropsSeccion) {
         <div className={estilos.heroFichaPie}>
           <div>
             <p className={estilos.heroFichaMeta}>{fmt(textos.general.formatos.fechaYLugar, { fecha: formatoDia(evento.fecha, idioma), lugar: evento.recinto.nombre })}</p>
-            <p className={estilos.heroFichaPrecio}>{fmt(d.desde, { precio: formatoPrecio(evento.precioDesde) })}</p>
+            <p className={estilos.heroFichaPrecio}>{fmt(d.desde, { precio: formatoPrecio(evento.precioDesde, idioma) })}</p>
           </div>
           <Link href={RUTAS.evento(evento.slug)} className={`${botones.boton} ${botones.botonPrimario} ${botones.botonPequeno} enlace-estirado`} aria-label={`${d.botones.verEvento}: ${evento.titulo}`}>
             {d.botones.verEvento}

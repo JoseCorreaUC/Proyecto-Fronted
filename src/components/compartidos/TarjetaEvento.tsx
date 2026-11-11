@@ -54,7 +54,7 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
           </Titulo>
           <p className={estilos.tarjetaCompactaMeta}>{fechaHora}</p>
           <p className={estilos.tarjetaCompactaPrecio}>
-            {fmt(textos.componentes.precio.desdePrecio, { precio: formatoPrecio(evento.precioDesde) })}
+            {fmt(textos.componentes.precio.desdePrecio, { precio: formatoPrecio(evento.precioDesde, idioma) })}
           </p>
         </div>
       </article>
@@ -83,7 +83,7 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
         <div className={estilos.tarjetaEventoPie}>
           <p className={estilos.precio}>
             <span className={estilos.precioEtiqueta}>{textos.componentes.precio.desde}</span>
-            <span className={estilos.precioValor}>{formatoPrecio(evento.precioDesde)}</span>
+            <span className={estilos.precioValor}>{formatoPrecio(evento.precioDesde, idioma)}</span>
           </p>
           <Link href={href} className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno} enlace-estirado`} aria-label={`${textos.paginas.inicio.tarjeta.botones.verEvento}: ${evento.titulo}`}>
             {textos.paginas.inicio.tarjeta.botones.verEvento}

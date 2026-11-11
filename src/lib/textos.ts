@@ -2,11 +2,11 @@ import "server-only";
 import { cache } from "react";
 import { cookies } from "next/headers";
 import { api, ENDPOINTS } from "./api";
-import type textosReferencia from "./textos-referencia.json";
+import type { Textos } from "./textos.tipos";
 
 // Todos los textos de la interfaz salen de GET /textos (ver CONTRATO.md, sección 2).
-// textos-referencia.json es una copia del español que solo se usa para tener tipos en TypeScript.
-export type Textos = typeof textosReferencia;
+// textos.tipos.ts solo describe sus claves para TypeScript (se genera con `npm run tipos:textos`).
+export type { Textos };
 export type Idioma = "es" | "en";
 
 export const IDIOMAS: Idioma[] = ["es", "en"];

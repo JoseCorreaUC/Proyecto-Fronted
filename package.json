@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "tipos:textos": "node --env-file-if-exists=.env.local scripts/generar-tipos-textos.mjs"
   },
   "dependencies": {
     "next": "16.4.3",

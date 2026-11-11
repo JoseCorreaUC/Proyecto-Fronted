@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getCategorias, getCiudades, getEventos } from "@/lib/api";
 import { getIdioma, getTextos, type Textos } from "@/lib/textos";
 import { hayFiltros, leerFiltros, parametrosApi, urlExplorar, type Filtros } from "@/lib/filtros";
-import { fmt, formatoPrecio, plural } from "@/lib/formato";
+import { fmt, formatoPrecio, plural, type Idioma } from "@/lib/formato";
 import { RUTAS } from "@/lib/rutas";
 import Icono from "@/components/compartidos/Icono";
 import TarjetaEvento, { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
@@ -92,6 +92,7 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
           categorias={(categorias?.datos ?? []).map((c) => ({ id: c.id, nombre: nombreCategoria(textos, c.id), eventos: c.eventos }))}
           ciudades={ciudades?.datos ?? []}
           precio={precio}
+          idioma={idioma}
           textos={{
             ...t.filtros,
             todasLasCiudades: textos.paginas.teatro.filtros.etiquetas.todas,
@@ -104,7 +105,7 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
 
         <section aria-label={textos.footer.columnas.explora.enlaces.explorar}>
           <div className={estilos.explorarBarra}>
-            <FiltrosActivos filtros={filtros} textos={textos} />
+            <FiltrosActivos filtros={filtros} textos={textos} idioma={idioma} />
             <div className={estilos.explorarBarraDerecha}>
               {resultado.ok && <span className={`${estilos.explorarTotalCorto} solo-movil`}>{plural(t.resultadosCorto, total)}</span>}
               <SelectorOrden filtros={filtros} etiqueta={t.orden.etiqueta} opciones={t.orden.opciones} />
@@ -138,7 +139,7 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
   );
 }
 
-function FiltrosActivos({ filtros, textos }: { filtros: Filtros; textos: Textos }) {
+function FiltrosActivos({ filtros, textos, idioma }: { filtros: Filtros; textos: Textos; idioma: Idioma }) {
   const f = textos.paginas.explorar.filtros;
   const fechas = { hoy: f.fecha.hoy, finde: f.fecha.finDeSemana, mes: f.fecha.mes, rango: f.fecha.elegir };
   const chips: { clave: keyof Filtros; texto: string; quitar: Partial<Filtros> }[] = [];
@@ -146,7 +147,7 @@ function FiltrosActivos({ filtros, textos }: { filtros: Filtros; textos: Textos 
   if (filtros.categoria) chips.push({ clave: "categoria", texto: nombreCategoria(textos, filtros.categoria), quitar: { categoria: undefined } });
   if (filtros.fecha) chips.push({ clave: "fecha", texto: fechas[filtros.fecha], quitar: { fecha: undefined } });
   if (filtros.ciudad) chips.push({ clave: "ciudad", texto: filtros.ciudad, quitar: { ciudad: undefined } });
-  if (filtros.precioMax) chips.push({ clave: "precioMax", texto: `≤ ${formatoPrecio(filtros.precioMax)}`, quitar: { precioMax: undefined } });
+  if (filtros.precioMax) chips.push({ clave: "precioMax", texto: `≤ ${formatoPrecio(filtros.precioMax, idioma)}`, quitar: { precioMax: undefined } });
   if (chips.length === 0) return <div />;
 
   return (

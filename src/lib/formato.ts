@@ -1,6 +1,8 @@
 // Utilidades de formato. Funcionan en el servidor y en el cliente.
 
 export type Idioma = "es" | "en";
+// Zona horaria del negocio, no del usuario: los eventos son en Colombia, así que fechas y horas
+// se muestran en la hora local del recinto, sin importar dónde esté quien navega.
 const ZONA = "America/Bogota";
 const LOCALE: Record<Idioma, string> = { es: "es-CO", en: "en-US" };
 
@@ -14,9 +16,9 @@ export function plural(formas: { uno: string; otro: string }, cantidad: number, 
   return fmt(cantidad === 1 ? formas.uno : formas.otro, { cantidad, n: cantidad, ...variables });
 }
 
-/** Pesos colombianos sin decimales: $95.000 */
-export function formatoPrecio(valor: number) {
-  return "$" + new Intl.NumberFormat("es-CO", { maximumFractionDigits: 0 }).format(valor);
+/** Pesos colombianos sin decimales, con el separador del idioma: $95.000 / $95,000 */
+export function formatoPrecio(valor: number, idioma: Idioma) {
+  return "$" + new Intl.NumberFormat(LOCALE[idioma], { maximumFractionDigits: 0 }).format(valor);
 }
 
 const capitalizar = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
