@@ -14,14 +14,14 @@ export default function EncabezadoSeccion({ id, titulo, subtitulo, enlace }: Pro
   return (
     <div className="encabezado-seccion">
       <div>
-        <h2 id={id} className="titular-h3">
+        <h2 id={id} className="titular-h2">
           {titulo}
         </h2>
         {subtitulo && <p className="encabezado-seccion-subtitulo solo-escritorio">{subtitulo}</p>}
       </div>
       <Link href={enlace.href} className="enlace-flecha">
         {enlace.texto}
-        <Icono nombre="arrowr" tamano={14} />
+        <Icono nombre="arrowr" tamano={16} />
       </Link>
     </div>
   );

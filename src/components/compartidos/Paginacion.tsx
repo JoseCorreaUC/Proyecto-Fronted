@@ -23,7 +23,7 @@ function numerosVisibles(actual: number, paginas: number) {
 
 /** Flecha anterior/siguiente: enlace si hay a dónde ir, si no un bloque desactivado. */
 function Flecha({ href, icono, etiqueta }: { href?: string; icono: NombreIcono; etiqueta: string }) {
-  const contenido = <Icono nombre={icono} tamano={14} />;
+  const contenido = <Icono nombre={icono} tamano={16} />;
   return href ? (
     <Link href={href} className="paginacion-boton" aria-label={etiqueta}>
       {contenido}

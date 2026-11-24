@@ -32,7 +32,7 @@ export async function EventoPrincipal({ textos, idioma }: Props) {
       <Afiche afiche={evento.afiche} className="hero-afiche" />
       <div className="hero-ficha">
         <Etiqueta>{d.etiqueta}</Etiqueta>
-        <h2 className="titular-h3">{evento.titulo}</h2>
+        <h2 className="titular-h2">{evento.titulo}</h2>
         <div className="hero-ficha-pie">
           <div>
             <p className="hero-ficha-meta">

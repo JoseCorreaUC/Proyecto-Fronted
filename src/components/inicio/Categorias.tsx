@@ -35,7 +35,7 @@ export default function Categorias({ categorias, textos }: Props) {
           <li key={c.id}>
             <Link href={urlExplorar({ categoria: c.id })} className="categoria">
               <span className="categoria-icono">
-                <Icono nombre={ICONO_CATEGORIA[c.id] ?? ICONO_PREDETERMINADO} tamano={16} />
+                <Icono nombre={ICONO_CATEGORIA[c.id] ?? ICONO_PREDETERMINADO} tamano={20} />
               </span>
               <span>
                 <span className="categoria-nombre">{nombreCategoria(textos, c.id)}</span>

@@ -25,14 +25,14 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
   return (
     <form action={RUTAS.explorar} role="search" className="hero-buscador">
       <label className="hero-buscador-campo">
-        <Icono nombre="search" tamano={16} />
+        <Icono nombre="search" tamano={18} />
         <span>
           <span className="hero-buscador-etiqueta">{textos.etiquetas.que}</span>
           <input type="search" name="q" placeholder={textos.placeholders.que} maxLength={80} />
         </span>
       </label>
       <label className="hero-buscador-campo">
-        <Icono nombre="pin" tamano={16} />
+        <Icono nombre="pin" tamano={18} />
         <span>
           <span className="hero-buscador-etiqueta">{textos.etiquetas.donde}</span>
           <select
@@ -49,7 +49,7 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
         </span>
       </label>
       <label className="hero-buscador-campo">
-        <Icono nombre="calendar" tamano={16} />
+        <Icono nombre="calendar" tamano={18} />
         <span>
           <span className="hero-buscador-etiqueta">{textos.etiquetas.cuando}</span>
           <select name="fecha" defaultValue="">

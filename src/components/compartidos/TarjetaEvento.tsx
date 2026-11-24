@@ -93,11 +93,11 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
         <Titulo className="tarjeta-evento-titulo">{evento.titulo}</Titulo>
         <ul className="tarjeta-evento-meta">
           <li>
-            <Icono nombre="calendar" tamano={14} />
+            <Icono nombre="calendar" tamano={16} />
             <time dateTime={evento.fecha}>{fechaHora}</time>
           </li>
           <li>
-            <Icono nombre="pin" tamano={14} />
+            <Icono nombre="pin" tamano={16} />
             <span>{lugar}</span>
           </li>
         </ul>

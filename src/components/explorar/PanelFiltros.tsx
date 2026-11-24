@@ -77,7 +77,7 @@ export default function PanelFiltros({ filtros, total, categorias, ciudades, pre
         {...(abierto ? { role: "dialog", "aria-modal": true } : {})}
       >
         <div className="filtros-cabecera">
-          <h2 id={`${id}-titulo`} className="titular-h4">
+          <h2 id={`${id}-titulo`} className="titular-h3">
             {textos.titulo}
           </h2>
           <button type="button" className="enlace-boton" onClick={() => iniciar(() => router.push(RUTAS.explorar, { scroll: false }))}>

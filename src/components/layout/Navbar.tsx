@@ -60,7 +60,7 @@ export default function Navbar({ textos, idioma, idiomas, usuario }: Props) {
 
         <div className="navbar-derecha">
           <form action={RUTAS.explorar} role="search" className="buscador-nav solo-escritorio">
-            <Icono nombre="search" tamano={14} />
+            <Icono nombre="search" tamano={16} />
             <input type="search" name="q" placeholder={nav.buscador.placeholder} aria-label={nav.buscador.aria} maxLength={80} />
           </form>
 
