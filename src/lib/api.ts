@@ -10,6 +10,10 @@ export const ENDPOINTS = {
   ciudades: "/ciudades",
   eventos: "/eventos",
   eventosDestacados: "/eventos/destacados",
+  /** Detalle de un evento (Sprint 2). */
+  evento: (slug: string) => `/eventos/${encodeURIComponent(slug)}`,
+  /** Hasta 4 eventos parecidos (Sprint 2). */
+  relacionados: (slug: string) => `/eventos/${encodeURIComponent(slug)}/relacionados`,
   idiomas: "/idiomas",
   sesion: "/sesion",
   textos: "/textos",
@@ -146,6 +150,25 @@ export interface Ciudad {
   eventos: number;
 }
 
+/** GET /eventos/:slug: el resumen de la vista 1 y además los datos del detalle. */
+export interface EventoDetalle extends EventoResumen {
+  recinto: { nombre: string; ciudad: string; direccion?: string; capacidad?: number };
+  descripcion: string;
+  duracionMin: number;
+  /** 0 significa todo público. */
+  edadMinima: number;
+  artistas: string[];
+  organizador?: { id: string; nombre: string };
+  funciones: { id: string; fecha: string; disponibles: number; agotada: boolean }[];
+  localidades: { id: string; nombre: string; precio: number; disponibles: number; agotada: boolean }[];
+}
+
+/** POST /sesion responde la persona y el token. */
+export interface RespuestaSesion {
+  usuario: Usuario;
+  token: string;
+}
+
 /** GET /idiomas: idiomas de la interfaz y el que se usa por defecto. */
 export interface Idiomas {
   predeterminado: string;
@@ -180,6 +203,12 @@ export interface FiltrosEventos {
   pagina?: number;
   porPagina?: number;
 }
+
+// ---------- Endpoints del Sprint 2 ----------
+
+// El detalle cambia poco (precios, funciones): un minuto en caché.
+export const getEvento = (slug: string) => api<EventoDetalle>(ENDPOINTS.evento(slug), { revalidar: 60 });
+export const getRelacionados = (slug: string) => api<Lista<EventoResumen>>(ENDPOINTS.relacionados(slug), { revalidar: 300 });
 
 /** `revalidar`: segundos de caché (30 por defecto; el rango de precios usa más). */
 export const getEventos = (filtros: FiltrosEventos, revalidar = 30) =>

@@ -10,7 +10,7 @@ import Accesibilidad from "./Accesibilidad";
 import EnlaceNav from "./EnlaceNav";
 import Logo from "./Logo";
 import MenuMovil from "./MenuMovil";
-import MenuUsuario from "./MenuUsuario";
+import MenuUsuario, { Avatar, DatosPersona } from "./MenuUsuario";
 import SelectorIdioma from "./SelectorIdioma";
 
 interface Props {
@@ -96,22 +96,31 @@ export default function Navbar({ textos, idioma, idiomas, usuario }: Props) {
                 <span>{movil.secciones.accesibilidad}</span>
                 {accesibilidad}
               </div>
-              {usuario ? (
-                <form action={cerrarSesion}>
-                  <Boton type="submit" variante="secundario" bloque>
-                    {movil.botones.cerrarSesion}
-                  </Boton>
-                </form>
-              ) : (
-                <>
-                  <BotonEnlace href={RUTAS.ingresar} bloque>
-                    {movil.botones.ingresar}
-                  </BotonEnlace>
-                  <BotonEnlace href={RUTAS.registro} variante="secundario" bloque>
-                    {movil.botones.crearCuenta}
-                  </BotonEnlace>
-                </>
-              )}
+              {/* Figma "Menú · sesión iniciada": avatar, nombre, correo y "Cerrar sesión". */}
+              <div className="menu-movil-sesion">
+                {usuario ? (
+                  <>
+                    <div className="menu-movil-persona">
+                      <Avatar nombre={usuario.nombre} />
+                      <DatosPersona usuario={usuario} />
+                    </div>
+                    <form action={cerrarSesion}>
+                      <Boton type="submit" variante="secundario" tamano="pequeno" bloque>
+                        {movil.botones.cerrarSesion}
+                      </Boton>
+                    </form>
+                  </>
+                ) : (
+                  <>
+                    <BotonEnlace href={RUTAS.ingresar} tamano="pequeno" bloque>
+                      {movil.botones.ingresar}
+                    </BotonEnlace>
+                    <BotonEnlace href={RUTAS.registro} variante="secundario" tamano="pequeno" bloque>
+                      {movil.botones.crearCuenta}
+                    </BotonEnlace>
+                  </>
+                )}
+              </div>
             </div>
           </MenuMovil>
         </div>

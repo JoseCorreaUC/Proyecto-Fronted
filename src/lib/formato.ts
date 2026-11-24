@@ -27,14 +27,15 @@ export function formatoPrecio(valor: number, idioma: Idioma) {
 
 const capitalizar = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-/** "Sáb 14 nov" / "Sat Nov 14" en hora de Colombia. */
-export function formatoDia(iso: string, idioma: Idioma) {
+/** "Sáb 14 nov" / "Sat Nov 14" en hora de Colombia; con `anio`, "Sáb 14 nov 2026" (detalle del evento). */
+export function formatoDia(iso: string, idioma: Idioma, anio = false) {
   // El orden de día y mes lo decide Intl según el idioma; solo se quitan comas, puntos y "de".
   const partes = new Intl.DateTimeFormat(regional(idioma), {
     timeZone: ZONA,
     weekday: "short",
     day: "numeric",
     month: "short",
+    ...(anio ? { year: "numeric" as const } : {}),
   })
     .formatToParts(new Date(iso))
     .filter((p) => p.type !== "literal")

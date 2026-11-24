@@ -1153,20 +1153,15 @@ button:disabled {
 }
 
 /* Menú de la cuenta (con sesión) */
+/* Menú de la cuenta (Figma "Menú de cuenta (abierto)": botón de 40 px con iniciales;
+   lista de 272 px, relleno 8, persona arriba y "Cerrar sesión" abajo). */
 .menu-usuario {
   position: relative;
 }
 
 .menu-usuario summary {
-  display: flex;
-  align-items: center;
-  gap: var(--espacio-2);
-  height: 36px;
-  padding-inline: var(--espacio-1) var(--espacio-3);
-  border: 1px solid var(--borde-sutil);
+  display: block;
   border-radius: var(--radio-completo);
-  font-size: var(--tamano-p);
-  font-weight: 500;
   cursor: pointer;
   list-style: none;
 }
@@ -1175,37 +1170,79 @@ button:disabled {
   display: none;
 }
 
-.menu-usuario-avatar {
+.avatar {
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radio-completo);
+  background: var(--fondo-sutil);
+  color: var(--texto-principal);
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.avatar-oscuro {
   background: var(--marca-primario);
   color: var(--texto-inverso);
+}
+
+.persona {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.persona-nombre {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+.persona-correo {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: var(--tamano-nota);
+  line-height: 1.3333;
+  color: var(--texto-secundario);
 }
 
 .menu-usuario-lista {
   position: absolute;
   right: 0;
-  top: calc(100% + var(--espacio-2));
-  min-width: 200px;
-  padding: var(--espacio-2);
+  top: calc(100% + 8px);
+  z-index: 40;
+  display: grid;
+  gap: 4px;
+  width: 272px;
+  padding: 8px;
   border: 1px solid var(--borde-sutil);
-  border-radius: var(--radio-lg);
+  border-radius: var(--radio-md);
   background: var(--fondo-superficie);
   box-shadow: var(--sombra-flotante);
+}
+
+.menu-usuario-persona {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 12px;
+  border-bottom: 1px solid var(--borde-sutil);
 }
 
 .menu-usuario-opcion {
   display: flex;
   align-items: center;
-  gap: var(--espacio-2);
+  gap: 10px;
   width: 100%;
-  padding: var(--espacio-2) var(--espacio-3);
+  padding: 10px 8px;
   border-radius: var(--radio-md);
   font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
   text-align: left;
 }
 
@@ -1213,36 +1250,55 @@ button:disabled {
   background: var(--fondo-sutil);
 }
 
+/* Menú móvil (Figma "Menú · sesión iniciada"): enlaces de 52 px y 18 px; filas de idioma y
+   accesibilidad con relleno 12/24; bloque de sesión con borde arriba y relleno 16/24/24. */
 .menu-movil-enlaces {
   display: grid;
-  gap: var(--espacio-1);
-  padding-block: var(--espacio-4);
+  gap: 2px;
+  padding: 16px 12px;
 }
 
 .menu-movil-enlaces a {
-  display: block;
-  padding-block: var(--espacio-3);
-  font-size: var(--tamano-m);
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  height: 52px;
+  padding-inline: 16px;
+  border-radius: var(--radio-md);
+  font-size: var(--tamano-g);
+  line-height: 1.5556;
 }
 
 .menu-movil-enlaces a[aria-current="page"] {
-  font-weight: 600;
+  background: var(--fondo-sutil);
+  font-weight: 500;
 }
 
 .menu-movil-pie {
   margin-top: auto;
   display: grid;
-  gap: var(--espacio-3);
 }
 
 .menu-movil-fila {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding-block: var(--espacio-2);
-  font-size: var(--tamano-p);
+  padding: 12px 24px;
+  font-size: var(--tamano-m);
+  line-height: 1.5;
   font-weight: 500;
+}
+
+.menu-movil-sesion {
+  display: grid;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  border-top: 1px solid var(--borde-sutil);
+}
+
+.menu-movil-persona {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 @media (max-width: 767px) {
@@ -1341,8 +1397,8 @@ button:disabled {
   z-index: 50;
   display: flex;
   flex-direction: column;
-  width: min(85vw, 340px);
-  padding: 0 var(--espacio-4) var(--espacio-6);
+  width: min(90vw, 350px);
+  padding: 0;
   background: var(--fondo-superficie);
   box-shadow: var(--sombra-flotante);
   overflow-y: auto;
@@ -1354,6 +1410,8 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   height: var(--alto-navbar);
+  padding: 0 12px 0 20px;
+  border-bottom: 1px solid var(--borde-sutil);
 }
 
 @keyframes entrar-derecha {
@@ -2521,5 +2579,551 @@ a.paginacion-boton:hover {
   /* Figma móvil: la lista "Este fin de semana" deja 24 px antes del pie de página. */
   .seccion.solo-movil:last-child {
     padding-bottom: 24px;
+  }
+}
+
+/* =====================================================================
+   Detalle de evento (Sprint 2) · medidas del Figma "3 · Detalle de evento"
+   Escritorio: portada 32/80 con imagen de 1280 × 360; contenido 40/80/64 con bloques separados 40.
+   Móvil: afiche a pantalla completa de 280 px y contenido 20/20/24 separado 20.
+   ===================================================================== */
+.detalle-portada {
+  display: grid;
+  gap: 20px;
+  padding-top: 32px;
+}
+
+.detalle-imagen {
+  position: relative;
+}
+
+.detalle-afiche {
+  height: 360px;
+  border-radius: var(--radio-lg);
+}
+
+.detalle-contenido {
+  display: grid;
+  gap: 40px;
+  padding-block: 40px 64px;
+}
+
+.detalle-cabecera {
+  display: grid;
+  gap: 16px;
+}
+
+.detalle-etiquetas {
+  display: flex;
+  gap: 8px;
+}
+
+.detalle-etiqueta-edad {
+  color: var(--texto-secundario);
+}
+
+.detalle-titulos {
+  display: grid;
+  gap: 16px;
+}
+
+.detalle-titulo {
+  font-size: var(--tamano-display);
+  font-weight: 600;
+  line-height: 1.0769;
+  letter-spacing: -0.025em;
+}
+
+.detalle-artistas {
+  font-size: var(--tamano-g);
+  line-height: 1.5556;
+  color: var(--texto-secundario);
+}
+
+.detalle-datos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 32px;
+  /* En el Figma los datos van 24 px debajo de los artistas (16 + 8), no a 40 como el resto. */
+  margin-top: -16px;
+}
+
+.dato-evento {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dato-evento-icono {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radio-md);
+  background: var(--fondo-sutil);
+}
+
+.dato-evento-textos {
+  display: flex;
+  flex-direction: column;
+}
+
+.dato-evento-textos-invertidos {
+  flex-direction: column-reverse;
+}
+
+.dato-evento-secundario {
+  font-size: var(--tamano-nota);
+  line-height: 1.3333;
+  color: var(--texto-terciario);
+}
+
+.dato-evento-textos-invertidos .dato-evento-secundario {
+  color: var(--texto-secundario);
+}
+
+.dato-evento-principal {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+/* Pestañas: enlaces a cada sección de la página. */
+.detalle-pestanas {
+  display: flex;
+  gap: 32px;
+  border-bottom: 1px solid var(--borde-sutil);
+}
+
+.detalle-pestanas a {
+  padding-bottom: 12px;
+  margin-bottom: -1px;
+  border-bottom: 3px solid transparent;
+  font-size: var(--tamano-m);
+  line-height: 1.5;
+  font-weight: 500;
+  color: var(--texto-secundario);
+}
+
+.detalle-pestanas a:hover,
+.detalle-pestanas a[aria-current="true"] {
+  color: var(--texto-principal);
+}
+
+.detalle-pestanas a[aria-current="true"] {
+  border-bottom-color: var(--marca-primario);
+}
+
+.detalle-seccion {
+  display: grid;
+  gap: 12px;
+  scroll-margin-top: calc(var(--alto-navbar) + 16px);
+}
+
+#como-llegar {
+  gap: 16px;
+}
+
+.detalle-descripcion {
+  display: grid;
+  gap: 12px;
+  font-size: var(--tamano-m);
+  line-height: 1.5;
+  color: var(--texto-secundario);
+}
+
+.detalle-leer-mas {
+  justify-self: start;
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+.detalle-mapa {
+  display: grid;
+  place-items: center;
+  height: 220px;
+  border-radius: var(--radio-lg);
+  background: var(--fondo-sutil);
+  font-size: var(--tamano-p);
+  color: var(--texto-terciario);
+}
+
+.detalle-direccion {
+  font-size: var(--tamano-m);
+  line-height: 1.5;
+  color: var(--texto-secundario);
+}
+
+.detalle-relacionados {
+  display: grid;
+  gap: 24px;
+  padding-bottom: 72px;
+}
+
+@media (max-width: 767px) {
+  /* En el móvil el Figma muestra el afiche a pantalla completa, sin la barra de navegación. */
+  body:has([data-detalle]) [data-navbar] {
+    display: none;
+  }
+  .detalle-portada {
+    display: block;
+    padding: 0;
+    max-width: none;
+  }
+  .detalle-afiche {
+    height: 280px;
+    border-radius: 0;
+  }
+  .detalle-acciones.solo-movil {
+    position: absolute;
+    inset: 16px 20px auto;
+    display: flex !important;
+    justify-content: space-between;
+  }
+  .detalle-accion {
+    width: 40px;
+    height: 40px;
+    border: 0;
+    border-radius: var(--radio-completo);
+    background: var(--fondo-superficie);
+  }
+  .detalle-contenido {
+    gap: 20px;
+    padding-block: 20px 24px;
+  }
+  .detalle-cabecera {
+    gap: 20px;
+  }
+  .detalle-titulos {
+    gap: 6px;
+  }
+  .detalle-titulo {
+    line-height: 1.1765;
+  }
+  .detalle-artistas {
+    font-size: var(--tamano-m);
+    line-height: 1.5;
+  }
+  .detalle-datos.solo-movil {
+    display: grid !important;
+    gap: 12px;
+    margin: 0;
+    padding: 0 0 20px;
+    border-bottom: 1px solid var(--borde-sutil);
+  }
+  .detalle-seccion {
+    gap: 8px;
+  }
+  /* Tres líneas y "Leer más". */
+  .detalle-descripcion:not(.detalle-descripcion-completa) {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    overflow: hidden;
+  }
+  .detalle-descripcion .titular-h2 {
+    line-height: 1.3;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Figma móvil: el detalle va sobre fondo blanco. */
+  body:has([data-detalle]) {
+    background: var(--fondo-superficie);
+  }
+}
+
+/* =====================================================================
+   UI · Campo de formulario y aviso (Sprint 2)
+   Figma "Campo": etiqueta 14 px, separación 6, caja de 48 px radio 8 borde #8c8c8c.
+   Con error: borde de 2 px rojo y mensaje de 12 px debajo.
+   ===================================================================== */
+.campo-formulario {
+  display: grid;
+  gap: 6px;
+}
+
+.campo-formulario-etiqueta {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+.campo-formulario-caja {
+  display: flex;
+  align-items: center;
+  height: 48px;
+  padding-inline: 14px 6px;
+  border: 1px solid var(--borde-fuerte);
+  border-radius: var(--radio-md);
+  background: var(--fondo-superficie);
+}
+
+.campo-formulario-caja:focus-within {
+  box-shadow: var(--foco);
+}
+
+.campo-formulario-caja input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: none;
+  background: transparent;
+  font-size: var(--tamano-m);
+  line-height: 1.5;
+}
+
+.campo-formulario-caja input::placeholder {
+  color: var(--texto-terciario);
+}
+
+.campo-formulario-error .campo-formulario-caja {
+  border: 2px solid var(--estado-error);
+  padding-inline: 13px 5px;
+}
+
+.campo-formulario-mensaje {
+  font-size: var(--tamano-nota);
+  line-height: 1.3333;
+  color: var(--estado-error);
+}
+
+.campo-formulario-ojo {
+  width: 36px;
+  height: 36px;
+  color: var(--texto-secundario);
+}
+
+/* Aviso de error (Figma: fondo #fce8e6, borde rojo, radio 8, relleno 12/16, separación 12). */
+.aviso {
+  display: flex;
+  gap: 12px;
+  padding: 12px 16px;
+  border: 1px solid var(--estado-error);
+  border-radius: var(--radio-md);
+  background: var(--estado-error-suave);
+}
+
+.aviso > .icono {
+  color: var(--estado-error);
+}
+
+.aviso-contenido {
+  display: grid;
+  gap: 2px;
+}
+
+.aviso-titulo {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+.aviso-texto {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  color: var(--texto-secundario);
+}
+
+/* Casilla de 20 px radio 4 (Figma "Casilla de verificación"). */
+.casilla-cuenta {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  cursor: pointer;
+}
+
+.casilla-cuenta input {
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.casilla-cuenta-caja {
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border: 1.5px solid var(--borde-fuerte);
+  border-radius: 4px;
+  background: var(--fondo-superficie);
+  color: transparent;
+}
+
+.casilla-cuenta input:checked + .casilla-cuenta-caja {
+  background: var(--marca-primario);
+  border-color: var(--marca-primario);
+  color: var(--texto-inverso);
+}
+
+.casilla-cuenta input:focus-visible + .casilla-cuenta-caja {
+  box-shadow: var(--foco);
+}
+
+.enlace-fuerte {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+.enlace-fuerte:hover {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* Indicador de carga del botón "Ingresando…" (Figma: 18 px). */
+.indicador-carga {
+  width: 18px;
+  height: 18px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: girar 700ms linear infinite;
+}
+
+@keyframes girar {
+  to {
+    rotate: 360deg;
+  }
+}
+
+/* =====================================================================
+   Ingresar (Sprint 2) · Figma "4 · Iniciar sesión"
+   Escritorio: portada oscura de 620 px (relleno 56) y formulario de 400 px centrado.
+   Móvil: solo el formulario, relleno 20/24/32, con el logo arriba.
+   ===================================================================== */
+.pantalla-cuenta {
+  min-height: 100vh;
+  background: var(--fondo-superficie);
+}
+
+.ingresar {
+  display: grid;
+  grid-template-columns: 620px minmax(0, 1fr);
+  min-height: 100vh;
+}
+
+.portada-cuenta {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 56px;
+  background: var(--fondo-inverso);
+  color: var(--texto-inverso);
+}
+
+.portada-cuenta-mensaje {
+  display: grid;
+  gap: 24px;
+}
+
+.portada-cuenta-lema {
+  font-size: var(--tamano-display);
+  line-height: 1.0769;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.portada-cuenta-beneficios {
+  display: grid;
+  gap: 24px;
+}
+
+.portada-cuenta-beneficios li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--tamano-g);
+  line-height: 1.5556;
+}
+
+.portada-cuenta-check {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radio-completo);
+  background: #ffffff38;
+}
+
+.ingresar-formulario {
+  display: grid;
+  place-items: center;
+  padding: 32px;
+}
+
+.ingresar-logo-movil {
+  display: none;
+}
+
+.formulario-cuenta {
+  display: grid;
+  gap: 20px;
+  width: min(400px, 100%);
+}
+
+.formulario-cuenta-encabezado {
+  display: grid;
+  gap: 20px;
+}
+
+/* El título es Titular/H1 (34 px) en los dos diseños. */
+.formulario-cuenta .titular-h1 {
+  font-size: 2.125rem;
+  line-height: 1.1765;
+}
+
+.formulario-cuenta-subtitulo {
+  font-size: var(--tamano-m);
+  line-height: 1.5;
+  color: var(--texto-secundario);
+}
+
+.formulario-cuenta-opciones {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.formulario-cuenta-pie {
+  text-align: center;
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  color: var(--texto-secundario);
+}
+
+.formulario-cuenta-pie .enlace-fuerte {
+  color: var(--texto-principal);
+}
+
+@media (max-width: 767px) {
+  .ingresar {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .portada-cuenta {
+    display: none;
+  }
+  .ingresar-formulario {
+    display: grid;
+    align-content: start;
+    justify-items: stretch;
+    gap: 20px;
+    padding: 20px 24px 32px;
+  }
+  .ingresar-logo-movil {
+    display: block;
+  }
+  .formulario-cuenta {
+    width: 100%;
+  }
+  .formulario-cuenta-opciones {
+    flex-direction: column;
+    align-items: flex-start;
   }
 }

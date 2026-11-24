@@ -7,6 +7,8 @@ export const RUTAS = {
   explorar: "/explorar",
   ingresar: "/ingresar",
   registro: "/registro",
+  /** Recuperar la contraseña (pantallas del Sprint 3). */
+  recuperarClave: "/recuperar-clave",
   terminos: "/terminos",
   accesibilidad: "/accesibilidad",
   /** Detalle de un evento. */

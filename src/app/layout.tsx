@@ -3,12 +3,9 @@ import { Instrument_Sans } from "next/font/google";
 import Script from "next/script";
 // Única hoja de estilos del sitio: variables globales, base y componentes.
 import "./globals.css";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/layout/CookieBanner";
-import { getConsentimiento, getIdioma, getIdiomas, getTextos } from "@/lib/textos";
+import { getConsentimiento, getIdioma, getTextos } from "@/lib/textos";
 import { scriptAccesibilidad } from "@/lib/accesibilidad";
-import { getUsuario } from "@/lib/sesion";
 
 const instrumentSans = Instrument_Sans({
   subsets: ["latin"],
@@ -27,13 +24,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export const viewport: Viewport = { themeColor: "#141414" };
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [idioma, idiomas, textos, consentimiento, usuario] = await Promise.all([
-    getIdioma(),
-    getIdiomas(),
-    getTextos(),
-    getConsentimiento(),
-    getUsuario(),
-  ]);
+  const [idioma, textos, consentimiento] = await Promise.all([getIdioma(), getTextos(), getConsentimiento()]);
 
   const textosError = {
     titulo: textos.estados.error.titulo,
@@ -51,11 +42,8 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <a href="#contenido" className="saltar-contenido">
           {textos.general.aria.saltarAlContenido}
         </a>
-        <Navbar textos={textos} idioma={idioma} idiomas={idiomas.datos} usuario={usuario} />
-        <main id="contenido" tabIndex={-1}>
-          {children}
-        </main>
-        <Footer textos={textos} />
+        {/* La barra y el pie los pone cada grupo de rutas: (sitio) los lleva, (cuenta) no. */}
+        {children}
         {!consentimiento && <CookieBanner textos={textos.cookies.banner} />}
       </body>
     </html>
