@@ -83,7 +83,6 @@
   --afiche-sombra: #14141440;
   --afiche-circulo-claro: #ffffff1f;
   --afiche-circulo-oscuro: #1414141f;
-  --afiche-trazo: #ffffff;
   --velo-modal: #14141473;
 
   /* Escala tipográfica fluida con clamp(). En 390 px y en 1440 px cae exactamente en los tamaños de Figma
@@ -782,8 +781,9 @@ button:disabled {
   overflow: hidden;
   background: linear-gradient(135deg, var(--afiche-1), var(--afiche-2));
   isolation: isolate;
-  /* Los colores de la API son vivos; el diseño los muestra apagados. */;
-  filter: saturate(0.6) brightness(0.92);
+  /* Los colores de la API son vivos; en el Figma los afiches tienen tonos apagados y medio oscuros
+     (poca saturación). Este filtro los acerca a esa paleta sin cambiar el color que manda la API. */
+  filter: saturate(0.4) brightness(0.82);
 }
 
 /* Capa que suaviza los colores de la API para acercarlos a los tonos del diseño. */
@@ -814,39 +814,6 @@ button:disabled {
   left: -8%;
   bottom: -18%;
   background: var(--afiche-circulo-oscuro);
-}
-
-.afiche-lineas::after,
-.afiche-puntos::after,
-.afiche-rombos::after,
-.afiche-ondas::after,
-.afiche-circulos::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.18;
-}
-
-.afiche-lineas::after {
-  background: repeating-linear-gradient(135deg, var(--afiche-trazo) 0 1px, transparent 1px 14px);
-}
-
-.afiche-puntos::after {
-  background: radial-gradient(var(--afiche-trazo) 1.2px, transparent 1.6px) 0 0 / 14px 14px;
-}
-
-.afiche-rombos::after {
-  background:
-    linear-gradient(45deg, var(--afiche-trazo) 1px, transparent 1px) 0 0 / 18px 18px,
-    linear-gradient(-45deg, var(--afiche-trazo) 1px, transparent 1px) 0 0 / 18px 18px;
-}
-
-.afiche-ondas::after {
-  background: radial-gradient(circle at 50% 120%, transparent 40%, var(--afiche-trazo) 40.5%, transparent 41.5%) 0 0 / 40px 20px;
-}
-
-.afiche-circulos::after {
-  background: radial-gradient(circle, transparent 6px, var(--afiche-trazo) 6.5px, transparent 7.5px) 0 0 / 24px 24px;
 }
 
 /* =====================================================================

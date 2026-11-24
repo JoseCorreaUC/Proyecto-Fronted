@@ -7,7 +7,7 @@ import { fmt } from "@/lib/formato";
 import { urlExplorar } from "@/lib/filtros";
 import { intentar } from "@/lib/intentar";
 import { getCiudadPredeterminada } from "@/lib/config";
-import { nombreCategoria, textosTarjeta } from "@/components/compartidos/TarjetaEvento";
+import { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
 import ErrorSeccion from "@/components/compartidos/ErrorSeccion";
 import EncabezadoSeccion from "@/components/compartidos/EncabezadoSeccion";
 import { TarjetasCargando } from "@/components/compartidos/Estados";
@@ -15,8 +15,7 @@ import Etiqueta from "@/components/ui/Etiqueta";
 import HeroBuscador from "@/components/inicio/HeroBuscador";
 import BuscadorMovil from "@/components/inicio/BuscadorMovil";
 import Categorias from "@/components/inicio/Categorias";
-import { EventoPrincipal, FinDeSemana, Proximos } from "@/components/inicio/SeccionesEventos";
-import DestacadosCliente from "@/components/inicio/DestacadosCliente";
+import { Destacados, EventoPrincipal, FinDeSemana, Proximos } from "@/components/inicio/SeccionesEventos";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.inicio;
@@ -105,8 +104,9 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
           subtitulo={t.destacados.subtitulo}
           enlace={{ href: urlExplorar({ orden: "popularidad" }), texto: t.destacados.enlaces.verTodos }}
         />
-        {/* Se pide desde el navegador: es la petición a la API que se ve en DevTools. */}
-        <DestacadosCliente textos={{ ...textosTarjeta(textos), estados: textos.estados }} idioma={idioma} />
+        <Suspense fallback={<TarjetasCargando etiqueta={cargando} />}>
+          <Destacados textos={textos} idioma={idioma} />
+        </Suspense>
       </section>
 
       {/* ---------- Próximamente en {ciudad} (escritorio); se omite si no se conoce ninguna ciudad ---------- */}

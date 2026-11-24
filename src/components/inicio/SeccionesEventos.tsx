@@ -8,6 +8,10 @@ import ErrorSeccion from "@/components/compartidos/ErrorSeccion";
 import RejillaEventos from "@/components/compartidos/RejillaEventos";
 import { BotonEnlace } from "@/components/ui/Boton";
 import Etiqueta from "@/components/ui/Etiqueta";
+import { textosTarjeta } from "@/components/compartidos/TarjetaEvento";
+import DestacadosCliente from "./DestacadosCliente";
+
+const CANTIDAD_DESTACADOS = 4;
 
 // Secciones del inicio que piden sus propios eventos. Cada una va dentro de un <Suspense>,
 // así la página se muestra enseguida y cada sección aparece cuando llega su respuesta.
@@ -43,6 +47,13 @@ export async function EventoPrincipal({ textos, idioma }: Props) {
       </div>
     </article>
   );
+}
+
+/** Destacados: el servidor trae los eventos y el cliente los refresca desde el navegador. */
+export async function Destacados({ textos, idioma }: Props) {
+  const r = await intentar(getDestacados());
+  const iniciales = r.ok ? r.datos.datos.slice(0, CANTIDAD_DESTACADOS) : undefined;
+  return <DestacadosCliente textos={{ ...textosTarjeta(textos), estados: textos.estados }} idioma={idioma} iniciales={iniciales} cantidad={CANTIDAD_DESTACADOS} />;
 }
 
 export async function Proximos({ textos, idioma, ciudad }: Props & { ciudad: string }) {
