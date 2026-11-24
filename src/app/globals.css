@@ -3004,7 +3004,8 @@ a.paginacion-boton:hover {
 
 .ingresar {
   display: grid;
-  grid-template-columns: 620px minmax(0, 1fr);
+  /* 620 y 820 px a 1440, como el Figma; en pantallas más angostas se reparten igual. */
+  grid-template-columns: minmax(0, 620fr) minmax(0, 820fr);
   min-height: 100vh;
 }
 
@@ -3086,9 +3087,16 @@ a.paginacion-boton:hover {
 
 .formulario-cuenta-opciones {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+}
+
+/* "Mantener la sesión iniciada" y "¿Olvidaste tu contraseña?" nunca se parten: si no caben juntos,
+   el enlace baja completo a la línea siguiente. */
+.formulario-cuenta-opciones > * {
+  white-space: nowrap;
 }
 
 .formulario-cuenta-pie {
