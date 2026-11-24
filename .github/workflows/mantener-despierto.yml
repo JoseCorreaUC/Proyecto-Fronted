@@ -1,0 +1,35 @@
+# Mantiene despiertos el sitio de Vercel y la API de prueba para que la primera visita no tarde.
+# La API de prueba (fly.dev) se apaga sola cuando nadie la usa y tarda varios segundos en arrancar;
+# la función de Vercel también tarda más la primera vez. Este flujo los visita cada 10 minutos
+# solo de lunes a viernes, de 6:00 a. m. a 10:00 p. m. (hora de Colombia), para no gastar de más.
+#
+# Antes de la sustentación también se puede correr a mano: pestaña Actions → "Mantener despierto"
+# → Run workflow.
+
+name: Mantener despierto
+
+on:
+  schedule:
+    # GitHub usa hora UTC. Colombia es UTC-5: 6:00 a. m. = 11:00 UTC y 10:00 p. m. = 03:00 UTC del día siguiente.
+    - cron: "*/10 11-23 * * 1-5"
+    - cron: "*/10 0-2 * * 2-6"
+  workflow_dispatch:
+
+permissions: {}
+
+env:
+  SITIO: https://proyecto-fronted-a6mt.vercel.app
+  API: https://yanethm-taquilla-api.fly.dev/api/v1
+
+jobs:
+  visitar:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Despertar la API y el sitio
+        run: |
+          # Una petición liviana a la API (GET /idiomas) y las dos vistas del sitio.
+          for url in "$API/idiomas" "$SITIO/" "$SITIO/explorar"; do
+            curl --silent --output /dev/null --max-time 60 \
+              --write-out "%{http_code} en %{time_total}s  $url\n" "$url" || echo "Sin respuesta: $url"
+          done
