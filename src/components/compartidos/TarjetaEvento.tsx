@@ -5,9 +5,16 @@ import { fmt, formatoDia, formatoHora, formatoPrecio, type Idioma } from "@/lib/
 import Afiche from "./Afiche";
 import Icono from "./Icono";
 import { RUTAS } from "@/lib/rutas";
-import etiquetas from "@/components/ui/Etiqueta.module.css";
-import botones from "@/components/ui/Boton.module.css";
-import estilos from "./TarjetaEvento.module.css";
+import { BotonEnlace } from "@/components/ui/Boton";
+import Etiqueta from "@/components/ui/Etiqueta";
+
+/** Etiqueta de disponibilidad: "Agotada" tiene prioridad sobre "Últimas entradas". */
+function estadoDisponibilidad(evento: EventoResumen, textos: Textos) {
+  const textosDisp = textos.componentes.etiquetas.disponibilidad;
+  if (evento.disponibilidad.agotado) return { texto: textosDisp.agotada, tono: "error" as const };
+  if (evento.disponibilidad.ultimasEntradas) return { texto: textosDisp.ultimasEntradas, tono: "alerta" as const };
+  return null;
+}
 
 interface Props {
   evento: EventoResumen;
@@ -35,25 +42,21 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
     lugar: evento.recinto.nombre,
     ciudad: evento.recinto.ciudad,
   });
-  const disp = textos.componentes.etiquetas.disponibilidad;
-  const estado = evento.disponibilidad.agotado
-    ? { texto: disp.agotada, clase: etiquetas.etiquetaError }
-    : evento.disponibilidad.ultimasEntradas
-      ? { texto: disp.ultimasEntradas, clase: etiquetas.etiquetaAlerta }
-      : null;
+  const disponibilidad = estadoDisponibilidad(evento, textos);
+  const verEvento = textos.paginas.inicio.tarjeta.botones.verEvento;
 
   if (variante === "compacta") {
     return (
-      <article className={estilos.tarjetaCompacta}>
-        <Afiche afiche={evento.afiche} className={estilos.tarjetaCompactaAfiche} />
+      <article className="tarjeta-compacta">
+        <Afiche afiche={evento.afiche} className="tarjeta-compacta-afiche" />
         <div>
-          <Titulo className={estilos.tarjetaCompactaTitulo}>
+          <Titulo className="tarjeta-compacta-titulo">
             <Link href={href} className="enlace-estirado">
               {evento.titulo}
             </Link>
           </Titulo>
-          <p className={estilos.tarjetaCompactaMeta}>{fechaHora}</p>
-          <p className={estilos.tarjetaCompactaPrecio}>
+          <p className="tarjeta-compacta-meta">{fechaHora}</p>
+          <p className="tarjeta-compacta-precio">
             {fmt(textos.componentes.precio.desdePrecio, { precio: formatoPrecio(evento.precioDesde, idioma) })}
           </p>
         </div>
@@ -62,15 +65,19 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
   }
 
   return (
-    <article className={estilos.tarjetaEvento}>
-      <div className={estilos.tarjetaEventoMedia}>
-        <Afiche afiche={evento.afiche} className={estilos.tarjetaEventoAfiche} />
-        {estado && <span className={`${etiquetas.etiqueta} ${etiquetas.etiquetaSobre} ${estado.clase}`}>{estado.texto}</span>}
+    <article className="tarjeta-evento">
+      <div className="tarjeta-evento-media">
+        <Afiche afiche={evento.afiche} className="tarjeta-evento-afiche" />
+        {disponibilidad && (
+          <Etiqueta tono={disponibilidad.tono} sobre>
+            {disponibilidad.texto}
+          </Etiqueta>
+        )}
       </div>
-      <div className={estilos.tarjetaEventoCuerpo}>
-        <span className={etiquetas.etiqueta}>{nombreCategoria(textos, evento.categoria, true)}</span>
-        <Titulo className={estilos.tarjetaEventoTitulo}>{evento.titulo}</Titulo>
-        <ul className={estilos.tarjetaEventoMeta}>
+      <div className="tarjeta-evento-cuerpo">
+        <Etiqueta>{nombreCategoria(textos, evento.categoria, true)}</Etiqueta>
+        <Titulo className="tarjeta-evento-titulo">{evento.titulo}</Titulo>
+        <ul className="tarjeta-evento-meta">
           <li>
             <Icono nombre="calendar" tamano={14} />
             <time dateTime={evento.fecha}>{fechaHora}</time>
@@ -80,14 +87,14 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
             <span>{lugar}</span>
           </li>
         </ul>
-        <div className={estilos.tarjetaEventoPie}>
-          <p className={estilos.precio}>
-            <span className={estilos.precioEtiqueta}>{textos.componentes.precio.desde}</span>
-            <span className={estilos.precioValor}>{formatoPrecio(evento.precioDesde, idioma)}</span>
+        <div className="tarjeta-evento-pie">
+          <p className="precio">
+            <span className="precio-etiqueta">{textos.componentes.precio.desde}</span>
+            <span className="precio-valor">{formatoPrecio(evento.precioDesde, idioma)}</span>
           </p>
-          <Link href={href} className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno} enlace-estirado`} aria-label={`${textos.paginas.inicio.tarjeta.botones.verEvento}: ${evento.titulo}`}>
-            {textos.paginas.inicio.tarjeta.botones.verEvento}
-          </Link>
+          <BotonEnlace href={href} variante="secundario" tamano="pequeno" className="enlace-estirado" aria-label={`${verEvento}: ${evento.titulo}`}>
+            {verEvento}
+          </BotonEnlace>
         </div>
       </div>
     </article>

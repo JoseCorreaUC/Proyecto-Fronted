@@ -3,7 +3,6 @@ import type { Textos } from "@/lib/textos";
 import { fmt } from "@/lib/formato";
 import Logo from "./Logo";
 import { RUTAS } from "@/lib/rutas";
-import estilos from "./Footer.module.css";
 
 export default function Footer({ textos }: { textos: Textos }) {
   const f = textos.footer;
@@ -32,17 +31,17 @@ export default function Footer({ textos }: { textos: Textos }) {
   ];
 
   return (
-    <footer className={estilos.footer}>
+    <footer className="footer">
       <div className="contenedor">
-        <div className={estilos.footerSuperior}>
-          <div className={estilos.footerMarca}>
+        <div className="footer-superior">
+          <div className="footer-marca">
             <Logo texto={textos.navbar.logo.texto} aria={textos.navbar.logo.aria} variante="inverso" />
             <p>{f.lema}</p>
           </div>
-          <div className={estilos.footerColumnas}>
+          <div className="footer-columnas">
             {columnas.map((columna) => (
               <nav key={columna.titulo} aria-label={columna.titulo}>
-                <h2 className={estilos.footerTitulo}>{columna.titulo}</h2>
+                <h2 className="footer-titulo">{columna.titulo}</h2>
                 <ul>
                   {columna.enlaces.map((enlace) => (
                     <li key={enlace.href}>
@@ -54,7 +53,7 @@ export default function Footer({ textos }: { textos: Textos }) {
             ))}
           </div>
         </div>
-        <div className={estilos.footerInferior}>
+        <div className="footer-inferior">
           <p>{fmt(f.legal.derechos, { anio: new Date().getFullYear() })}</p>
           <p>{f.legal.nota}</p>
         </div>

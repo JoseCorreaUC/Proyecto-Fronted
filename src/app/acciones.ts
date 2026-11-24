@@ -3,14 +3,15 @@
 import { cookies } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { api, ENDPOINTS } from "@/lib/api";
-import { COOKIE_CONSENTIMIENTO, COOKIE_IDIOMA, type Idioma } from "@/lib/textos";
+import { COOKIE_CONSENTIMIENTO, COOKIE_IDIOMA, esIdiomaValido, type Consentimiento, type Idioma } from "@/lib/textos";
 import { COOKIE_TOKEN } from "@/lib/sesion";
 
 const UN_ANIO = 60 * 60 * 24 * 365;
 
 /** Cambia el idioma. Solo se recuerda entre visitas si la persona aceptó las cookies. */
 export async function cambiarIdioma(idioma: Idioma) {
-  if (idioma !== "es" && idioma !== "en") return;
+  // Solo se aceptan los idiomas que ofrece GET /idiomas.
+  if (!(await esIdiomaValido(idioma))) return;
   const almacen = await cookies();
   const aceptado = almacen.get(COOKIE_CONSENTIMIENTO)?.value === "aceptado";
   almacen.set(COOKIE_IDIOMA, idioma, {
@@ -22,7 +23,7 @@ export async function cambiarIdioma(idioma: Idioma) {
   revalidatePath("/", "layout");
 }
 
-export async function guardarConsentimiento(valor: "aceptado" | "rechazado") {
+export async function guardarConsentimiento(valor: Consentimiento) {
   const almacen = await cookies();
   almacen.set(COOKIE_CONSENTIMIENTO, valor, { path: "/", sameSite: "lax", maxAge: UN_ANIO });
   const idioma = almacen.get(COOKIE_IDIOMA)?.value;

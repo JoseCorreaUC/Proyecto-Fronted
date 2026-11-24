@@ -1,20 +1,20 @@
-import Link from "next/link";
 import type { Metadata } from "next";
 import { getCategorias, getCiudades, getEventos } from "@/lib/api";
-import { getIdioma, getTextos, type Textos } from "@/lib/textos";
-import { hayFiltros, leerFiltros, parametrosApi, urlExplorar, type Filtros } from "@/lib/filtros";
-import { fmt, formatoPrecio, plural, type Idioma } from "@/lib/formato";
+import { getIdioma, getTextos } from "@/lib/textos";
+import { hayFiltros, leerFiltros, parametrosApi, rangoDePrecios, urlExplorar } from "@/lib/filtros";
+import { plural } from "@/lib/formato";
+import { intentar } from "@/lib/intentar";
 import { RUTAS } from "@/lib/rutas";
 import Icono from "@/components/compartidos/Icono";
-import TarjetaEvento, { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
+import { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
 import ErrorSeccion from "@/components/compartidos/ErrorSeccion";
 import { Estado, EnlaceBoton } from "@/components/compartidos/Estados";
+import Migas from "@/components/compartidos/Migas";
+import Paginacion from "@/components/compartidos/Paginacion";
+import RejillaEventos from "@/components/compartidos/RejillaEventos";
+import FiltrosActivos from "@/components/explorar/FiltrosActivos";
 import PanelFiltros from "@/components/explorar/PanelFiltros";
 import SelectorOrden from "@/components/explorar/SelectorOrden";
-import buscadores from "@/components/ui/Buscador.module.css";
-import tarjetas from "@/components/compartidos/TarjetaEvento.module.css";
-import etiquetas from "@/components/ui/Etiqueta.module.css";
-import estilos from "./page.module.css";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = (await getTextos()).paginas.explorar;
@@ -25,59 +25,50 @@ export async function generateMetadata(): Promise<Metadata> {
 async function getRangoPrecios() {
   try {
     const todos = await getEventos({ porPagina: 100 }, 300);
-    const precios = todos.datos.map((e) => e.precioDesde);
-    return {
-      minimo: Math.floor(Math.min(...precios) / 10000) * 10000,
-      maximo: Math.ceil(Math.max(...precios) / 10000) * 10000,
-    };
+    return rangoDePrecios(todos.datos.map((e) => e.precioDesde));
   } catch (error) {
     console.error("[explorar] No se pudo calcular el rango de precios:", error);
-    return { minimo: 0, maximo: 200000 };
+    return null;
   }
 }
 
 export default async function Explorar({ searchParams }: PageProps<"/explorar">) {
   const filtros = leerFiltros(await searchParams);
-  const [textos, idioma, categorias, ciudades, precio] = await Promise.all([
+  const [textos, idioma, categorias, ciudades, precio, resultado] = await Promise.all([
     getTextos(),
     getIdioma(),
     getCategorias().catch(() => null),
     getCiudades().catch(() => null),
     getRangoPrecios(),
+    intentar(getEventos(parametrosApi(filtros))),
   ]);
-  const resultado = await getEventos(parametrosApi(filtros)).then(
-    (r) => ({ ok: true as const, ...r }),
-    (error: unknown) => ({ ok: false as const, error }),
-  );
 
   const t = textos.paginas.explorar;
-  const total = resultado.ok ? resultado.paginacion.total : 0;
+  const titulo = textos.footer.columnas.explora.enlaces.explorar;
+  const total = resultado.ok ? resultado.datos.paginacion.total : 0;
   // "Del {inicio} al {fin}" se parte para nombrar los dos campos del rango de fechas.
   const [antes = "", resto = ""] = textos.paginas.conciertos.semana.rango.split("{inicio}");
   const entre = resto.split("{fin}")[0];
 
   return (
-    <div className={`contenedor ${estilos.explorar}`}>
-      <nav aria-label={textos.componentes.migas.explorar} className={`${estilos.migas} solo-escritorio`}>
-        <ol>
-          <li>
-            <Link href={RUTAS.inicio}>{textos.componentes.migas.inicio}</Link>
-          </li>
-          <li aria-current="page">{textos.componentes.migas.explorar}</li>
-        </ol>
-      </nav>
+    <div className="contenedor explorar">
+      <Migas
+        etiqueta={textos.componentes.migas.explorar}
+        className="solo-escritorio"
+        pasos={[{ texto: textos.componentes.migas.inicio, href: RUTAS.inicio }, { texto: textos.componentes.migas.explorar }]}
+      />
 
-      <header className={estilos.explorarCabecera}>
-        <h1 className="titular-h1">{textos.footer.columnas.explora.enlaces.explorar}</h1>
+      <header className="explorar-cabecera">
+        <h1 className="titular-h1">{titulo}</h1>
         {resultado.ok && (
-          <p className={`${estilos.explorarTotal} solo-escritorio`} aria-live="polite">
+          <p className="explorar-total solo-escritorio" aria-live="polite">
             {plural(t.resultados, total)}
           </p>
         )}
       </header>
 
-      <div className={`${estilos.explorarBuscador} solo-movil`}>
-        <form action={RUTAS.explorar} role="search" className={`${buscadores.buscadorNav} ${buscadores.buscadorNavMovil}`}>
+      <div className="explorar-buscador solo-movil">
+        <form action={RUTAS.explorar} role="search" className="buscador-nav buscador-nav-movil">
           <Icono nombre="search" tamano={14} />
           <input type="search" name="q" defaultValue={filtros.q} placeholder={textos.paginas.inicio.hero.buscador.placeholders.movil} aria-label={textos.navbar.buscador.aria} maxLength={80} />
           {filtros.categoria && <input type="hidden" name="categoria" value={filtros.categoria} />}
@@ -85,7 +76,7 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
         </form>
       </div>
 
-      <div className={estilos.explorarCuerpo}>
+      <div className="explorar-cuerpo">
         <PanelFiltros
           filtros={filtros}
           total={total}
@@ -103,18 +94,18 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
           }}
         />
 
-        <section aria-label={textos.footer.columnas.explora.enlaces.explorar}>
-          <div className={estilos.explorarBarra}>
+        <section aria-label={titulo}>
+          <div className="explorar-barra">
             <FiltrosActivos filtros={filtros} textos={textos} idioma={idioma} />
-            <div className={estilos.explorarBarraDerecha}>
-              {resultado.ok && <span className={`${estilos.explorarTotalCorto} solo-movil`}>{plural(t.resultadosCorto, total)}</span>}
+            <div className="explorar-barra-derecha">
+              {resultado.ok && <span className="explorar-total-corto solo-movil">{plural(t.resultadosCorto, total)}</span>}
               <SelectorOrden filtros={filtros} etiqueta={t.orden.etiqueta} opciones={t.orden.opciones} />
             </div>
           </div>
 
           {!resultado.ok ? (
             <ErrorSeccion textos={textos} error={resultado.error} />
-          ) : resultado.datos.length === 0 ? (
+          ) : resultado.datos.datos.length === 0 ? (
             <Estado
               icono="search"
               titulo={t.vacio.titulo}
@@ -123,105 +114,17 @@ export default async function Explorar({ searchParams }: PageProps<"/explorar">)
             />
           ) : (
             <>
-              <ul className={`${tarjetas.rejillaEventos} ${tarjetas.rejillaEventosTres}`}>
-                {resultado.datos.map((evento) => (
-                  <li key={evento.id}>
-                    <TarjetaEvento evento={evento} textos={textos} idioma={idioma} nivelTitulo="h2" />
-                  </li>
-                ))}
-              </ul>
-              <Paginacion filtros={filtros} paginas={resultado.paginacion.paginas} textos={textos} />
+              <RejillaEventos eventos={resultado.datos.datos} textos={textos} idioma={idioma} tresColumnas nivelTitulo="h2" />
+              <Paginacion
+                actual={filtros.pagina ?? 1}
+                paginas={resultado.datos.paginacion.paginas}
+                url={(pagina) => urlExplorar({ ...filtros, pagina })}
+                textos={textos.componentes.paginacion.aria}
+              />
             </>
           )}
         </section>
       </div>
     </div>
-  );
-}
-
-function FiltrosActivos({ filtros, textos, idioma }: { filtros: Filtros; textos: Textos; idioma: Idioma }) {
-  const f = textos.paginas.explorar.filtros;
-  const fechas = { hoy: f.fecha.hoy, finde: f.fecha.finDeSemana, mes: f.fecha.mes, rango: f.fecha.elegir };
-  const chips: { clave: keyof Filtros; texto: string; quitar: Partial<Filtros> }[] = [];
-  if (filtros.q) chips.push({ clave: "q", texto: `“${filtros.q}”`, quitar: { q: undefined } });
-  if (filtros.categoria) chips.push({ clave: "categoria", texto: nombreCategoria(textos, filtros.categoria), quitar: { categoria: undefined } });
-  if (filtros.fecha) chips.push({ clave: "fecha", texto: fechas[filtros.fecha], quitar: { fecha: undefined } });
-  if (filtros.ciudad) chips.push({ clave: "ciudad", texto: filtros.ciudad, quitar: { ciudad: undefined } });
-  if (filtros.precioMax) chips.push({ clave: "precioMax", texto: `≤ ${formatoPrecio(filtros.precioMax, idioma)}`, quitar: { precioMax: undefined } });
-  if (chips.length === 0) return <div />;
-
-  return (
-    <ul className={`${etiquetas.chips} ${etiquetas.chipsActivos}`}>
-      {chips.map((chip) => (
-        <li key={chip.clave}>
-          <Link
-            href={urlExplorar({ ...filtros, ...chip.quitar, pagina: undefined })}
-            className={`${etiquetas.chip} ${etiquetas.chipQuitar}`}
-            scroll={false}
-            aria-label={`${textos.general.acciones.eliminar}: ${chip.texto}`}
-          >
-            {chip.texto}
-            <Icono nombre="x" tamano={12} />
-          </Link>
-        </li>
-      ))}
-    </ul>
-  );
-}
-
-function Paginacion({ filtros, paginas, textos }: { filtros: Filtros; paginas: number; textos: Textos }) {
-  if (paginas <= 1) return null;
-  const actual = Math.min(filtros.pagina ?? 1, paginas);
-  const aria = textos.componentes.paginacion.aria;
-
-  // 1 2 3 … 6: siempre la primera, la última y las vecinas de la actual.
-  const numeros: (number | "…")[] = [];
-  for (let n = 1; n <= paginas; n++) {
-    if (n === 1 || n === paginas || Math.abs(n - actual) <= 1 || (actual <= 2 && n <= 3)) numeros.push(n);
-    else if (numeros[numeros.length - 1] !== "…") numeros.push("…");
-  }
-  const url = (pagina: number) => urlExplorar({ ...filtros, pagina });
-
-  return (
-    <nav className={estilos.paginacion} aria-label={aria.etiqueta}>
-      {actual > 1 ? (
-        <Link href={url(actual - 1)} className={estilos.paginacionBoton} aria-label={aria.anterior}>
-          <Icono nombre="chevl" tamano={14} />
-        </Link>
-      ) : (
-        <span className={estilos.paginacionBoton} aria-disabled="true">
-          <Icono nombre="chevl" tamano={14} />
-        </span>
-      )}
-      <ol>
-        {numeros.map((n, i) =>
-          n === "…" ? (
-            <li key={`p${i}`} aria-hidden="true" className={estilos.paginacionPuntos}>
-              …
-            </li>
-          ) : (
-            <li key={n}>
-              <Link
-                href={url(n)}
-                className={estilos.paginacionBoton}
-                aria-current={n === actual ? "page" : undefined}
-                aria-label={fmt(n === actual ? aria.paginaActual : aria.irAPagina, { numero: n })}
-              >
-                {n}
-              </Link>
-            </li>
-          ),
-        )}
-      </ol>
-      {actual < paginas ? (
-        <Link href={url(actual + 1)} className={estilos.paginacionBoton} aria-label={aria.siguiente}>
-          <Icono nombre="chevr" tamano={14} />
-        </Link>
-      ) : (
-        <span className={estilos.paginacionBoton} aria-disabled="true">
-          <Icono nombre="chevr" tamano={14} />
-        </span>
-      )}
-    </nav>
   );
 }

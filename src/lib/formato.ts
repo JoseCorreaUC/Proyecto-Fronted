@@ -1,10 +1,14 @@
 // Utilidades de formato. Funcionan en el servidor y en el cliente.
 
-export type Idioma = "es" | "en";
-// Zona horaria del negocio, no del usuario: los eventos son en Colombia, así que fechas y horas
-// se muestran en la hora local del recinto, sin importar dónde esté quien navega.
+/** Código de idioma tal como lo entrega GET /idiomas ("es", "en"…). */
+export type Idioma = string;
+// Zona horaria y país del negocio, no del usuario: los eventos son en Colombia, así que fechas,
+// horas y precios se muestran como en Colombia, sin importar dónde esté quien navega.
 const ZONA = "America/Bogota";
-const LOCALE: Record<Idioma, string> = { es: "es-CO", en: "en-US" };
+const PAIS = "CO";
+// Configuración regional de Intl a partir del idioma que llega de la API: "es" → "es-CO".
+// Así un idioma nuevo en la API funciona sin tocar el código.
+const regional = (idioma: Idioma) => `${idioma}-${PAIS}`;
 
 /** Reemplaza {variable} en un texto de la API. */
 export function fmt(texto: string, variables: Record<string, string | number> = {}) {
@@ -18,28 +22,29 @@ export function plural(formas: { uno: string; otro: string }, cantidad: number, 
 
 /** Pesos colombianos sin decimales, con el separador del idioma: $95.000 / $95,000 */
 export function formatoPrecio(valor: number, idioma: Idioma) {
-  return "$" + new Intl.NumberFormat(LOCALE[idioma], { maximumFractionDigits: 0 }).format(valor);
+  return "$" + new Intl.NumberFormat(regional(idioma), { maximumFractionDigits: 0 }).format(valor);
 }
 
 const capitalizar = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
 /** "Sáb 14 nov" / "Sat Nov 14" en hora de Colombia. */
 export function formatoDia(iso: string, idioma: Idioma) {
-  const partes = new Intl.DateTimeFormat(LOCALE[idioma], {
+  // El orden de día y mes lo decide Intl según el idioma; solo se quitan comas, puntos y "de".
+  const partes = new Intl.DateTimeFormat(regional(idioma), {
     timeZone: ZONA,
     weekday: "short",
     day: "numeric",
     month: "short",
-  }).formatToParts(new Date(iso));
-  const v = (tipo: string) => partes.find((p) => p.type === tipo)?.value.replace(".", "") ?? "";
-  return idioma === "es"
-    ? `${capitalizar(v("weekday"))} ${v("day")} ${v("month")}`
-    : `${v("weekday")} ${v("month")} ${v("day")}`;
+  })
+    .formatToParts(new Date(iso))
+    .filter((p) => p.type !== "literal")
+    .map((p) => p.value.replace(".", ""));
+  return capitalizar(partes.join(" "));
 }
 
 /** "8:00 p. m." / "8:00 PM" en hora de Colombia. */
 export function formatoHora(iso: string, idioma: Idioma) {
-  return new Intl.DateTimeFormat(LOCALE[idioma], { timeZone: ZONA, hour: "numeric", minute: "2-digit" })
+  return new Intl.DateTimeFormat(regional(idioma), { timeZone: ZONA, hour: "numeric", minute: "2-digit" })
     .format(new Date(iso))
     .replace(/\s/g, " ");
 }

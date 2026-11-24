@@ -1,135 +1,115 @@
-import Link from "next/link";
 import type { Usuario } from "@/lib/api";
 import type { Textos } from "@/lib/textos";
-import { fmt, type Idioma } from "@/lib/formato";
+import type { Idioma } from "@/lib/formato";
 import { cerrarSesion } from "@/app/acciones";
+import { RUTAS } from "@/lib/rutas";
+import Icono from "@/components/compartidos/Icono";
+import Boton, { BotonEnlace } from "@/components/ui/Boton";
+import { EnlaceIcono } from "@/components/ui/BotonIcono";
 import Accesibilidad from "./Accesibilidad";
 import EnlaceNav from "./EnlaceNav";
-import Icono from "@/components/compartidos/Icono";
 import Logo from "./Logo";
 import MenuMovil from "./MenuMovil";
+import MenuUsuario from "./MenuUsuario";
 import SelectorIdioma from "./SelectorIdioma";
-import { RUTAS } from "@/lib/rutas";
-import buscadores from "@/components/ui/Buscador.module.css";
-import botones from "@/components/ui/Boton.module.css";
-import estilos from "./Navbar.module.css";
 
 interface Props {
   textos: Textos;
   idioma: Idioma;
+  /** Idiomas de GET /idiomas para el selector. */
+  idiomas: { codigo: Idioma; nombre: string }[];
   usuario: Usuario | null;
 }
 
-export default function Navbar({ textos, idioma, usuario }: Props) {
+/** Lista de enlaces principales; la misma en la barra de escritorio y en el menú móvil. */
+function EnlacesPrincipales({ className, textos }: { className: string; textos: { inicio: string; explorar: string } }) {
+  const enlaces = [
+    { href: RUTAS.inicio, texto: textos.inicio },
+    { href: RUTAS.explorar, texto: textos.explorar },
+  ];
+  return (
+    <ul className={className}>
+      {enlaces.map((enlace) => (
+        <li key={enlace.href}>
+          <EnlaceNav href={enlace.href}>{enlace.texto}</EnlaceNav>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+export default function Navbar({ textos, idioma, idiomas, usuario }: Props) {
   const nav = textos.navbar;
   const movil = textos.menuMovil;
-  const idiomaProps = {
-    idioma,
-    etiqueta: nav.aria.idioma,
-    nombres: { es: textos.idioma.es, en: textos.idioma.en },
-    codigos: { es: textos.idioma.codigoEs, en: textos.idioma.codigoEn },
-  };
-  const accesibilidadProps = {
-    textos: textos.accesibilidad,
-    etiquetaBoton: nav.aria.accesibilidad,
-    cerrar: textos.general.aria.cerrarDialogo,
-  };
+  const logo = <Logo texto={nav.logo.texto} aria={nav.logo.aria} />;
+  const selectorIdioma = <SelectorIdioma idioma={idioma} idiomas={idiomas} etiqueta={nav.aria.idioma} />;
+  const accesibilidad = (
+    <Accesibilidad textos={textos.accesibilidad} etiquetaBoton={nav.aria.accesibilidad} cerrar={textos.general.aria.cerrarDialogo} />
+  );
 
   return (
     // data-navbar: marca para los estilos que cambian dentro de la barra (Logo, Boton, MenuMovil).
-    <header className={estilos.navbar} data-navbar>
-      <div className={`${estilos.navbarContenido} contenedor`}>
-        <div className={estilos.navbarIzquierda}>
-          <Logo texto={nav.logo.texto} aria={nav.logo.aria} />
+    <header className="navbar" data-navbar>
+      <div className="navbar-contenido contenedor">
+        <div className="navbar-izquierda">
+          {logo}
           <nav aria-label={nav.logo.texto} className="solo-escritorio">
-            <ul className={estilos.navbarEnlaces}>
-              <li>
-                <EnlaceNav href={RUTAS.inicio}>{nav.enlaces.inicio}</EnlaceNav>
-              </li>
-              <li>
-                <EnlaceNav href={RUTAS.explorar}>{nav.enlaces.explorar}</EnlaceNav>
-              </li>
-            </ul>
+            <EnlacesPrincipales className="navbar-enlaces" textos={nav.enlaces} />
           </nav>
         </div>
 
-        <div className={estilos.navbarDerecha}>
-          <form action={RUTAS.explorar} role="search" className={`${buscadores.buscadorNav} solo-escritorio`}>
+        <div className="navbar-derecha">
+          <form action={RUTAS.explorar} role="search" className="buscador-nav solo-escritorio">
             <Icono nombre="search" tamano={14} />
             <input type="search" name="q" placeholder={nav.buscador.placeholder} aria-label={nav.buscador.aria} maxLength={80} />
           </form>
 
-          <div className={`solo-escritorio ${estilos.navbarAcciones}`}>
-            <Accesibilidad {...accesibilidadProps} />
-            <SelectorIdioma {...idiomaProps} />
+          <div className="solo-escritorio navbar-acciones">
+            {accesibilidad}
+            {selectorIdioma}
           </div>
 
           {usuario ? (
-            <details className={estilos.menuUsuario}>
-              <summary aria-label={fmt(nav.usuario.menu, { nombre: usuario.nombre })}>
-                <span className={estilos.menuUsuarioAvatar} aria-hidden="true">
-                  {usuario.nombre.charAt(0)}
-                </span>
-                <span className="solo-escritorio">{usuario.nombre.split(" ")[0]}</span>
-                <Icono nombre="chevd" tamano={14} />
-              </summary>
-              <div className={estilos.menuUsuarioLista}>
-                <form action={cerrarSesion}>
-                  <button type="submit" className={estilos.menuUsuarioOpcion}>
-                    <Icono nombre="arrowl" tamano={14} />
-                    {nav.usuario.cerrarSesion}
-                  </button>
-                </form>
-              </div>
-            </details>
+            <MenuUsuario usuario={usuario} textos={nav.usuario} />
           ) : (
             <>
-              <Link href={RUTAS.explorar} className={`${botones.botonIcono} ${botones.botonIconoPlano} solo-movil`} aria-label={nav.buscador.aria}>
-                <Icono nombre="search" tamano={18} />
-              </Link>
-              <Link href={RUTAS.ingresar} className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno} ${estilos.navbarIngresar}`}>
+              <EnlaceIcono href={RUTAS.explorar} icono="search" tamanoIcono={18} variante="plano" className="solo-movil" etiqueta={nav.buscador.aria} />
+              <BotonEnlace href={RUTAS.ingresar} variante="secundario" tamano="pequeno" className="navbar-ingresar">
                 {nav.botones.ingresar}
-              </Link>
-              <Link href={RUTAS.registro} className={`${botones.boton} ${botones.botonPrimario} ${botones.botonPequeno} solo-escritorio`}>
+              </BotonEnlace>
+              <BotonEnlace href={RUTAS.registro} tamano="pequeno" className="solo-escritorio">
                 {nav.botones.crearCuenta}
-              </Link>
+              </BotonEnlace>
             </>
           )}
 
-          <MenuMovil abrir={movil.abrir} cerrar={movil.cerrar} cabecera={<Logo texto={nav.logo.texto} aria={nav.logo.aria} />}>
+          <MenuMovil abrir={movil.abrir} cerrar={movil.cerrar} cabecera={logo}>
             <nav aria-label={nav.logo.texto}>
-              <ul className={estilos.menuMovilEnlaces}>
-                <li>
-                  <EnlaceNav href={RUTAS.inicio}>{movil.enlaces.inicio}</EnlaceNav>
-                </li>
-                <li>
-                  <EnlaceNav href={RUTAS.explorar}>{movil.enlaces.explorar}</EnlaceNav>
-                </li>
-              </ul>
+              <EnlacesPrincipales className="menu-movil-enlaces" textos={movil.enlaces} />
             </nav>
-            <div className={estilos.menuMovilPie}>
-              <div className={estilos.menuMovilFila}>
+            <div className="menu-movil-pie">
+              <div className="menu-movil-fila">
                 <span>{movil.secciones.idioma}</span>
-                <SelectorIdioma {...idiomaProps} />
+                {selectorIdioma}
               </div>
-              <div className={estilos.menuMovilFila}>
+              <div className="menu-movil-fila">
                 <span>{movil.secciones.accesibilidad}</span>
-                <Accesibilidad {...accesibilidadProps} />
+                {accesibilidad}
               </div>
               {usuario ? (
                 <form action={cerrarSesion}>
-                  <button type="submit" className={`${botones.boton} ${botones.botonSecundario} ${botones.botonBloque}`}>
+                  <Boton type="submit" variante="secundario" bloque>
                     {movil.botones.cerrarSesion}
-                  </button>
+                  </Boton>
                 </form>
               ) : (
                 <>
-                  <Link href={RUTAS.ingresar} className={`${botones.boton} ${botones.botonPrimario} ${botones.botonBloque}`}>
+                  <BotonEnlace href={RUTAS.ingresar} bloque>
                     {movil.botones.ingresar}
-                  </Link>
-                  <Link href={RUTAS.registro} className={`${botones.boton} ${botones.botonSecundario} ${botones.botonBloque}`}>
+                  </BotonEnlace>
+                  <BotonEnlace href={RUTAS.registro} variante="secundario" bloque>
                     {movil.botones.crearCuenta}
-                  </Link>
+                  </BotonEnlace>
                 </>
               )}
             </div>

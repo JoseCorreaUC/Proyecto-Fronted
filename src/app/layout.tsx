@@ -1,15 +1,13 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Sans } from "next/font/google";
 import Script from "next/script";
-// Estilos globales: tokens de la profesora (sin cambios), mis ajustes y la base.
-// Cada página y cada componente tiene su .module.css al lado de su .tsx.
-import "@/styles/tokens.css";
-import "@/styles/ajustes-tokens.css";
-import "@/styles/base.css";
+// Única hoja de estilos del sitio: variables globales, base y componentes.
+import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 import CookieBanner from "@/components/layout/CookieBanner";
-import { getConsentimiento, getIdioma, getTextos } from "@/lib/textos";
+import { getConsentimiento, getIdioma, getIdiomas, getTextos } from "@/lib/textos";
+import { scriptAccesibilidad } from "@/lib/accesibilidad";
 import { getUsuario } from "@/lib/sesion";
 
 const instrumentSans = Instrument_Sans({
@@ -28,11 +26,14 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export const viewport: Viewport = { themeColor: "#141414" };
 
-// Aplica las preferencias de accesibilidad guardadas antes de pintar, para que no "salte" la página.
-const scriptAccesibilidad = `(function(){try{var p=JSON.parse(localStorage.getItem("taquilla-accesibilidad")||"null");var m=function(q){return matchMedia(q).matches};var t=[87.5,100,112.5,125,150];var h=document.documentElement;p=p||{tamano:1,contraste:m("(prefers-contrast: more)"),movimiento:m("(prefers-reduced-motion: reduce)")};h.style.fontSize=(t[p.tamano]||100)+"%";if(p.contraste)h.setAttribute("data-alto-contraste","");if(p.movimiento)h.setAttribute("data-reducir-movimiento","");if(p.subrayar)h.setAttribute("data-subrayar-enlaces","");if(p.espaciado)h.setAttribute("data-espaciado-lectura","")}catch(e){}})();`;
-
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [idioma, textos, consentimiento, usuario] = await Promise.all([getIdioma(), getTextos(), getConsentimiento(), getUsuario()]);
+  const [idioma, idiomas, textos, consentimiento, usuario] = await Promise.all([
+    getIdioma(),
+    getIdiomas(),
+    getTextos(),
+    getConsentimiento(),
+    getUsuario(),
+  ]);
 
   const textosError = {
     titulo: textos.estados.error.titulo,
@@ -43,13 +44,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang={idioma} className={instrumentSans.variable} suppressHydrationWarning>
       <body data-textos-error={JSON.stringify(textosError)}>
+        {/* Aplica las preferencias de accesibilidad guardadas antes de pintar, para que no "salte" la página. */}
         <Script id="preferencias-accesibilidad" strategy="beforeInteractive">
           {scriptAccesibilidad}
         </Script>
         <a href="#contenido" className="saltar-contenido">
           {textos.general.aria.saltarAlContenido}
         </a>
-        <Navbar textos={textos} idioma={idioma} usuario={usuario} />
+        <Navbar textos={textos} idioma={idioma} idiomas={idiomas.datos} usuario={usuario} />
         <main id="contenido" tabIndex={-1}>
           {children}
         </main>

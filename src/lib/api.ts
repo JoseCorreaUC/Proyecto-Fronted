@@ -10,6 +10,7 @@ export const ENDPOINTS = {
   ciudades: "/ciudades",
   eventos: "/eventos",
   eventosDestacados: "/eventos/destacados",
+  idiomas: "/idiomas",
   sesion: "/sesion",
   textos: "/textos",
 } as const;
@@ -145,6 +146,12 @@ export interface Ciudad {
   eventos: number;
 }
 
+/** GET /idiomas: idiomas de la interfaz y el que se usa por defecto. */
+export interface Idiomas {
+  predeterminado: string;
+  datos: { codigo: string; nombre: string }[];
+}
+
 export interface Usuario {
   id: string;
   nombre: string;
@@ -159,6 +166,8 @@ export interface Usuario {
 export const getCategorias = () => api<Lista<Categoria>>(ENDPOINTS.categorias, { revalidar: 300 });
 export const getCiudades = () => api<Lista<Ciudad>>(ENDPOINTS.ciudades, { revalidar: 300 });
 export const getDestacados = () => api<Lista<EventoResumen>>(ENDPOINTS.eventosDestacados, { revalidar: 60 });
+// Los idiomas casi nunca cambian: una hora en caché, igual que los textos.
+export const getListaIdiomas = () => api<Idiomas>(ENDPOINTS.idiomas, { revalidar: 3600 });
 
 export interface FiltrosEventos {
   q?: string;

@@ -64,14 +64,16 @@ export function urlExplorar(filtros: Filtros) {
   return texto ? `${RUTAS.explorar}?${texto}` : RUTAS.explorar;
 }
 
+/** Fechas `desde`/`hasta` del filtro: un atajo (hoy, finde, mes) o el rango elegido a mano. */
+function fechasDelFiltro(filtros: Filtros): { desde?: string; hasta?: string } {
+  if (!filtros.fecha) return {};
+  if (filtros.fecha === "rango") return { desde: filtros.desde, hasta: filtros.hasta };
+  return rangoDeFecha(filtros.fecha);
+}
+
 /** Convierte los filtros de la URL en los parámetros de GET /eventos. */
 export function parametrosApi(filtros: Filtros) {
-  const rango =
-    filtros.fecha && filtros.fecha !== "rango"
-      ? rangoDeFecha(filtros.fecha)
-      : filtros.fecha === "rango"
-        ? { desde: filtros.desde, hasta: filtros.hasta }
-        : {};
+  const rango = fechasDelFiltro(filtros);
   return {
     q: filtros.q,
     categoria: filtros.categoria,
@@ -84,4 +86,25 @@ export function parametrosApi(filtros: Filtros) {
   };
 }
 
-export const hayFiltros = (f: Filtros) => Boolean(f.q || f.categoria || f.ciudad || f.fecha || f.precioMax);
+/** Extremos y paso del control de precio de Explorar. */
+export interface RangoPrecios {
+  minimo: number;
+  maximo: number;
+  paso: number;
+}
+
+// Los extremos se redondean a decenas de mil para que el control muestre cifras limpias.
+const REDONDEO_PRECIO = 10000;
+const PASO_PRECIO = 5000;
+
+/** Calcula el rango a partir de los precios reales de los eventos (null si no hay precios). */
+export function rangoDePrecios(precios: number[]): RangoPrecios | null {
+  if (precios.length === 0) return null;
+  return {
+    minimo: Math.floor(Math.min(...precios) / REDONDEO_PRECIO) * REDONDEO_PRECIO,
+    maximo: Math.ceil(Math.max(...precios) / REDONDEO_PRECIO) * REDONDEO_PRECIO,
+    paso: PASO_PRECIO,
+  };
+}
+
+export const hayFiltros =(f: Filtros) => Boolean(f.q || f.categoria || f.ciudad || f.fecha || f.precioMax);

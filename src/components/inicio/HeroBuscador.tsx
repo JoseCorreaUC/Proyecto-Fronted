@@ -2,9 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import Icono from "@/components/compartidos/Icono";
+import Boton from "@/components/ui/Boton";
 import { RUTAS } from "@/lib/rutas";
-import botones from "@/components/ui/Boton.module.css";
-import estilos from "./HeroBuscador.module.css";
 
 interface Props {
   ciudades: string[];
@@ -24,18 +23,18 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
   const router = useRouter();
 
   return (
-    <form action={RUTAS.explorar} role="search" className={estilos.heroBuscador}>
-      <label className={estilos.heroBuscadorCampo}>
+    <form action={RUTAS.explorar} role="search" className="hero-buscador">
+      <label className="hero-buscador-campo">
         <Icono nombre="search" tamano={16} />
         <span>
-          <span className={estilos.heroBuscadorEtiqueta}>{textos.etiquetas.que}</span>
+          <span className="hero-buscador-etiqueta">{textos.etiquetas.que}</span>
           <input type="search" name="q" placeholder={textos.placeholders.que} maxLength={80} />
         </span>
       </label>
-      <label className={estilos.heroBuscadorCampo}>
+      <label className="hero-buscador-campo">
         <Icono nombre="pin" tamano={16} />
         <span>
-          <span className={estilos.heroBuscadorEtiqueta}>{textos.etiquetas.donde}</span>
+          <span className="hero-buscador-etiqueta">{textos.etiquetas.donde}</span>
           <select
             name="ciudad"
             defaultValue={ciudad}
@@ -49,10 +48,10 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
           </select>
         </span>
       </label>
-      <label className={estilos.heroBuscadorCampo}>
+      <label className="hero-buscador-campo">
         <Icono nombre="calendar" tamano={16} />
         <span>
-          <span className={estilos.heroBuscadorEtiqueta}>{textos.etiquetas.cuando}</span>
+          <span className="hero-buscador-etiqueta">{textos.etiquetas.cuando}</span>
           <select name="fecha" defaultValue="">
             <option value="">{textos.placeholders.cuando}</option>
             {opcionesFecha.map((o) => (
@@ -63,9 +62,9 @@ export default function HeroBuscador({ ciudades, ciudad, textos, opcionesFecha }
           </select>
         </span>
       </label>
-      <button type="submit" className={`${botones.boton} ${botones.botonPrimario} ${estilos.heroBuscadorBoton}`}>
+      <Boton type="submit" className="hero-buscador-boton">
         {textos.botones.buscar}
-      </button>
+      </Boton>
     </form>
   );
 }

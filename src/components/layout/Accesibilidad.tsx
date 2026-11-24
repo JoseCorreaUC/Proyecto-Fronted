@@ -1,29 +1,16 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
-import Icono from "@/components/compartidos/Icono";
+import { useId, useState } from "react";
 import { RUTAS } from "@/lib/rutas";
-import botones from "@/components/ui/Boton.module.css";
-import campos from "@/components/ui/Campo.module.css";
-import estilos from "./Accesibilidad.module.css";
-
-// Preferencias del panel de accesibilidad. Se guardan en este dispositivo (localStorage)
-// y se aplican como atributos en <html>; ver el script inicial en layout.tsx.
-export const CLAVE_ACCESIBILIDAD = "taquilla-accesibilidad";
-export const TAMANOS = [87.5, 100, 112.5, 125, 150];
-
-interface Preferencias {
-  tamano: number; // índice en TAMANOS
-  contraste: boolean;
-  movimiento: boolean;
-  subrayar: boolean;
-  espaciado: boolean;
-}
+import { ATRIBUTOS, CLAVE_ACCESIBILIDAD, TAMANO_INICIAL, TAMANOS, type Interruptor, type Preferencias } from "@/lib/accesibilidad";
+import { useDialogo } from "@/hooks/useDialogo";
+import Boton from "@/components/ui/Boton";
+import BotonIcono from "@/components/ui/BotonIcono";
 
 function valoresDelSistema(): Preferencias {
   const consulta = (q: string) => typeof window !== "undefined" && window.matchMedia(q).matches;
   return {
-    tamano: 1,
+    tamano: TAMANO_INICIAL,
     contraste: consulta("(prefers-contrast: more)"),
     movimiento: consulta("(prefers-reduced-motion: reduce)"),
     subrayar: false,
@@ -42,20 +29,19 @@ function leer(): Preferencias {
 function aplicar(p: Preferencias) {
   const html = document.documentElement;
   html.style.fontSize = `${TAMANOS[p.tamano] ?? 100}%`;
-  html.toggleAttribute("data-alto-contraste", p.contraste);
-  html.toggleAttribute("data-reducir-movimiento", p.movimiento);
-  html.toggleAttribute("data-subrayar-enlaces", p.subrayar);
-  html.toggleAttribute("data-espaciado-lectura", p.espaciado);
+  for (const clave of Object.keys(ATRIBUTOS) as Interruptor[]) html.toggleAttribute(ATRIBUTOS[clave], p[clave]);
 }
+
+type TextoInterruptor = { nombre: string; descripcion: string };
 
 export interface TextosAccesibilidad {
   titulo: string;
   tamanoTexto: string;
   muestraTamano: string;
-  altoContraste: { nombre: string; descripcion: string };
-  reducirMovimiento: { nombre: string; descripcion: string };
-  subrayarEnlaces: { nombre: string; descripcion: string };
-  espaciadoLectura: { nombre: string; descripcion: string };
+  altoContraste: TextoInterruptor;
+  reducirMovimiento: TextoInterruptor;
+  subrayarEnlaces: TextoInterruptor;
+  espaciadoLectura: TextoInterruptor;
   nota: string;
   enlaces: { declaracion: string };
   botones: { restablecer: string };
@@ -68,42 +54,20 @@ interface Props {
   cerrar: string;
 }
 
-export default function Accesibilidad({ textos, etiquetaBoton, cerrar }: Props) {
-  const [abierto, setAbierto] = useState(false);
+export default function Accesibilidad({ textos, etiquetaBoton, cerrar: textoCerrar }: Props) {
+  const { abierto, setAbierto, cerrar, boton, panel } = useDialogo({ cerrarAlClicFuera: true });
   const [pref, setPref] = useState<Preferencias | null>(null);
-  const boton = useRef<HTMLButtonElement>(null);
-  const panel = useRef<HTMLDivElement>(null);
   const id = useId();
 
-  useEffect(() => {
-    if (!abierto) return;
-    panel.current?.focus();
-    const alPulsar = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setAbierto(false);
-        boton.current?.focus();
-      }
-    };
-    const alClic = (e: MouseEvent) => {
-      const objetivo = e.target as Node;
-      if (!panel.current?.contains(objetivo) && !boton.current?.contains(objetivo)) setAbierto(false);
-    };
-    document.addEventListener("keydown", alPulsar);
-    document.addEventListener("mousedown", alClic);
-    return () => {
-      document.removeEventListener("keydown", alPulsar);
-      document.removeEventListener("mousedown", alClic);
-    };
-  }, [abierto]);
-
-  const cambiar = (cambios: Partial<Preferencias>) => {
-    const nuevas = { ...(pref ?? leer()), ...cambios };
+  const guardar = (nuevas: Preferencias) => {
     setPref(nuevas);
     aplicar(nuevas);
     try {
       localStorage.setItem(CLAVE_ACCESIBILIDAD, JSON.stringify(nuevas));
     } catch {}
   };
+
+  const cambiar = (cambios: Partial<Preferencias>) => guardar({ ...(pref ?? leer()), ...cambios });
 
   const restablecer = () => {
     try {
@@ -114,8 +78,13 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar }: Props) 
     aplicar(base);
   };
 
+  const alternar = () => {
+    if (!abierto) setPref(leer());
+    setAbierto(!abierto);
+  };
+
   const p = pref ?? valoresDelSistema();
-  const interruptores: { clave: keyof Omit<Preferencias, "tamano">; texto: { nombre: string; descripcion: string } }[] = [
+  const interruptores: { clave: Interruptor; texto: TextoInterruptor }[] = [
     { clave: "contraste", texto: textos.altoContraste },
     { clave: "movimiento", texto: textos.reducirMovimiento },
     { clave: "subrayar", texto: textos.subrayarEnlaces },
@@ -123,82 +92,64 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar }: Props) 
   ];
 
   return (
-    <div className={estilos.accesibilidad}>
-      <button
+    <div className="accesibilidad">
+      <BotonIcono
         ref={boton}
-        type="button"
-        className={botones.botonIcono}
-        aria-label={etiquetaBoton}
+        icono="person"
+        etiqueta={etiquetaBoton}
         aria-expanded={abierto}
         aria-controls={abierto ? id : undefined}
-        onClick={() => {
-          if (!abierto) setPref(leer());
-          setAbierto(!abierto);
-        }}
-      >
-        <Icono nombre="person" tamano={16} />
-      </button>
+        onClick={alternar}
+      />
 
       {abierto && (
-        <div ref={panel} id={id} className={estilos.panelAccesibilidad} role="dialog" aria-labelledby={`${id}-titulo`} tabIndex={-1}>
-          <div className={estilos.panelAccesibilidadCabecera}>
+        <div ref={panel} id={id} className="panel-accesibilidad" role="dialog" aria-labelledby={`${id}-titulo`} tabIndex={-1}>
+          <div className="panel-accesibilidad-cabecera">
             <h2 id={`${id}-titulo`} className="titular-h4">
               {textos.titulo}
             </h2>
-            <button
-              type="button"
-              className={`${botones.botonIcono} ${botones.botonIconoPlano}`}
-              aria-label={cerrar}
-              onClick={() => {
-                setAbierto(false);
-                boton.current?.focus();
-              }}
-            >
-              <Icono nombre="x" tamano={16} />
-            </button>
+            <BotonIcono icono="x" variante="plano" etiqueta={textoCerrar} onClick={cerrar} />
           </div>
 
-          <p className={estilos.panelAccesibilidadSubtitulo}>{textos.tamanoTexto}</p>
-          <div className={estilos.tamanoTexto}>
-            <button
-              type="button"
-              className={`${botones.botonIcono} ${botones.botonIconoCuadrado}`}
-              aria-label={textos.aria.disminuirTexto}
+          <p className="panel-accesibilidad-subtitulo">{textos.tamanoTexto}</p>
+          <div className="tamano-texto">
+            <BotonIcono
+              icono="minus"
+              tamanoIcono={14}
+              variante="cuadrado"
+              etiqueta={textos.aria.disminuirTexto}
               disabled={p.tamano <= 0}
               onClick={() => cambiar({ tamano: p.tamano - 1 })}
-            >
-              <Icono nombre="minus" tamano={14} />
-            </button>
-            <span className={estilos.tamanoTextoMuestra} aria-live="polite">
+            />
+            <span className="tamano-texto-muestra" aria-live="polite">
               <span style={{ fontSize: `${(TAMANOS[p.tamano] / 100) * 16}px` }}>{textos.muestraTamano}</span>
               <span className="solo-lectores">{TAMANOS[p.tamano]} %</span>
             </span>
-            <button
-              type="button"
-              className={`${botones.botonIcono} ${botones.botonIconoCuadrado}`}
-              aria-label={textos.aria.aumentarTexto}
+            <BotonIcono
+              icono="plus"
+              tamanoIcono={14}
+              variante="cuadrado"
+              etiqueta={textos.aria.aumentarTexto}
               disabled={p.tamano >= TAMANOS.length - 1}
               onClick={() => cambiar({ tamano: p.tamano + 1 })}
-            >
-              <Icono nombre="plus" tamano={14} />
-            </button>
+            />
           </div>
 
-          <ul className={estilos.panelAccesibilidadOpciones}>
+          <ul className="panel-accesibilidad-opciones">
             {interruptores.map(({ clave, texto }) => (
-              <li key={clave} className={estilos.interruptorFila}>
+              <li key={clave} className="interruptor-fila">
                 <span>
-                  <span className={estilos.interruptorFilaNombre} id={`${id}-${clave}`}>
+                  <span className="interruptor-fila-nombre" id={`${id}-${clave}`}>
                     {texto.nombre}
                   </span>
-                  <span className={estilos.interruptorFilaDescripcion} id={`${id}-${clave}-d`}>
+                  <span className="interruptor-fila-descripcion" id={`${id}-${clave}-d`}>
                     {texto.descripcion}
                   </span>
                 </span>
                 <button
                   type="button"
                   role="switch"
-                  className={campos.interruptor}
+                  className="interruptor"
                   aria-checked={p[clave]}
                   aria-labelledby={`${id}-${clave}`}
                   aria-describedby={`${id}-${clave}-d`}
@@ -208,14 +159,14 @@ export default function Accesibilidad({ textos, etiquetaBoton, cerrar }: Props) 
             ))}
           </ul>
 
-          <p className={estilos.panelAccesibilidadNota}>{textos.nota}</p>
-          <div className={estilos.panelAccesibilidadPie}>
-            <a href={RUTAS.accesibilidad} className={botones.enlaceSubrayado}>
+          <p className="panel-accesibilidad-nota">{textos.nota}</p>
+          <div className="panel-accesibilidad-pie">
+            <a href={RUTAS.accesibilidad} className="enlace-subrayado">
               {textos.enlaces.declaracion}
             </a>
-            <button type="button" className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno}`} onClick={restablecer}>
+            <Boton variante="secundario" tamano="pequeno" onClick={restablecer}>
               {textos.botones.restablecer}
-            </button>
+            </Boton>
           </div>
         </div>
       )}

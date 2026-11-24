@@ -1,10 +1,7 @@
-import Link from "next/link";
 import type { ReactNode } from "react";
 import Icono from "./Icono";
 import type { NombreIcono } from "./iconos";
-import botones from "@/components/ui/Boton.module.css";
-import tarjetas from "./TarjetaEvento.module.css";
-import estilos from "./Estados.module.css";
+import { BotonEnlace, unirClases } from "@/components/ui/Boton";
 
 interface Props {
   titulo: string;
@@ -12,16 +9,19 @@ interface Props {
   icono?: NombreIcono;
   accion?: ReactNode;
   tono?: "neutro" | "error";
+  /** h1 cuando el estado ocupa toda la página (error.tsx); h2 dentro de una sección. */
+  nivelTitulo?: "h1" | "h2";
 }
 
 /** Bloque para los estados vacío y error. */
-export function Estado({ titulo, texto, icono = "info", accion, tono = "neutro" }: Props) {
+export function Estado({ titulo, texto, icono = "info", accion, tono = "neutro", nivelTitulo: Titulo = "h2" }: Props) {
+  const esError = tono === "error";
   return (
-    <div className={tono === "error" ? `${estilos.estado} ${estilos.estadoError}` : estilos.estado} role={tono === "error" ? "alert" : "status"}>
-      <span className={estilos.estadoIcono}>
+    <div className={unirClases("estado", esError && "estado-error")} role={esError ? "alert" : "status"}>
+      <span className="estado-icono">
         <Icono nombre={icono} tamano={20} />
       </span>
-      <h2 className="titular-h4">{titulo}</h2>
+      <Titulo className="titular-h4">{titulo}</Titulo>
       <p>{texto}</p>
       {accion}
     </div>
@@ -30,24 +30,26 @@ export function Estado({ titulo, texto, icono = "info", accion, tono = "neutro" 
 
 export function EnlaceBoton({ href, children }: { href: string; children: ReactNode }) {
   return (
-    <Link href={href} className={`${botones.boton} ${botones.botonSecundario} ${botones.botonPequeno}`}>
+    <BotonEnlace href={href} variante="secundario" tamano="pequeno">
       {children}
-    </Link>
+    </BotonEnlace>
   );
 }
+
+// Líneas grises de cada tarjeta mientras carga: categoría, título, fecha y lugar.
+const LINEAS_ESQUELETO = [{ width: "30%" }, { width: "80%", height: 18 }, { width: "60%" }, { width: "70%" }];
 
 /** Tarjetas grises que ocupan el lugar de los eventos mientras cargan. */
 export function TarjetasCargando({ cantidad = 4, etiqueta }: { cantidad?: number; etiqueta: string }) {
   return (
-    <div className={tarjetas.rejillaEventos} role="status" aria-label={etiqueta}>
+    <div className="rejilla-eventos" role="status" aria-label={etiqueta}>
       {Array.from({ length: cantidad }, (_, i) => (
-        <div key={i} className={`${tarjetas.tarjetaEvento} ${tarjetas.tarjetaEventoCargando}`} aria-hidden="true">
-          <div className={`${estilos.esqueleto} ${tarjetas.tarjetaEventoAfiche}`} />
-          <div className={tarjetas.tarjetaEventoCuerpo}>
-            <div className={`${estilos.esqueleto} ${estilos.esqueletoLinea}`} style={{ width: "30%" }} />
-            <div className={`${estilos.esqueleto} ${estilos.esqueletoLinea}`} style={{ width: "80%", height: 18 }} />
-            <div className={`${estilos.esqueleto} ${estilos.esqueletoLinea}`} style={{ width: "60%" }} />
-            <div className={`${estilos.esqueleto} ${estilos.esqueletoLinea}`} style={{ width: "70%" }} />
+        <div key={i} className="tarjeta-evento tarjeta-evento-cargando" aria-hidden="true">
+          <div className="esqueleto tarjeta-evento-afiche" />
+          <div className="tarjeta-evento-cuerpo">
+            {LINEAS_ESQUELETO.map((estilo, j) => (
+              <div key={j} className="esqueleto esqueleto-linea" style={estilo} />
+            ))}
           </div>
         </div>
       ))}
