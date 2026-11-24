@@ -45,12 +45,6 @@ export async function EventoPrincipal({ textos, idioma }: Props) {
   );
 }
 
-export async function Destacados({ textos, idioma }: Props) {
-  const r = await intentar(getDestacados());
-  if (!r.ok) return <ErrorSeccion textos={textos} error={r.error} />;
-  return <RejillaEventos eventos={r.datos.datos.slice(0, 4)} textos={textos} idioma={idioma} forma="carrusel" />;
-}
-
 export async function Proximos({ textos, idioma, ciudad }: Props & { ciudad: string }) {
   const r = await intentar(getEventos({ ciudad, orden: "fecha", porPagina: 4 }));
   if (!r.ok) return <ErrorSeccion textos={textos} error={r.error} />;

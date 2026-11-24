@@ -2,12 +2,12 @@ import type { EventoResumen } from "@/lib/api";
 import type { Textos } from "@/lib/textos";
 import type { Idioma } from "@/lib/formato";
 import { unirClases } from "@/components/ui/Boton";
-import TarjetaEvento from "./TarjetaEvento";
+import TarjetaEvento, { type TextosTarjeta } from "./TarjetaEvento";
 import { Estado } from "./Estados";
 
 interface Props {
   eventos: EventoResumen[];
-  textos: Textos;
+  textos: TextosTarjeta & Pick<Textos, "estados">;
   idioma: Idioma;
   /** rejilla: tarjetas en columnas · carrusel: desliza en el móvil · compacta: lista de filas pequeñas. */
   forma?: "rejilla" | "carrusel" | "compacta";

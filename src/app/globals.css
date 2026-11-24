@@ -71,8 +71,11 @@
 :root {
   /* Instrument Sans se carga con next/font en la variable --fuente-cargada (ver app/layout.tsx). */
   --fuente-instrument-sans: var(--fuente-cargada, "Instrument Sans"), system-ui, sans-serif;
-  --ancho-contenido: 1240px;
-  --alto-navbar: 64px;
+  /* Medidas del Figma: a 1440 px el contenido deja 80 px a cada lado (1280 + 2 × 80),
+     en el móvil de 390 px el margen es de 20 px. La barra mide 72 px en escritorio y 60 en móvil. */
+  --ancho-contenido: 1280px;
+  --margen-lateral: clamp(20px, 5.7692vw - 2.7885px, 80px);
+  --alto-navbar: clamp(60px, 1.1538vw + 55.4423px, 72px);
   --foco: 0 0 0 2px var(--fondo-superficie), 0 0 0 4px var(--marca-primario);
   --transicion: 150ms ease;
   /* Capas de color sobre los afiches y fondo del menú móvil */
@@ -83,30 +86,26 @@
   --afiche-trazo: #ffffff;
   --velo-modal: #14141473;
 
-
-  /* Escala tipográfica fluida: clamp(mínimo en móvil, valor según el ancho, máximo en escritorio). */
-  --tamano-2xs: clamp(0.5938rem, 0.5821rem + 0.0476vw, 0.625rem);
-  --tamano-xs: clamp(0.6563rem, 0.6446rem + 0.0476vw, 0.6875rem);
-  --tamano-sm: clamp(0.7188rem, 0.7071rem + 0.0476vw, 0.75rem);
-  --tamano-md: clamp(0.75rem, 0.7268rem + 0.0952vw, 0.8125rem);
-  --tamano-base: clamp(0.8125rem, 0.7893rem + 0.0952vw, 0.875rem);
-  --tamano-lg: clamp(0.875rem, 0.8518rem + 0.0952vw, 0.9375rem);
-  --tamano-xl: clamp(0.9375rem, 0.9143rem + 0.0952vw, 1rem);
-  --tamano-2xl: clamp(1rem, 0.9536rem + 0.1905vw, 1.125rem);
-  --tamano-3xl: clamp(1.125rem, 1.0786rem + 0.1905vw, 1.25rem);
-  --tamano-h4: clamp(0.9375rem, 0.9143rem + 0.0952vw, 1rem);
-  --tamano-h3: clamp(1rem, 0.9071rem + 0.381vw, 1.25rem);
-  --tamano-h2: clamp(1.25rem, 1.1571rem + 0.381vw, 1.5rem);
-  --tamano-h1: clamp(1.5rem, 1.2679rem + 0.9524vw, 2.125rem);
-  --tamano-cifra: clamp(1.5rem, 1.3607rem + 0.5714vw, 1.875rem);
-  --tamano-display: clamp(1.75rem, 1.1929rem + 2.2857vw, 3.25rem);
-  --tamano-gigante: clamp(3.5rem, 2.2rem + 5.3333vw, 7rem);
-}
-
-@media (max-width: 767px) {
-  :root {
-    --alto-navbar: 56px;
-  }
+  /* Escala tipográfica fluida con clamp(). En 390 px y en 1440 px cae exactamente en los tamaños de Figma
+     (52/34/24/20/18/16/14/12…): la transición va de 395 a 1435 px para que en 390 y 1440 el clamp
+     quede justo en el mínimo y el máximo. Entre esos anchos los títulos crecen poco a poco.
+     El texto pequeño mide lo mismo en los dos diseños, así que solo crece en pantallas de más de 1440 px. */
+  --tamano-2xs: clamp(0.625rem, 0.2632vw + 0.3873rem, 0.7031rem);
+  --tamano-xs: clamp(0.6875rem, 0.2895vw + 0.4261rem, 0.7734rem);
+  --tamano-sm: clamp(0.75rem, 0.3158vw + 0.4648rem, 0.8438rem);
+  --tamano-md: clamp(0.8125rem, 0.3421vw + 0.5035rem, 0.9141rem);
+  --tamano-base: clamp(0.875rem, 0.3684vw + 0.5423rem, 0.9844rem);
+  --tamano-lg: clamp(0.9375rem, 0.3947vw + 0.581rem, 1.0547rem);
+  --tamano-xl: clamp(1rem, 0.4211vw + 0.6197rem, 1.125rem);
+  --tamano-2xl: clamp(1.125rem, 0.4737vw + 0.6972rem, 1.2656rem);
+  --tamano-3xl: clamp(1.25rem, 0.5263vw + 0.7747rem, 1.4063rem);
+  --tamano-h4: clamp(1rem, 0.4211vw + 0.6197rem, 1.125rem);
+  --tamano-h3: clamp(1rem, 0.3846vw + 0.905rem, 1.25rem);
+  --tamano-h2: clamp(1.25rem, 0.3846vw + 1.155rem, 1.5rem);
+  --tamano-h1: clamp(1.5rem, 0.9615vw + 1.2626rem, 2.125rem);
+  --tamano-cifra: clamp(1.5rem, 0.5769vw + 1.3576rem, 1.875rem);
+  --tamano-display: clamp(2.125rem, 1.7308vw + 1.6977rem, 3.25rem);
+  --tamano-gigante: clamp(3.25rem, 5.7692vw + 1.8257rem, 7rem);
 }
 
 /* Alto contraste del panel de accesibilidad: refuerza los colores del diseño. */
@@ -243,9 +242,9 @@ button:disabled {
 
 .contenedor {
   width: 100%;
-  max-width: calc(var(--ancho-contenido) + 2 * var(--espacio-8));
+  max-width: calc(var(--ancho-contenido) + 2 * var(--margen-lateral));
   margin-inline: auto;
-  padding-inline: var(--espacio-8);
+  padding-inline: var(--margen-lateral);
 }
 
 .seccion {
@@ -294,9 +293,6 @@ button:disabled {
   }
   .solo-movil {
     display: revert !important;
-  }
-  .contenedor {
-    padding-inline: var(--espacio-4);
   }
   .seccion {
     padding-block: var(--espacio-6) 0;
@@ -716,8 +712,8 @@ button:disabled {
     flex-wrap: nowrap;
     overflow-x: auto;
     scrollbar-width: none;
-    margin-inline: calc(-1 * var(--espacio-4));
-    padding-inline: var(--espacio-4);
+    margin-inline: calc(-1 * var(--margen-lateral));
+    padding-inline: var(--margen-lateral);
   }
   .chips.solo-movil::-webkit-scrollbar {
     display: none;
@@ -1090,8 +1086,8 @@ button:disabled {
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
-    margin-inline: calc(-1 * var(--espacio-4));
-    padding: 2px var(--espacio-4) var(--espacio-2);
+    margin-inline: calc(-1 * var(--margen-lateral));
+    padding: 2px var(--margen-lateral) var(--espacio-2);
   }
   .rejilla-eventos-carrusel::-webkit-scrollbar {
     display: none;
@@ -1126,7 +1122,8 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: var(--espacio-6);
-  height: var(--alto-navbar);
+  /* La barra mide --alto-navbar en total: se descuenta el borde inferior de 1 px. */
+  height: calc(var(--alto-navbar) - 1px);
 }
 
 .navbar-izquierda,
@@ -1362,7 +1359,7 @@ button:disabled {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 56px;
+  height: var(--alto-navbar);
 }
 
 @keyframes entrar-derecha {

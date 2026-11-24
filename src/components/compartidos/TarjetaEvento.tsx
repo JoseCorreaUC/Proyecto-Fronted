@@ -8,8 +8,22 @@ import { RUTAS } from "@/lib/rutas";
 import { BotonEnlace } from "@/components/ui/Boton";
 import Etiqueta from "@/components/ui/Etiqueta";
 
+/**
+ * Solo las partes de GET /textos que usa la tarjeta. Así un componente de cliente puede recibirlas
+ * sin mandar al navegador todos los textos del sitio (unos 42 KB).
+ */
+export type TextosTarjeta = Pick<Textos, "general" | "componentes"> & {
+  paginas: { inicio: { tarjeta: Textos["paginas"]["inicio"]["tarjeta"] } };
+};
+
+export const textosTarjeta = (textos: Textos): TextosTarjeta => ({
+  general: textos.general,
+  componentes: textos.componentes,
+  paginas: { inicio: { tarjeta: textos.paginas.inicio.tarjeta } },
+});
+
 /** Etiqueta de disponibilidad: "Agotada" tiene prioridad sobre "Últimas entradas". */
-function estadoDisponibilidad(evento: EventoResumen, textos: Textos) {
+function estadoDisponibilidad(evento: EventoResumen, textos: TextosTarjeta) {
   const textosDisp = textos.componentes.etiquetas.disponibilidad;
   if (evento.disponibilidad.agotado) return { texto: textosDisp.agotada, tono: "error" as const };
   if (evento.disponibilidad.ultimasEntradas) return { texto: textosDisp.ultimasEntradas, tono: "alerta" as const };
@@ -18,14 +32,14 @@ function estadoDisponibilidad(evento: EventoResumen, textos: Textos) {
 
 interface Props {
   evento: EventoResumen;
-  textos: Textos;
+  textos: TextosTarjeta;
   idioma: Idioma;
   /** "compacta" es la fila de la lista móvil "Este fin de semana". */
   variante?: "normal" | "compacta";
   nivelTitulo?: "h2" | "h3";
 }
 
-export function nombreCategoria(textos: Textos, id: string, singular = false) {
+export function nombreCategoria(textos: Pick<Textos, "general">, id: string, singular = false) {
   const cat = textos.general.categorias as Record<string, unknown>;
   const fuente = (singular ? cat.singular : cat) as Record<string, string>;
   return fuente[id] ?? id;
