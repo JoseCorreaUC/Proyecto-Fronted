@@ -7,6 +7,8 @@ export const RUTAS = {
   explorar: "/explorar",
   ingresar: "/ingresar",
   registro: "/registro",
+  /** Borra el token vencido y lleva a ingresar con el aviso. */
+  sesionVencida: "/sesion-vencida",
   /** Recuperar la contraseña (pantallas del Sprint 3). */
   recuperarClave: "/recuperar-clave",
   terminos: "/terminos",

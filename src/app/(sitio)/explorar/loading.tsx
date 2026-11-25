@@ -12,7 +12,7 @@ export default async function Cargando() {
         <div className="filtros filtros-cargando solo-escritorio" aria-hidden="true">
           <div className="esqueleto" style={{ height: 420 }} />
         </div>
-        <TarjetasCargando cantidad={6} etiqueta={textos.estados.cargando.titulo} />
+        <TarjetasCargando cantidad={6} textos={textos.estados.cargando} />
       </div>
     </div>
   );

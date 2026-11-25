@@ -8,16 +8,21 @@ export const COOKIE_TOKEN = "token";
 
 export const getToken = async () => (await cookies()).get(COOKIE_TOKEN)?.value;
 
-/** Usuario de la sesión, o null si no hay sesión o ya venció. */
-export const getUsuario = cache(async (): Promise<Usuario | null> => {
+export interface Sesion {
+  usuario: Usuario | null;
+  /** Había un token y la API ya no lo acepta (401). */
+  vencida: boolean;
+}
+
+/** Estado de la sesión según GET /sesion. */
+export const getSesion = cache(async (): Promise<Sesion> => {
   const token = await getToken();
-  if (!token) return null;
+  if (!token) return { usuario: null, vencida: false };
   try {
     const respuesta = await api<{ usuario: Usuario } | Usuario>(ENDPOINTS.sesion, { token });
-    return "usuario" in respuesta ? respuesta.usuario : respuesta;
+    return { usuario: "usuario" in respuesta ? respuesta.usuario : respuesta, vencida: false };
   } catch (error) {
-    if (error instanceof ApiError && error.estado === 401) return null;
-    // Si la API falla, la navegación se muestra como sin sesión en vez de romper la página.
-    return null;
+    // Si la API falla por otra causa, la navegación se muestra como sin sesión en vez de romper la página.
+    return { usuario: null, vencida: error instanceof ApiError && error.estado === 401 };
   }
 });

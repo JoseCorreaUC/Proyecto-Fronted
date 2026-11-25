@@ -880,6 +880,30 @@ button:disabled {
   border-style: solid;
 }
 
+/* Aviso de carga: indicador, título y texto de apoyo sobre el esqueleto. */
+.carga {
+  display: grid;
+  gap: 24px;
+}
+
+.aviso-carga {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aviso-carga-titulo {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+}
+
+.aviso-carga-texto {
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  color: var(--texto-secundario);
+}
+
 .estado-error .estado-icono {
   background: var(--estado-error-suave);
   color: var(--estado-error);
@@ -2724,6 +2748,30 @@ a.paginacion-boton:hover {
   gap: 16px;
 }
 
+.detalle-enlace-mapa {
+  justify-self: start;
+  font-size: var(--tamano-p);
+  line-height: 1.4286;
+  font-weight: 500;
+  text-decoration: underline;
+}
+
+.detalle-politicas {
+  display: grid;
+  gap: 8px;
+  padding-left: 20px;
+  list-style: disc;
+  font-size: var(--tamano-m);
+  line-height: 1.5;
+  color: var(--texto-secundario);
+}
+
+/* Esqueleto: la línea de las migas mide lo mismo que las migas. */
+.detalle-migas-cargando {
+  width: 290px;
+  height: 20px;
+}
+
 .detalle-descripcion {
   display: grid;
   gap: 12px;
@@ -3085,18 +3133,24 @@ a.paginacion-boton:hover {
   color: var(--texto-secundario);
 }
 
+/* "Mantener la sesión iniciada" a la izquierda y "¿Olvidaste tu contraseña?" a la derecha, siempre en
+   el mismo renglón. El enlace nunca se parte; si no hay espacio (móvil), es la casilla la que usa dos líneas. */
 .formulario-cuenta-opciones {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
 }
 
-/* "Mantener la sesión iniciada" y "¿Olvidaste tu contraseña?" nunca se parten: si no caben juntos,
-   el enlace baja completo a la línea siguiente. */
-.formulario-cuenta-opciones > * {
+.formulario-cuenta-opciones .casilla-cuenta {
+  flex: 1;
+  min-width: 0;
+}
+
+.formulario-cuenta-opciones .enlace-fuerte {
+  flex-shrink: 0;
   white-space: nowrap;
+  text-align: right;
 }
 
 .formulario-cuenta-pie {
@@ -3129,9 +3183,5 @@ a.paginacion-boton:hover {
   }
   .formulario-cuenta {
     width: 100%;
-  }
-  .formulario-cuenta-opciones {
-    flex-direction: column;
-    align-items: flex-start;
   }
 }

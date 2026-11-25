@@ -5,6 +5,7 @@ import { ApiError, getEvento, getRelacionados, type EventoDetalle } from "@/lib/
 import { getIdioma, getTextos } from "@/lib/textos";
 import { fmt, formatoDia, formatoHora } from "@/lib/formato";
 import { intentar } from "@/lib/intentar";
+import ErrorSeccion from "@/components/compartidos/ErrorSeccion";
 import { RUTAS } from "@/lib/rutas";
 import Afiche from "@/components/compartidos/Afiche";
 import Icono from "@/components/compartidos/Icono";
@@ -13,8 +14,10 @@ import RejillaEventos from "@/components/compartidos/RejillaEventos";
 import { nombreCategoria } from "@/components/compartidos/TarjetaEvento";
 import Etiqueta from "@/components/ui/Etiqueta";
 import BotonCompartir from "@/components/detalle/BotonCompartir";
+import ComoLlegar from "@/components/detalle/ComoLlegar";
 import DatoEvento from "@/components/detalle/DatoEvento";
 import DescripcionEvento from "@/components/detalle/DescripcionEvento";
+import PoliticasEvento from "@/components/detalle/PoliticasEvento";
 
 /** Pide el evento; si la API responde 404 muestra la página de no encontrado. */
 async function cargarEvento(slug: string): Promise<EventoDetalle> {
@@ -46,13 +49,17 @@ export default async function DetalleEvento({ params }: PageProps<"/eventos/[slu
 
   const t = textos.paginas.detalleEvento;
   const fecha = formatoDia(evento.fecha, idioma, true);
-  const hora = formatoHora(evento.fecha, idioma);
+  const horaInicio = formatoHora(evento.fecha, idioma);
+  const puertas = evento.puertas ? formatoHora(evento.puertas, idioma) : undefined;
+  const hora = puertas ? fmt(t.info.horaValor, { hora: horaInicio, puertas }) : horaInicio;
   const lugar = fmt(textos.general.formatos.lugarYCiudad, { lugar: evento.recinto.nombre, ciudad: evento.recinto.ciudad });
   const direccion = evento.recinto.direccion
     ? fmt(textos.general.formatos.lugarYCiudad, { lugar: evento.recinto.direccion, ciudad: evento.recinto.ciudad })
     : evento.recinto.ciudad;
   const edad = evento.edadMinima > 0 ? fmt(t.etiquetas.edadMinima, { edad: evento.edadMinima }) : t.etiquetas.todoPublico;
   const eventosRelacionados = relacionados.ok ? relacionados.datos.datos : [];
+  // No todos los servidores de la API traen estos textos: sin ellos, esa parte no se muestra.
+  const { comoLlegar, politicas } = t as Partial<typeof t>;
 
   return (
     // data-detalle: en el móvil el Figma muestra el afiche a pantalla completa, sin la barra de navegación.
@@ -106,6 +113,7 @@ export default async function DetalleEvento({ params }: PageProps<"/eventos/[slu
             {t.pestanas.descripcion}
           </a>
           <a href="#como-llegar">{t.pestanas.comoLlegar}</a>
+          {politicas && <a href="#politicas">{t.pestanas.politicas}</a>}
         </nav>
 
         <section id="descripcion" className="detalle-seccion" aria-labelledby="descripcion-titulo">
@@ -115,23 +123,28 @@ export default async function DetalleEvento({ params }: PageProps<"/eventos/[slu
           <DescripcionEvento texto={evento.descripcion} leerMas={t.descripcion.botones.leerMas} />
         </section>
 
-        <section id="como-llegar" className="detalle-seccion solo-escritorio" aria-labelledby="como-llegar-titulo">
-          <h2 id="como-llegar-titulo" className="titular-h2">
-            {t.pestanas.comoLlegar}
-          </h2>
-          <div className="detalle-mapa" role="img" aria-label={t.mapa.titulo}>
-            <span>{t.mapa.titulo}</span>
-          </div>
-          <p className="detalle-direccion">{`${evento.recinto.nombre} · ${direccion}`}</p>
-        </section>
+        <ComoLlegar
+          titulo={t.pestanas.comoLlegar}
+          tituloMapa={t.mapa.titulo}
+          direccion={direccion}
+          recinto={evento.recinto}
+          puertas={puertas}
+          textos={comoLlegar}
+        />
+
+        {politicas && <PoliticasEvento textos={politicas} edadMinima={evento.edadMinima} />}
       </div>
 
-      {eventosRelacionados.length > 0 && (
+      {(!relacionados.ok || eventosRelacionados.length > 0) && (
         <section className="contenedor detalle-relacionados solo-escritorio" aria-labelledby="relacionados-titulo">
           <h2 id="relacionados-titulo" className="titular-h2">
             {t.relacionados.titulo}
           </h2>
-          <RejillaEventos eventos={eventosRelacionados} textos={textos} idioma={idioma} />
+          {relacionados.ok ? (
+            <RejillaEventos eventos={eventosRelacionados} textos={textos} idioma={idioma} />
+          ) : (
+            <ErrorSeccion textos={textos} error={relacionados.error} />
+          )}
         </section>
       )}
     </article>

@@ -49,7 +49,7 @@ export default function DestacadosCliente({ textos, idioma, iniciales, cantidad 
     setIntento((n) => n + 1);
   };
 
-  if (estado.tipo === "cargando") return <TarjetasCargando etiqueta={textos.estados.cargando.titulo} />;
+  if (estado.tipo === "cargando") return <TarjetasCargando textos={textos.estados.cargando} />;
 
   if (estado.tipo === "error") {
     const e = textos.estados.error;

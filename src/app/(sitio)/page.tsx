@@ -45,7 +45,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
   ];
   // "Populares" son las categorías con más eventos según la API.
   const populares = categorias.ok ? categorias.datos.datos.toSorted((a, b) => b.eventos - a.eventos).slice(0, 4) : [];
-  const cargando = textos.estados.cargando.titulo;
+  const cargando = textos.estados.cargando;
 
   return (
     <>
@@ -104,7 +104,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
           subtitulo={t.destacados.subtitulo}
           enlace={{ href: urlExplorar({ orden: "popularidad" }), texto: t.destacados.enlaces.verTodos }}
         />
-        <Suspense fallback={<TarjetasCargando etiqueta={cargando} />}>
+        <Suspense fallback={<TarjetasCargando textos={cargando} />}>
           <Destacados textos={textos} idioma={idioma} />
         </Suspense>
       </section>
@@ -118,7 +118,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
             subtitulo={t.proximos.subtitulo}
             enlace={{ href: urlExplorar({ ciudad }), texto: t.destacados.enlaces.verTodos }}
           />
-          <Suspense key={ciudad} fallback={<TarjetasCargando etiqueta={cargando} />}>
+          <Suspense key={ciudad} fallback={<TarjetasCargando textos={cargando} />}>
             <Proximos textos={textos} idioma={idioma} ciudad={ciudad} />
           </Suspense>
         </section>
@@ -131,7 +131,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
           titulo={t.filtrosMovil.finDeSemana}
           enlace={{ href: urlExplorar({ fecha: "finde" }), texto: t.destacados.enlaces.verTodos }}
         />
-        <Suspense fallback={<TarjetasCargando cantidad={3} etiqueta={cargando} />}>
+        <Suspense fallback={<TarjetasCargando cantidad={3} textos={cargando} />}>
           <FinDeSemana textos={textos} idioma={idioma} />
         </Suspense>
       </section>

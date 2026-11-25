@@ -36,6 +36,8 @@ interface Props {
   textos: TextosIngreso;
   /** A dónde volver después de ingresar (por ejemplo la página que pidió la sesión). */
   siguiente?: string;
+  /** Aviso que se ve antes del primer intento (por ejemplo, la sesión terminó). */
+  avisoInicial?: { titulo: string; texto: string };
 }
 
 const INICIAL: EstadoIngreso = { estado: "inicial" };
@@ -62,7 +64,7 @@ function useCuentaRegresiva(estado: EstadoIngreso) {
  * credenciales incorrectas y error de conexión; además 422 por campo y 429 con cuenta regresiva.
  * Si algo falla, lo que la persona escribió se conserva.
  */
-export default function FormularioIngreso({ textos, siguiente }: Props) {
+export default function FormularioIngreso({ textos, siguiente, avisoInicial }: Props) {
   const [estado, accion, pendiente] = useActionState(ingresar, INICIAL);
   const restantes = useCuentaRegresiva(estado);
   const e = textos.errores;
@@ -95,7 +97,7 @@ export default function FormularioIngreso({ textos, siguiente }: Props) {
       case "error":
         return e.generico;
       default:
-        return null;
+        return avisoInicial ?? null;
     }
   })();
 

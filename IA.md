@@ -63,6 +63,22 @@ Al comparar la aplicación con Figma encontré dos diferencias:
 - **Postman fuera del repositorio:** la colección de Postman se agregó primero al proyecto (commit `2457d25`) y luego la moví a la carpeta de recursos (commit `0d2262e`), porque es material de apoyo y no parte del código.
 - **Despliegue bloqueado en Vercel:** los commits tenían un correo de autor que GitHub no reconocía y Vercel bloqueaba el despliegue. Corregí el autor y hice un commit vacío (commit `49b9220`) para volver a desplegar.
 
+### 6. Sprint 2: requisitos que faltaban en el detalle y la sesión
+
+**Fecha:** 24 de noviembre de 2026. **Herramienta:** Claude Code.
+
+La primera versión del Sprint 2 (commits `2297208` y `9000bd7`) estaba incompleta. Al revisarla contra el contrato de la API y el Figma pedí corregirla:
+
+- No mostraba la hora de puertas, el parqueadero ni la pestaña "Políticas".
+- El detalle usaba el esqueleto de carga del Inicio, y si fallaban los eventos relacionados la sección desaparecía sin aviso.
+- Cuando la sesión vencía, la persona quedaba como visitante sin saber por qué. La cookie duraba lo mismo que el token, así que el navegador la borraba antes de poder detectarlo.
+
+**Corrección:** agregué los componentes `ComoLlegar`, `PoliticasEvento` y `DetalleCargando`, el error con Reintentar en relacionados y la ruta `/sesion-vencida`, y alargué la duración de la cookie.
+
+Después, con las claves de carga que compartió la profesora, agregué `AvisoCargando` (título, texto de apoyo e indicador desde `estados.cargando`) a las pantallas de carga, y la frase de apertura de puertas en "Cómo llegar".
+
+**Validación:** revisión de tipos, lint y compilación; pruebas en el navegador del detalle (escritorio y móvil), la sesión vencida, la carga y el error de relacionados. El ingreso (campos vacíos, credenciales incorrectas, 429, sin conexión, ingreso correcto y cierre de sesión) se probó contra una API simulada en mi computador.
+
 ---
 
 ### Decisiones de diseño y desarrollo bajo mi criterio

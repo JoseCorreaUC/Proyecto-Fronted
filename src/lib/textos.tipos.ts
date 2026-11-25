@@ -422,6 +422,25 @@ export type Textos = {
       mapa: {
         titulo: string;
       };
+      comoLlegar: {
+        titulo: string;
+        direccion: string;
+        parqueadero: string;
+        sinParqueadero: string;
+        puertas: string;
+        botones: {
+          abrirMapa: string;
+        };
+      };
+      politicas: {
+        titulo: string;
+        documento: string;
+        edad: string;
+        todoPublico: string;
+        reembolso: string;
+        ingreso: string;
+        objetos: string;
+      };
       relacionados: {
         titulo: string;
       };

@@ -7,7 +7,7 @@ export default async function Cargando() {
     <>
       <div className="hero hero-cargando" data-hero aria-hidden="true" />
       <div className="contenedor seccion">
-        <TarjetasCargando etiqueta={textos.estados.cargando.titulo} />
+        <TarjetasCargando textos={textos.estados.cargando} />
       </div>
     </>
   );

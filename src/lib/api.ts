@@ -152,14 +152,24 @@ export interface Ciudad {
 
 /** GET /eventos/:slug: el resumen de la vista 1 y además los datos del detalle. */
 export interface EventoDetalle extends EventoResumen {
-  recinto: { nombre: string; ciudad: string; direccion?: string; capacidad?: number };
+  // parqueadero y ubicacion pueden llegar en null o no venir.
+  recinto: {
+    nombre: string;
+    ciudad: string;
+    direccion?: string;
+    capacidad?: number;
+    parqueadero?: string | null;
+    ubicacion?: { lat: number; lng: number } | null;
+  };
+  /** Hora en que abren las puertas. */
+  puertas?: string | null;
   descripcion: string;
   duracionMin: number;
   /** 0 significa todo público. */
   edadMinima: number;
   artistas: string[];
   organizador?: { id: string; nombre: string };
-  funciones: { id: string; fecha: string; disponibles: number; agotada: boolean }[];
+  funciones: { id: string; fecha: string; puertas?: string | null; disponibles: number; agotada: boolean }[];
   localidades: { id: string; nombre: string; precio: number; disponibles: number; agotada: boolean }[];
 }
 

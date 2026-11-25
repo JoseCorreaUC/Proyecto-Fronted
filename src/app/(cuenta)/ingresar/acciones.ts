@@ -19,8 +19,9 @@ export type EstadoIngreso =
   | { estado: "conexion" }
   | { estado: "error"; codigo: string };
 
-// La sesión de la API dura 12 horas (contrato, sección 1).
-const DOCE_HORAS = 60 * 60 * 12;
+// La sesión de la API dura 12 horas (contrato, sección 1). La cookie dura más para que, al vencer
+// el token, la API responda 401 y se pueda avisar que la sesión terminó.
+const DURACION_COOKIE = 60 * 60 * 24 * 7;
 
 /** Solo se vuelve a direcciones internas del sitio (evita redirigir a otro dominio). */
 const destinoSeguro = (valor: FormDataEntryValue | null) => {
@@ -69,8 +70,8 @@ export async function ingresar(_anterior: EstadoIngreso, datos: FormData): Promi
     secure: process.env.NODE_ENV === "production",
     sameSite: "lax",
     path: "/",
-    // "Mantener la sesión iniciada": 12 horas aunque se cierre el navegador; si no, cookie de sesión.
-    ...(mantener ? { maxAge: DOCE_HORAS } : {}),
+    // "Mantener la sesión iniciada": la cookie sigue aunque se cierre el navegador; si no, es de sesión.
+    ...(mantener ? { maxAge: DURACION_COOKIE } : {}),
   });
   revalidatePath("/", "layout");
   redirect(destinoSeguro(datos.get("siguiente")));

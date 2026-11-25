@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { getTextos } from "@/lib/textos";
-import { getUsuario } from "@/lib/sesion";
+import { getSesion } from "@/lib/sesion";
 import { RUTAS } from "@/lib/rutas";
 import Logo from "@/components/layout/Logo";
 import PortadaCuenta from "@/components/cuenta/PortadaCuenta";
@@ -13,13 +13,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function Ingresar({ searchParams }: PageProps<"/ingresar">) {
-  const [textos, usuario, parametros] = await Promise.all([getTextos(), getUsuario(), searchParams]);
+  const [textos, { usuario, vencida }, parametros] = await Promise.all([getTextos(), getSesion(), searchParams]);
   // Con la sesión ya iniciada no tiene sentido volver a ingresar.
   if (usuario) redirect(RUTAS.inicio);
 
   const t = textos.paginas.ingresar;
   const errores = textos.errores as Record<string, string>;
   const siguiente = typeof parametros.siguiente === "string" ? parametros.siguiente : undefined;
+
+  const sesionTerminada = vencida || parametros.vencida !== undefined;
 
   return (
     <div className="ingresar">
@@ -34,6 +36,7 @@ export default async function Ingresar({ searchParams }: PageProps<"/ingresar">)
         </div>
         <FormularioIngreso
           siguiente={siguiente}
+          avisoInicial={sesionTerminada ? textos.estados.sesionVencida : undefined}
           textos={{
             ...t.formulario,
             botones: { ...t.formulario.botones, reintentar: t.errores.conexion.botones.reintentar },
