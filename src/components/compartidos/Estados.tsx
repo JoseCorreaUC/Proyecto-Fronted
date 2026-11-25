@@ -40,20 +40,32 @@ export function EnlaceBoton({ href, children }: { href: string; children: ReactN
 // Líneas grises de cada tarjeta mientras carga: categoría, título, fecha y lugar.
 const LINEAS_ESQUELETO = [{ width: "30%" }, { width: "80%", height: 18 }, { width: "60%" }, { width: "70%" }];
 
+// La variante compacta solo tiene título, fecha y precio.
+const LINEAS_ESQUELETO_COMPACTA = [{ width: "80%", height: 16 }, { width: "50%" }, { width: "40%" }];
+
+interface PropsCargando {
+  cantidad?: number;
+  textos?: TextosCarga;
+  /** La misma forma de la lista que se espera, para que la página no salte al llegar los eventos. */
+  forma?: "rejilla" | "compacta";
+}
+
 /**
  * Tarjetas grises que ocupan el lugar de los eventos mientras cargan.
  * Con `textos` lleva encima el aviso de carga; sin ellos, el aviso ya está en otra parte de la pantalla.
  */
-export function TarjetasCargando({ cantidad = 4, textos }: { cantidad?: number; textos?: TextosCarga }) {
+export function TarjetasCargando({ cantidad = 4, textos, forma = "rejilla" }: PropsCargando) {
+  const compacta = forma === "compacta";
+  const lineas = compacta ? LINEAS_ESQUELETO_COMPACTA : LINEAS_ESQUELETO;
   return (
     <div className="carga">
       {textos && <AvisoCargando textos={textos} />}
-      <div className="rejilla-eventos" aria-hidden="true">
+      <div className={compacta ? "lista-compacta" : "rejilla-eventos"} aria-hidden="true">
         {Array.from({ length: cantidad }, (_, i) => (
-          <div key={i} className="tarjeta-evento tarjeta-evento-cargando">
-            <div className="esqueleto tarjeta-evento-afiche" />
-            <div className="tarjeta-evento-cuerpo">
-              {LINEAS_ESQUELETO.map((estilo, j) => (
+          <div key={i} className={compacta ? "tarjeta-compacta" : "tarjeta-evento tarjeta-evento-cargando"}>
+            <div className={unirClases("esqueleto", compacta ? "tarjeta-compacta-afiche" : "tarjeta-evento-afiche")} />
+            <div className={compacta ? "tarjeta-compacta-lineas" : "tarjeta-evento-cuerpo"}>
+              {lineas.map((estilo, j) => (
                 <div key={j} className="esqueleto esqueleto-linea" style={estilo} />
               ))}
             </div>
