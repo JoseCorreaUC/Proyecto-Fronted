@@ -69,10 +69,15 @@ export default function TarjetaEvento({ evento, textos, idioma, variante = "norm
               {evento.titulo}
             </Link>
           </Titulo>
-          <p className="tarjeta-compacta-meta">{fechaHora}</p>
-          <p className="tarjeta-compacta-precio">
-            {fmt(textos.componentes.precio.desdePrecio, { precio: formatoPrecio(evento.precioDesde, idioma) })}
+          <p className="tarjeta-compacta-meta">
+            <time dateTime={evento.fecha}>{fechaHora}</time>
           </p>
+          <div className="tarjeta-compacta-pie">
+            <p className="tarjeta-compacta-precio">
+              {fmt(textos.componentes.precio.desdePrecio, { precio: formatoPrecio(evento.precioDesde, idioma) })}
+            </p>
+            {disponibilidad && <Etiqueta tono={disponibilidad.tono}>{disponibilidad.texto}</Etiqueta>}
+          </div>
         </div>
       </article>
     );

@@ -1080,6 +1080,20 @@ button:disabled {
   line-height: 1.4286;
 }
 
+.tarjeta-compacta-pie {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 8px;
+}
+
+/* Esqueleto: ocupa el lugar de título, fecha y precio. */
+.tarjeta-compacta-lineas {
+  display: grid;
+  flex: 1;
+  gap: 8px;
+}
+
 .lista-compacta {
   display: grid;
   gap: 12px;

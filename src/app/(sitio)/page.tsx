@@ -131,7 +131,7 @@ export default async function Inicio({ searchParams }: PageProps<"/">) {
           titulo={t.filtrosMovil.finDeSemana}
           enlace={{ href: urlExplorar({ fecha: "finde" }), texto: t.destacados.enlaces.verTodos }}
         />
-        <Suspense fallback={<TarjetasCargando cantidad={3} textos={cargando} />}>
+        <Suspense fallback={<TarjetasCargando forma="compacta" cantidad={3} textos={cargando} />}>
           <FinDeSemana textos={textos} idioma={idioma} />
         </Suspense>
       </section>
