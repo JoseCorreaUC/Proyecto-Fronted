@@ -47,6 +47,8 @@ interface Opciones {
   token?: string;
   /** Segundos de caché de Next.js. `false` = sin caché. */
   revalidar?: number | false;
+  /** Cabeceras extra solo para esta petición (por ejemplo, las de simulación). */
+  cabeceras?: Record<string, string>;
 }
 
 export async function api<T>(ruta: string, opciones: Opciones = {}): Promise<T> {
@@ -64,6 +66,7 @@ export async function api<T>(ruta: string, opciones: Opciones = {}): Promise<T> 
   const simulacion = getSimulacion();
   if (simulacion.latencia) cabeceras["X-Simular-Latencia"] = simulacion.latencia;
   if (simulacion.error) cabeceras["X-Simular-Error"] = simulacion.error;
+  Object.assign(cabeceras, opciones.cabeceras);
 
   const pedir = () =>
     fetch(url, {

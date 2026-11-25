@@ -79,7 +79,6 @@ Después, con las claves de carga que compartió la profesora, agregué `AvisoCa
 
 **Validación:** revisión de tipos, lint y compilación; pruebas en el navegador del detalle (escritorio y móvil), la sesión vencida, la carga y el error de relacionados. El ingreso (campos vacíos, credenciales incorrectas, 429, sin conexión, ingreso correcto y cierre de sesión) se probó contra una API simulada en mi computador.
 
----
 
 ### Decisiones de diseño y desarrollo bajo mi criterio
 

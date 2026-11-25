@@ -31,10 +31,18 @@ async function cargarEvento(slug: string): Promise<EventoDetalle> {
 
 export async function generateMetadata({ params }: PageProps<"/eventos/[slug]">): Promise<Metadata> {
   const { slug } = await params;
-  const [textos, evento] = await Promise.all([getTextos(), getEvento(slug).catch(() => null)]);
+  // punto b sustentacion 
+  // 
+  const [textos, evento] = await Promise.all([
+    getTextos(),
+    cargarEvento(slug).catch((error) => {
+      if (error instanceof ApiError) return null;
+      throw error;
+    }),
+  ]);
+  if (!evento) return {};
   const seo = textos.paginas.detalleEvento.seo;
-  if (!evento) return { title: textos.paginas.detalleEvento.noEncontrado.titulo };
-  // El contrato pide usar el título y la descripción del evento para los metadatos.
+  // uso el titulo del evento
   return { title: fmt(seo.titulo, { titulo: evento.titulo }), description: evento.descripcion || seo.descripcion };
 }
 

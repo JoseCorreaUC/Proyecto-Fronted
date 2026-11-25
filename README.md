@@ -45,6 +45,7 @@ En todas las vistas: textos en español e inglés desde `GET /textos`, aviso de 
 
 El token de la API se guarda en una cookie `httpOnly` del sitio. Si la API responde 401, `/sesion-vencida` borra la cookie y lleva a ingresar con el aviso "Tu sesión terminó"; después de ingresar se vuelve a la página en la que estaba la persona.
 
+
 ## Estructura
 
 ```
